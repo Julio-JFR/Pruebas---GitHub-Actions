@@ -1,0 +1,31 @@
+em {
+    cursor: pointer;
+}
+
+form {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media screen and (max-width: 500px) {
+    form {
+        width: 100%;
+    }
+}
+.posicion{
+    z-index: 1;
+    align-items: center;
+    @media screen and (min-width:1025px) and (max-width:1200px) {
+        padding-right: 6rem;
+    }
+    @media screen and (min-width:1024px) {
+        padding-right: 10.5rem;
+    }
+    @media screen and (min-width:769px) and (max-width:992px) {
+       
+    }
+    @media screen and (min-width:541px) and (max-width:768px) {
+        padding-right: 3rem;
+    }
+  }

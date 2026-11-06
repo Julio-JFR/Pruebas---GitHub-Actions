@@ -1,0 +1,191 @@
+<nav class="conteiner-nav">
+  <div class="conteiner-nav__logo">
+    <img *ngIf="!isMovil else movilLogo" id="img-logo" src="../../../assets/images/LOGO_01.png" [routerLink]="['/home']"
+      alt="logo" style="cursor: pointer;">
+    <ng-template #movilLogo>
+      <img id="img-logo" src="../../../assets/images/LOGO_01.png" alt="logo" style="cursor: pointer;">
+    </ng-template>
+  </div>
+  <ul *ngIf="!isMovil" class="conteiner-nav__items">
+    <li  class="item-hover"><a [routerLink]="['/postulante/login']">
+        <span><strong>Soy Postulante</strong></span>
+      </a>
+    </li>
+
+    <li ngbDropdown>
+      <a ngbDropdownToggle>
+        <span style="cursor: pointer;"><strong>Regístrate</strong></span>
+      </a>
+      <div class="select-dropdown" ngbDropdownMenu>
+        <a (click)="mostrarTipoPersona()" class="clienteLi"><span>
+            <hr class="barra">
+            <strong style="padding-left: 15px;">Cliente</strong>
+          </span></a>
+        <a (click)="mostrarTipoEspecialista()" class="especialistaLi">
+          <span>
+            <hr class="barra"><strong style="padding-left: 15px;">Especialista</strong>
+          </span>
+        </a>
+      </div>
+    </li>
+
+    <li>
+      <a [href]="intranetUrl">
+        <span class="item-hover"><strong>Intranet</strong></span></a>
+    </li>
+    <li ngbDropdown>
+      <a ngbDropdownToggle>
+        <span class="btn-ini"><label>Iniciar Sesión</label></span>
+      </a>
+      <div class="select-dropdown" style="width: 4rem;" ngbDropdownMenu>
+        <a (click)="redirectToLogin('/clientes/login')" class="clienteLi">
+          <span>
+            <hr class="barra">
+            <strong style="padding-left: 15px;">Cliente</strong>
+          </span>
+        </a>
+        <a (click)="redirectToLogin('/especialistas/login')" class="especialistaLi">
+          <span>
+            <hr class="barra2">
+            <strong style="padding-left: 15px;">Especialista</strong>
+          </span>
+        </a>
+      </div>
+    </li>
+  </ul>
+</nav>
+
+
+
+
+<!-- dropdown menu -->
+
+
+<nav class="nav-collapsed" style="background-color: #3E11BC;" *ngIf="!isMovil">
+  <div class="container">
+    <div class="nav-head">
+      <h3 style="margin-top: 20px; margin-left: 20px;">
+        <span [routerLink]="['/home']" style="cursor: pointer;">
+          <img src="../../../assets/images/LOGO_01.png" [routerLink]="['/home']" alt="logo"
+            style="width: 50%;cursor: pointer;">
+        </span>
+        <em style="color: white;margin-top: 2px;" class="fa fa-th-list float-right"
+          (click)="isToggled = !isToggled"></em>
+      </h3>
+    </div>
+    <table class="table" *ngIf="!isToggled" style="width: 92%;">
+      <tbody class="text-center">
+        <tr>
+          <td class="postulante" [routerLink]="['/postulante/login']">Soy Postulante</td>
+        </tr>
+        <tr>
+          <td (click)="mostrarTipoEspecialista()">Registrarse como especialista</td>
+        </tr>
+        <tr>
+          <td (click)="mostrarTipoPersona()">Registrarse como cliente</td>
+        </tr>
+        <tr>
+          <td><a [href]="intranetUrl" style="color: #3E11BC;">Intranet</a></td>
+        </tr>
+        <tr>
+          <td>
+            <ul>
+              <li ngbDropdown>
+                <a ngbDropdownToggle>
+                  <span class="btn-ini"><label>Iniciar Sesión</label></span>
+                </a>
+                <div class="select-dropdown" ngbDropdownMenu>
+                  <a (click)="redirectToLogin('/clientes/login')" class="clienteLi"><span>
+                      <!-- <hr class="barra"> -->
+                      <strong style="padding-left: 15px;">Cliente</strong>
+                    </span>
+                  </a>
+                  <a (click)="redirectToLogin('/especialistas/login')" class="especialistaLi">
+                    <span>
+                      <!-- <hr class="barra"> -->
+                       <br>
+                      <strong style="padding-left: 15px;">Especialista</strong>
+                    </span>
+                  </a>
+                </div>
+              </li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</nav>
+
+<!-- MODALES PARA REGISTRO -->
+<ng-template #tPersona let-modal>
+  <div class="modal-header" style="text-align: center;align-items: center;">
+    <h5 class="modal-title col-11 text-center" id="exampleModalLongTitle">Selecciona</h5>
+    <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div style="margin-top: 15px;" class="row">
+    <div class="col-xl-12">
+      <div *ngIf="carga" class="progress" style="height:.1rem">
+        <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true"
+          [animated]="true"></ngb-progressbar>
+      </div>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="row justify-content-center">
+      <div style="text-align: center;padding-left: 0px;" class="col-12 col-sm-6">
+        <div class="col-12"><label>Soy una persona</label></div>
+        <div class="col-12" style="cursor: pointer" (click)="redireccionarRegistroClienteNatural();">
+          <img style="height: 15rem;width: 7rem;" src="../../../assets/images/PERSONA-NATURAL.png" alt="">
+        </div>
+      </div>
+      <div style="text-align: center;padding-left: 0px" class="col-12 col-sm-6">
+        <div class="col-12"><label>Soy una empresa</label></div>
+        <div class="col-12" style="cursor: pointer" (click)="redireccionarRegistroClienteJuridico();">
+          <img style="height: 15rem;width: 7rem;" src="../../../assets/images/PERSONA-JURIDICA.png" alt="">
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+  </div>
+</ng-template>
+
+<ng-template #tEspecialista let-modal>
+  <div class="modal-header" style="text-align: center;align-items: center;">
+    <h5 class="modal-title col-11 text-center" id="exampleModalLongTitle">Selecciona</h5>
+    <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div style="margin-top: 15px;" class="row">
+    <div class="col-xl-12">
+      <div *ngIf="carga" class="progress" style="height:.1rem">
+        <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true"
+          [animated]="true"></ngb-progressbar>
+      </div>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="row justify-content-center">
+      <div style="text-align: center;padding-left: 0px;" class="col-12 col-sm-6">
+        <div class="col-12"><label>Soy una persona</label></div>
+        <div class="col-12" style="cursor: pointer" (click)="redireccionarRegistroEspecialistaPersona();">
+          <img style="height: 15rem; width: 7rem;" src="../../../assets/images/PERSONA-NATURAL.png" alt="">
+        </div>
+      </div>
+      <div style="text-align: center;padding-left: 0px" class="col-12 col-sm-6">
+        <div class="col-12"><label>Soy una empresa</label></div>
+        <div class="col-12" style="cursor: pointer" (click)="redireccionarRegistroEspecialistaEmpresa();">
+          <img style="height: 15rem;width: 7rem;" src="../../../assets/images/PERSONA-JURIDICA.png" alt="">
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+  </div>
+</ng-template>

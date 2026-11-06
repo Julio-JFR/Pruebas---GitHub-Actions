@@ -1,0 +1,141 @@
+em{
+    margin-top: 10px;
+}
+
+select {
+    background-image: url('../../../../assets/images/select.png'); 
+    background-size: 22px 22px;
+}
+ 
+.trMin{
+    width: 18%;
+}
+
+#contentAll{
+    border: transparent; 
+    border-left: 1px solid #24DEEC;
+    padding-left: 1rem;
+}
+
+.contenedor-barra{
+    width: 100%;
+    padding-left: 1rem;
+}
+
+.btn-style{
+    background-color: var(--color-primary);
+    border-radius: 1rem;
+    width: 2rem;
+    height: 2rem;
+    
+}
+
+
+.raya-separadora-title{
+    background-color: #24DEEC;height: 0.9rem;
+}
+
+.raya-separadora-b{
+    background-color:#24DEEC;height:.5rem;
+}
+.triangulo-equilatero-bottom-left {
+    width: 0;
+    height: 0;
+    border-right: 0.45rem solid transparent;
+    border-top: 0.45rem solid transparent;
+    border-left: 0.45rem solid #24DEEC;
+    border-bottom: 0.45rem solid #24DEEC;
+}
+
+.table-width{
+    width: 110% !important;
+    max-width: none !important;
+}
+
+::-webkit-scrollbar {
+    height: 13px;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #3e11bc;
+}
+
+.spanAccion{
+    font-size: 20px; 
+    cursor: pointer;
+    display: inline-block;
+}
+
+.disabledSpan{
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.estrella{
+    color: #FFD700;
+}
+
+@media (max-width: 1320px) {
+    .table-width{
+        width: 150% !important;
+    }
+}
+
+@media (max-width: 1070px) {
+    .table-width{
+        width: 250% !important;
+    }
+}
+
+
+@media screen and (max-width: 500px) {
+    .card {
+        width: 80%;
+    }
+
+    .card-design{
+        margin-left: 20px;
+        margin-right: 20px;
+        width: 100%;
+    }
+
+}
+
+@media (max-width: 540px) {
+    #sidebar {
+        display: none;
+    }
+    #contentAll{
+        border-left: none;
+        padding-left: 0rem;
+    }
+    .card-design{
+        margin-left: 0px;
+    }
+    .btn-span{
+        display: none;
+    }
+
+}
+
+
+@media (min-width: 541px) {
+    #sidebar2 {
+        display: none;
+    }
+    .btn-movil{
+        display: none;
+    }
+}
+
+@media (max-width: 450px) {
+    .table-width{
+        width: 380% !important;
+    }
+}
+
+@media (max-width: 329px) {
+    .table-width{
+        width: 480% !important;
+    }
+}

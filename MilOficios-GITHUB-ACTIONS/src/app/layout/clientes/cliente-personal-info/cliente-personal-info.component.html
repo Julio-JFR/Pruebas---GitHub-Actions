@@ -1,0 +1,625 @@
+<app-alerta-general 
+    *ngIf="mostrarAlerta"
+    [tipoAlerta]="tipoAlerta" >
+    {{mensajes}}
+</app-alerta-general>
+<div class="row">
+    <div class="col-xl-12">
+        <div *ngIf="cargandoDatos" class="progress" style="height:.1rem">
+            <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true"
+                [animated]="true"></ngb-progressbar>
+        </div>
+    </div>
+</div>
+<div class="d-flex flex-column divGeneral">
+    <div class="d-flex">
+        <app-cliente-sidebar id="sidebar"></app-cliente-sidebar>
+        <div class="container" style="margin-top: -1rem;">
+            <div class="card" id="wrapper">
+                <div id="lineaIntermedia" class="barra-azul-lateral"></div>
+                <div class="container" id="containerTodo">
+                    <div class="card-design">
+                        <div class="card" style="border: 0;">
+                            <div *ngIf="CLIENTE.CLI_TIPO == 0; else btnJuridico">
+                                <h5 class="card-header pb-0"><label>Información Personal</label></h5>
+                                <triangular-bar></triangular-bar>
+                            </div>
+                            <ng-template #btnJuridico>
+                                <h5 class="card-header bold-tipografy"><label>Información Personal</label></h5>
+                                <triangular-bar></triangular-bar>
+                            </ng-template>
+    
+    
+                            <div *ngIf="CLIENTE.CLI_TIPO!=null" class="mt-4">
+                                <div *ngIf="CLIENTE.CLI_TIPO == 0; else juridico">
+                                    <form [formGroup]="clienteForm">
+                                        <div class="row">
+                                            <div class="col-sm-12 col-lg-6 my-2">
+                                                <div class="barra-azul-lateral"></div>
+                                                <label for="nombreInput">Nombres *</label>
+                                                <input type="text" id="nombreInput" name="nombreInput" class="form-control"
+                                                    [value]="clienteForm.get('usu_nombres').value" readonly>
+                                               
+                                            </div>
+    
+    
+                                            <div class="col-sm-12 col-lg-6 my-2">
+                                                <div class="barra-azul-lateral"></div>
+                                                <label for="dniInput">Documento de Identidad *</label>
+                                                <input type="text" id="dniInput" name="dniInput" class="form-control"
+                                                    [value]="clienteForm.get('usu_dni').value" readonly>
+                                            </div>
+    
+    
+                                            <div class="col-sm-12 col-lg-6 my-2">
+                                                <div class="barra-azul-lateral"></div>
+                                                <label for="apePatInput">Apellido Paterno *</label>
+                                                <input type="text" id="apePatInput" name="apePatInput" class="form-control"
+                                                 [value]="clienteForm.get('usu_ape_pat').value" readonly>
+                                            </div>
+    
+    
+                                            <div class="col-sm-12 col-lg-6 my-2">
+                                                <div class="barra-azul-lateral"></div>
+                                                <label for="apeMatInput">Apellido Materno *</label>
+                                                <input type="text" id="apeMatInput" name="apeMatInput" class="form-control" 
+                                                 [value]="clienteForm.get('usu_ape_mat').value" readonly>
+                                            </div>
+    
+    
+                                            <div class="col-sm-12 col-lg-6 my-2">
+                                                <div class="barra-azul-lateral"></div>
+                                                <label for="lista-genero">Sexo *</label>
+                                                <div id="lista-genero">
+                                                    <input type="text" id="apeMatInput" name="apeMatInput" class="form-control" 
+                                                     [value]="clienteForm.get('usu_sexo').value" readonly>
+                                                  
+                                                </div>
+                                            </div>
+    
+    
+                                            <div class="col-sm-12 col-lg-6 my-2">
+                                                <div class="barra-azul-lateral"></div>
+                                                <label for="lista-idiomas">Idioma *</label>
+                                                <div id="lista-idiomas">
+                                                    <select name="idiomas-select" id="idiomas-select"
+                                                        class="form-control custom-select" formControlName="idi_id">
+                                                        <option [ngValue]=null disabled> Seleccionar </option>
+                                                        <option [ngValue]="IDIOMA.IDI_ID" *ngFor="let IDIOMA of IDIOMAS" disabled>
+                                                            {{IDIOMA.IDI_NOMBRE}}</option>
+                                                    </select>
+                                                </div>
+                                                <div *ngIf="idi_id.invalid && (idi_id.dirty || idi_id.touched)" class="my-1"
+                                                    style="color: rgb(197, 68, 68);">
+                                                    <div *ngIf="idi_id.errors.required">
+                                                        * El idioma es requerido
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+    
+                                            <div class="col-sm-12 col-lg-6 my-2">
+                                                <div class="barra-azul-lateral"></div>
+                                                <label for="lista-paises">País *</label>
+                                                <div id="lista-paises">
+                                                    <select name="paises-select" id="paises-select"
+                                                        class="form-control custom-select" formControlName="pai_id"
+                                                        (change)="cambiarPais()">
+                                                        <option [ngValue]=null disabled>Seleccionar</option>
+                                                        <option [ngValue]="PAIS.PAI_ID" *ngFor="let PAIS of PAISES" disabled>
+                                                            {{PAIS.PAI_NOMBRE}}</option>
+                                                    </select>
+                                                </div>
+                                                <div *ngIf="pai_id.invalid && (pai_id.dirty || pai_id.touched)" class="my-1"
+                                                    style="color: rgb(197, 68, 68);">
+                                                    <div *ngIf="pai_id.errors.required">
+                                                        * El país es requerido
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+    
+                                            <div class="col-sm-12 col-lg-6 my-2">
+                                                <div class="barra-azul-lateral"></div>
+                                                <label for="lista-regiones">Región *</label>
+                                                <div id="lista-regiones">
+                                                    <select name="regiones-select" id="regiones-select"
+                                                        class="form-control custom-select" formControlName="reg_id"
+                                                        (change)="cambiarRegion()">
+                                                        <option [ngValue]=null disabled>Seleccionar</option>
+                                                        <option [ngValue]="REGION.REG_ID" *ngFor="let REGION of REGIONES" disabled>
+                                                            {{REGION.REG_NOMBRE}}</option>
+                                                    </select>
+                                                </div>
+                                                <div *ngIf="reg_id.invalid && (reg_id.dirty || reg_id.touched)" class="my-1"
+                                                    style="color: rgb(197, 68, 68);">
+                                                    <div *ngIf="reg_id.errors.required">
+                                                        * La región es requerida
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+    
+                                            <div class="col">
+                                                <div class="barra-azul-lateral"></div>
+                                                <label for="lista-provincia">Provincia *</label>
+                                                <div id="lista-provincia">
+                                                    <select name="provincia-select" id="provincia-select"
+                                                        class="form-control custom-select" formControlName="pro_id"
+                                                        (change)="cambiarProvincia()">
+                                                        <option [ngValue]=null disabled>Seleccionar</option>
+                                                        <option [ngValue]="PROVINCIA.PRO_ID"
+                                                            *ngFor="let PROVINCIA of PROVINCIAS" disabled>
+                                                            {{PROVINCIA.PRO_NOMBRE}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                                <div *ngIf="pro_id.invalid && (pro_id.dirty || pro_id.touched)" class="my-1"
+                                                    style="color: rgb(197, 68, 68);">
+                                                    <div *ngIf="pro_id.errors.required">
+                                                        * La provincia es requerida
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+    
+                                            <div class="col-sm-12 col-lg-6 my-2">
+                                                <div class="barra-azul-lateral"></div>
+                                                <label for="lista-distritos">Distrito *</label>
+                                                <div id="lista-distritos">
+                                                    <select name="distritos-select" id="distritos-select"
+                                                        class="form-control custom-select" formControlName="dist_id">
+                                                        <option [ngValue]=null disabled>Seleccionar</option>
+                                                        <option [ngValue]="DISTRITO.DIST_ID"
+                                                            *ngFor="let DISTRITO of DISTRITOS" disabled>{{DISTRITO.DIST_NOMBRE}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                                <div *ngIf="dist_id.invalid && (dist_id.dirty || dist_id.touched)"
+                                                    class="my-1" style="color: rgb(197, 68, 68);">
+                                                    <div *ngIf="dist_id.errors.required">
+                                                        * El distrito es requerido
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+    
+                                            <div class="col-12">
+                                                <div class="barra-azul-lateral"></div>
+                                                <label for="direccionInput">Dirección *</label>
+                                                <input type="text" id="direccionInput" name="direccionInput" readonly
+                                                    class="form-control" formControlName="usu_direccion">
+                                                <div *ngIf="usu_direccion.invalid && (usu_direccion.dirty || usu_direccion.touched)"
+                                                    class="my-1" style="color: rgb(197, 68, 68);">
+                                                    <div *ngIf="usu_direccion.errors.required">
+                                                        * La dirección es requerida
+                                                    </div>
+                                                    <div *ngIf="usu_direccion.errors.maxlength">
+                                                        * Se requieren máximo 150 caracteres
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+    
+                                            <div class="col-sm-12 col-lg-6 my-2">
+                                                <div class="barra-azul-lateral"></div>
+                                                <label for="celularInput">Celular *</label>
+                                                <input type=text id="celularInput" name="celularInput" class="form-control" readonly
+                                                    name="Contrasena" formControlName="usu_celular">
+                                                <small>Ejemplo: +51998745638</small>
+                                                <div *ngIf="usu_celular.invalid && (usu_celular.dirty || usu_celular.touched)"
+                                                    class="my-1" style="color: rgb(197, 68, 68);">
+                                                    <div *ngIf="usu_celular.errors.required">
+                                                        * El número de celular es requerido
+                                                    </div>
+                                                    <div *ngIf="usu_celular.errors.minlength">
+                                                        * Se requiere mínimo 12 caracteres.
+                                                    </div>
+                                                    <div *ngIf="usu_celular.errors.maxlength">
+                                                        * Se requieren máximo 20 caracteres
+                                                    </div>
+                                                    <div *ngIf="usu_celular.errors.pattern">
+                                                        * Formato incorrecto. Se debe colocar '+' al inicio, seguido de
+                                                        números
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+    
+                                            <div class="col-sm-12 col-lg-6 my-2">
+                                                <div class="barra-azul-lateral"></div>
+                                                <label for="fechaInput">Fecha de Nacimiento *</label>
+                                                <input type="date" [max]="maxFecha" id="fechaInput" name="fechaInput"
+                                                    class="form-control" [value]="clienteForm.get('usu_fech_nacimiento').value" readonly>
+                                            </div>
+    
+                                        </div>
+                                    </form>
+                                </div>
+                                <ng-template #juridico>
+                                    <form [formGroup]="datosJuridicosForm">
+                                        <div class="row">
+                                            <div class="col-sm-12 col-lg-6 my-2">
+                                                <div class="barra-azul-lateral"></div>
+                                                <label for="RUCInput">RUC *</label>
+                                                <input id="RUCInput" name="RUCInput" class="form-control"
+                                                   type="text"  [value]="datosJuridicosForm.get('jur_RUC').value" readonly>
+                                            </div>
+    
+                                            <div class="col-sm-12 col-lg-6 my-2">
+                                                <div class="barra-azul-lateral"></div>
+                                                <label for="lista-typeEmpresa">Tipo de empresa *</label>
+                                                <div id="lista-typeEmpresa">
+                                                    <select formControlName="jur_tipoEmpresa"
+                                                        class="form-control custom-select"
+                                                        (change)="cambiarTipoEmpresa($event.target.value)">
+                                                        <option [ngValue]=null> Seleccionar </option>
+                                                        <option [ngValue]="typeEmpresa.TIP_EMP_CLAVE "
+                                                            *ngFor="let typeEmpresa of TIPOSEMPRESAS">
+                                                            {{typeEmpresa.TIP_EMP_CLAVE}}</option>
+                                                    </select>
+                                                </div>
+                                                <div *ngIf="jur_tipoEmpresa.invalid && (jur_tipoEmpresa.dirty || jur_tipoEmpresa.touched)"
+                                                    class="my-1" style="color: rgb(197, 68, 68);">
+                                                    <div *ngIf="jur_tipoEmpresa.errors.required">
+                                                        * El campo es requerido.
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+                                            <div class="col-12 my-2">
+                                                <div class="barra-azul-lateral"></div>
+                                                <label for="RazonSocialInput">Razon Social *</label>
+                                                <input id="RazonSocialInput" name="RazonSocialInput" class="form-control"
+                                                    formControlName="jur_RazonSocial">
+                                                <div *ngIf="jur_RazonSocial.invalid && (jur_RazonSocial.dirty || jur_RazonSocial.touched)"
+                                                    class="my-1" style="color: rgb(197, 68, 68);">
+                                                    <div *ngIf="jur_RazonSocial.errors.required">
+                                                        * El campo es requerido.
+                                                    </div>
+                                                    <div *ngIf="jur_RazonSocial.errors.pattern">
+                                                        * El campo solo acepta caracteres alfanuméricos.
+                                                    </div>
+                                                    <div *ngIf="jur_RazonSocial.errors.maxlength">
+                                                        * El campo solo necesita 100 caracteres alfanuméricos.
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+                                            <div class="col-sm-12 col-lg-6 my-2">
+                                                <div class="barra-azul-lateral"></div>
+                                                <label for="nombreInput">Nombres *</label>
+                                                <input type="text" id="nombreInput" name="nombreInput" class="form-control" readonly
+                                                    formControlName="jur_usu_nombres">
+                                                <div *ngIf="jur_usu_nombres.invalid && (jur_usu_nombres.dirty || jur_usu_nombres.touched)"
+                                                    class="my-1" style="color: rgb(197, 68, 68);">
+                                                    <div *ngIf="jur_usu_nombres.errors.required">
+                                                        * El nombre es requerido
+                                                    </div>
+                                                    <div *ngIf="jur_usu_nombres.errors.maxlength">
+                                                        * Se requieren máximo 50 caracteres
+                                                    </div>
+                                                    <div *ngIf="jur_usu_nombres.errors.pattern">
+                                                        * Solo se permiten caracteres alfabéticos
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+    
+                                            <div class="col-sm-12 col-lg-6 my-2">
+                                                <div class="barra-azul-lateral"></div>
+                                                <label for="dniInput">Documento de Identidad *</label>
+                                                <input type="text" id="dniInput" name="dniInput" class="form-control" readonly
+                                                    formControlName="jur_usu_dni">
+                                                <div *ngIf="jur_usu_dni.invalid && (jur_usu_dni.dirty || jur_usu_dni.touched)"
+                                                    class="my-1" style="color: rgb(197, 68, 68);">
+                                                    <div *ngIf="jur_usu_dni.errors.required">
+                                                        * El DNI es requerido
+                                                    </div>
+                                                    <div *ngIf="jur_usu_dni.errors.pattern">
+                                                        * Solo se permiten números
+                                                    </div>
+                                                    <div *ngIf="jur_usu_dni.errors.maxlength">
+                                                        * Se requieren maximo 8 caracteres
+                                                    </div>
+                                                    <div *ngIf="jur_usu_dni.errors.minlength">
+                                                        * Se requieren minimo 8 caracteres
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+    
+                                            <div class="col-sm-12 col-lg-6 my-2">
+                                                <div class="barra-azul-lateral"></div>
+                                                <label for="apePatInput">Apellido Paterno *</label>
+                                                <input type="text" id="apePatInput" name="apePatInput" class="form-control" readonly
+                                                    formControlName="jur_usu_ape_pat">
+                                                <div *ngIf="jur_usu_ape_pat.invalid && (jur_usu_ape_pat.dirty || jur_usu_ape_pat.touched)"
+                                                    class="my-1" style="color: rgb(197, 68, 68);">
+                                                    <div *ngIf="jur_usu_ape_pat.errors.required">
+                                                        * El apellido paterno es requerido
+                                                    </div>
+                                                    <div *ngIf="jur_usu_ape_pat.errors.maxlength">
+                                                        * Se requieren máximo 30 caracteres
+                                                    </div>
+                                                    <div *ngIf="jur_usu_ape_pat.errors.pattern">
+                                                        * Solo se permiten caracteres alfabéticos
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+    
+                                            <div class="col-sm-12 col-lg-6 my-2">
+                                                <div class="barra-azul-lateral"></div>
+                                                <label for="apeMatInput">Apellido Materno *</label>
+                                                <input type="text" id="apeMatInput" name="apeMatInput" class="form-control" readonly
+                                                    formControlName="jur_usu_ape_mat">
+                                                <div *ngIf="jur_usu_ape_mat.invalid && (jur_usu_ape_mat.dirty || jur_usu_ape_mat.touched)"
+                                                    class="my-1" style="color: rgb(197, 68, 68);">
+                                                    <div *ngIf="jur_usu_ape_mat.errors.required">
+                                                        * El apellido materno es requerido
+                                                    </div>
+                                                    <div *ngIf="jur_usu_ape_mat.errors.maxlength">
+                                                        * Se requieren máximo 30 caracteres
+                                                    </div>
+                                                    <div *ngIf="jur_usu_ape_mat.errors.pattern">
+                                                        * Solo se permiten caracteres alfabéticos
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+    
+                                            <div class="col-sm-12 col-lg-6 my-2">
+                                                <div class="barra-azul-lateral"></div>
+                                                <label for="lista-genero">Sexo *</label>
+                                                <div id="lista-genero">
+                                                    <select readonly name="genero-select" id="genero-select"
+                                                        class="form-control custom-select" formControlName="jur_usu_sexo">
+                                                        <option [ngValue]=null disabled> Seleccionar </option>
+                                                        <option [ngValue]="SEXO.clave" *ngFor="let SEXO of SEXO_CLIENTE" disabled>
+                                                            {{SEXO.nombre}}</option>
+                                                    </select>
+                                                </div>
+                                                <div *ngIf="jur_usu_sexo.invalid && (jur_usu_sexo.dirty || jur_usu_sexo.touched)"
+                                                    class="my-1" style="color: rgb(197, 68, 68);">
+                                                    <div *ngIf="jur_usu_sexo.errors.required">
+                                                        * El sexo del cliente es requerido
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+    
+                                            <div class="col-sm-12 col-lg-6 my-2">
+                                                <div class="barra-azul-lateral"></div>
+                                                <label for="lista-idiomas">Idioma *</label>
+                                                <div id="lista-idiomas">
+                                                    <select readonly name="idiomas-select" id="idiomas-select"
+                                                        class="form-control custom-select" formControlName="jur_idi_id">
+                                                        <option [ngValue]=null disabled>Seleccionar </option>
+                                                        <option [ngValue]="IDIOMA.IDI_ID" *ngFor="let IDIOMA of IDIOMAS" disabled>
+                                                            {{IDIOMA.IDI_NOMBRE}}</option>
+                                                    </select>
+                                                </div>
+                                                <div *ngIf="jur_idi_id.invalid && (jur_idi_id.dirty || jur_idi_id.touched)"
+                                                    class="my-1" style="color: rgb(197, 68, 68);">
+                                                    <div *ngIf="jur_idi_id.errors.required">
+                                                        * El idioma es requerido
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+    
+                                            <div class="col-sm-12 col-lg-6 my-2">
+                                                <div class="barra-azul-lateral"></div>
+                                                <label for="lista-paises">País *</label>
+                                                <div id="lista-paises">
+                                                    <select readonly name="paises-select" id="paises-select"
+                                                        class="form-control custom-select" formControlName="jur_pai_id"
+                                                        (change)="cambiarPais()">
+                                                        <option [ngValue]=null disabled>Seleccionar</option>
+                                                        <option [ngValue]="PAIS.PAI_ID" *ngFor="let PAIS of PAISES" disabled>
+                                                            {{PAIS.PAI_NOMBRE}}</option>
+                                                    </select>
+                                                </div>
+                                                <div *ngIf="jur_pai_id.invalid && (jur_pai_id.dirty || jur_pai_id.touched)"
+                                                    class="my-1" style="color: rgb(197, 68, 68);">
+                                                    <div *ngIf="jur_pai_id.errors.required">
+                                                        * El país es requerido
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+    
+                                            <div class="col-sm-12 col-lg-6 my-2">
+                                                <div class="barra-azul-lateral"></div>
+                                                <label for="lista-regiones">Región *</label>
+                                                <div id="lista-regiones">
+                                                    <select readonly name="regiones-select" id="regiones-select"
+                                                        class="form-control custom-select" formControlName="jur_reg_id"
+                                                        (change)="cambiarRegionJuridico()">
+                                                        <option [ngValue]=null disabled>Seleccionar</option>
+                                                        <option [ngValue]="REGION.REG_ID" *ngFor="let REGION of REGIONES" disabled>
+                                                            {{REGION.REG_NOMBRE}}</option>
+                                                    </select>
+                                                </div>
+                                                <div *ngIf="jur_reg_id.invalid && (jur_reg_id.dirty || jur_reg_id.touched)"
+                                                    class="my-1" style="color: rgb(197, 68, 68);">
+                                                    <div *ngIf="jur_reg_id.errors.required">
+                                                        * La región es requerida
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+    
+                                            <div class="col">
+                                                <div class="barra-azul-lateral"></div>
+                                                <label for="lista-provincia">Provincia *</label>
+                                                <div id="lista-provincia">
+                                                    <select readonly name="provincia-select" id="provincia-select"
+                                                        class="form-control custom-select" formControlName="jur_pro_id"
+                                                        (change)="cambiarProvinciaJuridico()">
+                                                        <option [ngValue]=null disabled>Seleccionar </option>
+                                                        <option [ngValue]="PROVINCIA.PRO_ID"
+                                                            *ngFor="let PROVINCIA of PROVINCIAS" disabled>
+                                                            {{PROVINCIA.PRO_NOMBRE}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                                <div *ngIf="jur_pro_id.invalid && (jur_pro_id.dirty || jur_pro_id.touched)"
+                                                    class="my-1" style="color: rgb(197, 68, 68);">
+                                                    <div *ngIf="jur_pro_id.errors.required">
+                                                        * La provincia es requerida
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+    
+                                            <div class="col-sm-12 col-lg-6 my-2">
+                                                <div class="barra-azul-lateral"></div>
+                                                <label for="lista-distritos">Distrito *</label>
+                                                <div id="lista-distritos">
+                                                    <select readonly name="distritos-select" id="distritos-select"
+                                                        class="form-control custom-select" formControlName="jur_dist_id">
+                                                        <option [ngValue]=null disabled>Seleccionar</option>
+                                                        <option [ngValue]="DISTRITO.DIST_ID"
+                                                            *ngFor="let DISTRITO of DISTRITOS" disabled>{{DISTRITO.DIST_NOMBRE}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                                <div *ngIf="jur_dist_id.invalid && (jur_dist_id.dirty || jur_dist_id.touched)"
+                                                    class="my-1" style="color: rgb(197, 68, 68);">
+                                                    <div *ngIf="jur_dist_id.errors.required">
+                                                        * El distrito es requerido
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+    
+                                            <div class="col-12">
+                                                <div class="barra-azul-lateral"></div>
+                                                <label for="direccionInput">Dirección *</label>
+                                                <input type="text" id="direccionInput" name="direccionInput" readonly
+                                                    class="form-control" formControlName="jur_usu_direccion">
+                                                <div *ngIf="jur_usu_direccion.invalid && (jur_usu_direccion.dirty || jur_usu_direccion.touched)"
+                                                    class="my-1" style="color: rgb(197, 68, 68);">
+                                                    <div *ngIf="jur_usu_direccion.errors.required">
+                                                        * La dirección es requerida
+                                                    </div>
+                                                    <div *ngIf="jur_usu_direccion.errors.maxlength">
+                                                        * Se requieren máximo 150 caracteres
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+    
+                                            <div class="col-sm-12 col-lg-6 my-2">
+                                                <div class="barra-azul-lateral"></div>
+                                                <label for="celularInput">Celular *</label>
+                                                <input type=text id="celularInput" name="celularInput" class="form-control" readonly
+                                                    name="Contrasena" formControlName="jur_usu_celular">
+                                                <small>Ejemplo: +51998745638</small>
+                                                <div *ngIf="jur_usu_celular.invalid && (jur_usu_celular.dirty || jur_usu_celular.touched)"
+                                                    class="my-1" style="color: rgb(197, 68, 68);">
+                                                    <div *ngIf="jur_usu_celular.errors.required">
+                                                        * El número de celular es requerido
+                                                    </div>
+                                                    <div *ngIf="jur_usu_celular.errors.minlength">
+                                                        * Se requiere mínimo 12 caracteres.
+                                                    </div>
+                                                    <div *ngIf="jur_usu_celular.errors.maxlength">
+                                                        * Se requieren máximo 20 caracteres
+                                                    </div>
+                                                    <div *ngIf="jur_usu_celular.errors.pattern">
+                                                        * Formato incorrecto. Se debe colocar '+' al inicio, seguido de
+                                                        números
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+    
+                                            <div class="col-sm-12 col-lg-6 my-2">
+                                                <div class="barra-azul-lateral"></div>
+                                                <label for="fechaInput">Fecha de Nacimiento *</label>
+                                                <input type="date" [max]="maxFecha" id="fechaInput" name="fechaInput" readonly
+                                                    class="form-control" formControlName="jur_usu_fech_nacimiento">
+                                                <div *ngIf="jur_usu_fech_nacimiento.invalid && (jur_usu_fech_nacimiento.dirty || jur_usu_fech_nacimiento.touched)"
+                                                    class="my-1" style="color: rgb(197, 68, 68);">
+                                                    <div *ngIf="jur_usu_fech_nacimiento.errors.required">
+                                                        * La fecha de nacimiento es requerida
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+                                        </div>
+                                    </form>
+                                </ng-template>
+                                <div *ngIf="CLIENTE.CLI_TIPO == 0" class="row mx-4">
+                                    <p> (*) Campo obligatorio</p>
+                                </div>
+                                <div *ngIf="CLIENTE.CLI_TIPO == 1" class="row mx-1">
+                                    <br>
+                                    <p> (*) Campo obligatorio</p>
+                                </div>
+    
+                                <div style="display: flex; justify-content: center;">
+                                    <button 
+                                        *ngIf="CLIENTE.CLI_TIPO == 0; else juridicoButt" 
+                                        (click)="abrirModalActualizacion();mostrarAlerta=false" 
+                                        [disabled]="!clienteForm.controls.usu_dni.value"
+                                        class="btn btn-sm btn float-right btnActualizar">
+                                        ACTUALIZAR
+                                    </button>
+                                    
+                                    <ng-template #juridicoButt>
+                                        <button 
+                                        (click)="abrirModalActualizacion();mostrarAlerta=false" 
+                                        [disabled]="!datosJuridicosForm.controls.jur_usu_dni.value"
+                                        class="btn btn-sm btn float-right btnActualizar">ACTUALIZAR</button>
+                                    </ng-template>
+                                    
+                                    <button 
+                                        (click)="obtenerCliente()"
+                                        class="btn btn-sm btn float-right btnActualizar ml-5">
+                                        CANCELAR
+                                    </button>
+                                </div>
+    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <app-cliente-sidebar id="sidebar2"></app-cliente-sidebar>
+</div>
+
+
+
+<ng-template #modalConfirmacion let-modal>
+
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle"> <label>Confirmación </label></h5>
+        <button type="button" class="close" (click)="cerrarModal(); mensajes = ''" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <p>¿Estás seguro de querer actualizar tus datos?</p>
+    </div>
+    <!-- POGRESS BAR  -->
+    <div style="margin-top: 15px;" class="row">
+        <div class="col-xl-12">
+            <div *ngIf="cargandoDatosModal" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true"
+                    [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button (click)="cerrarModal(); mensajes = ''" style="color: #ffffff;" type="button" class="btn btn-danger bold"
+            data-dismiss="modal"> Cancelar </button>
+        <button (click)="updateCliente()" style="color: #ffffff;" type="button" class="btn btn-success bold"
+            data-dismiss="modal" [disabled]="cargandoDatosModal"> Aceptar </button>
+    </div>
+</ng-template>

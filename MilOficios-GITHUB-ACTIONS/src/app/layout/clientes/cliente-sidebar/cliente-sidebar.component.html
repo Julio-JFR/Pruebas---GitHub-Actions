@@ -1,0 +1,81 @@
+<div class="card" id="sideCard">
+<div  id="sidebar-wrapper" >
+    <div class="d-flex flex-row">
+        <div id="barr" class="barra-azul-lateral"></div>
+        <div class="sidebar-heading pl-1"><label>{{TITULO}}</label></div>
+    </div>
+    <div class="row" style="width: 100%;margin:0">
+        <div class="col-12 raya-separadora-b" >
+        </div>
+    </div>
+    <div class="list-group">
+        <div *ngIf="idCliente > 0; else noId">
+            <a [routerLink]="['../profile']" [routerLinkActive]="['router-link-active']" id="fila1" class="list-group-item list-group-item-action ">
+                <em class="fa fa-user-circle"></em><span id="side">Perfil</span>
+            </a>
+            <a [routerLink]="['../personal-info']" [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action ">
+                <em class="fa fa-address-book"></em><span id="side">Información Personal</span>
+            </a>
+            <a [routerLink]="['../payment']" [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action ">
+                <em class="fa fa-credit-card"></em><span id="side">Configuración de tarjeta</span>
+            </a>
+            <a [routerLink]="['../service']" [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action ">
+                <em class="fa fa-tasks"></em><span id="side">Servicios</span>
+            </a>
+            <a [routerLink]="['../bonus']" [routerLinkActive]="['router-link-active']" id="ultimafila" class="list-group-item list-group-item-action ">
+                <em class="fa fa-ticket"></em><span id="side">Bonos Acumulados</span>
+            </a>
+        </div>
+        <ng-template #noId>
+            <a [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action" style="opacity: 50%;">
+                <em class="fa fa-user-circle"></em><span style="opacity: 50%;">Perfil</span>
+            </a>
+            <a [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action bg-light" style="opacity: 50%;">
+                <em class="fa fa-address-book"></em><span>Información Personal</span>
+            </a>
+            <a [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action bg-light" style="opacity: 50%;">
+                <em class="fa fa-credit-card"></em><span>Configuración de tarjeta</span>
+            </a>
+            <a [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action bg-light" style="opacity: 50%;">
+                <em  class="fa fa-tasks"></em><span>Servicios</span>
+            </a>
+            <a [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action bg-light" style="opacity: 50%;">
+                <em class="fa fa-ticket"></em><span>Bonos Acumulados</span>
+            </a>
+        </ng-template>
+    </div>
+</div>
+
+</div>
+
+<div class="row list-group"  id="sidebarResponsive">
+    <div *ngIf="idCliente > 0; else noId">
+        <button type="button" id="botones" class="btn btn-secondary">
+            <a routerLink="/app/cliente/profile" [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action" >
+                <em class="fa fa-fw fa-user-circle" id="iconosSide"></em>
+            </a>
+        </button>
+        <button type="button" id="botones" class="btn btn-secondary">
+            <a routerLink="/app/cliente/personal-info" [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action">
+                <em class="fa fa-fw fa-address-book" id="iconosSide"></em>
+            </a>
+        </button>
+        <button type="button" id="botones" class="btn btn-secondary">
+            <a routerLink="/app/cliente/payment" [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action">
+                <em class="fa fa-credit-card" id="iconosSide"></em>
+            </a>
+        </button>
+        <button type="button" id="botones" class="btn btn-secondary">
+            <a routerLink="/app/cliente/service" [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action">
+                <em class="fa fa-tasks" id="iconosSide"></em>
+            </a>
+        </button>
+        <button type="button" id="botones" class="btn btn-secondary">
+            <a routerLink="/app/cliente/bonus" [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action">
+                <em  class="fa fa-ticket" id="iconosSide"></em>
+            </a>
+        </button>
+    </div>
+</div>
+
+

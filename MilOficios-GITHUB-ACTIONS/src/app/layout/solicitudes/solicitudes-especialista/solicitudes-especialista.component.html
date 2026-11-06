@@ -1,0 +1,444 @@
+<app-alerta-general 
+    *ngIf="mostrarAlerta"
+    [tipoAlerta]="tipoAlerta">
+    {{mensaje}}
+</app-alerta-general>
+<app-page-header [heading]="'Solicitudes de Servicios'"></app-page-header>
+<div style="margin-top: 15px;" class="row">
+    <div class="col-xl-12">
+        <div *ngIf="cargando" class="progress" style="height:.1rem">
+            <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+        </div>
+    </div>
+</div>
+
+<triangular-bar></triangular-bar>
+
+<br>
+
+
+<div *ngIf="SERVICIOS?.length > 0; else no_servicios">
+    <em class="fa fa-filter float-right" style="width: 1.5rem;" ngbTooltip="Filtrar" (click)="modal.open(elementModalFiltro, {size: 'lg'});" style="opacity: 100%"></em>
+</div>
+<ng-template #no_servicios>
+    <em class="fa fa-filter float-right" style="width: 1.5rem;" ngbTooltip="Filtrar" style="opacity: 60%; cursor: default;"></em>
+</ng-template>
+<label class="float-right filter-label">Filtrar</label>
+<br>
+<div class="row" style="width: 100%;" *ngIf="this.SOLICITUDES.length > 0 ; else no_data">
+    <div class="col-12 col-md-7 col-lg-5 col-xl-4 mt-3" *ngFor="let solicitud of this.SOLICITUDES  | slice:(currentPage-1)*itemsPerPage:currentPage*itemsPerPage ; let i = index">
+        <div  class="card" style="min-height:40rem" [ngStyle]="{'height': solicitud.IS_COLLAPSED==true ? '40rem' : '58rem'}">
+            <div class="relative card-body">
+                <div class="row-12">
+                    <div class="barra-azul-lateralB position-absolute"></div>
+                    <div 
+                        class="flex-row d-flex justify-content-between sidebar-heading bold-tipografy" 
+                        id="boldtipoStyleB">
+                        <h4 class="mr-3">{{solicitud?.SER_NOMBRES}}</h4>
+                        <h4 class="mr-3">---{{solicitud.MON_SIMBOLO}}{{definirPrecioCard(solicitud)}}</h4>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col">
+                        <p class="float-right mb-1" style="font-size:medium;"><strong>Comisiones e impuestos: {{solicitud.MON_SIMBOLO}}{{solicitud.comisiones |  number:'.2-2'}}</strong></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p class="float-right" style="font-size:medium;"><strong> Monto a recibir: {{solicitud.MON_SIMBOLO}}{{solicitud.montoRecibir |  number:'.2-2'}}</strong></p>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <em class="fa fa-comment" id="iconstyle"></em>
+                    <div style="margin-left: 0px;" class="col">
+                        <h6 style="margin-left: 0px;" class="card-text">
+                            <strong class="pr-1"><label>Comentarios:</label></strong> {{solicitud?.SOL_DESCRIPCION}}
+                        </h6>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <em class="fa fa-calendar" id="iconstyle"></em>
+                    <div style="margin-left: 0px;" class="col">
+                        <h6 style="margin-left: 0px;" class="card-text">
+                            <strong class="pr-1"><label>Fecha:</label></strong> {{solicitud.FECHA | date: 'dd/MM/yyyy'}}
+                        </h6>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <em class="fa fa-clock-o" id="iconstyle"></em>
+                    <div style="margin-left: 0px;" class="col">
+                        <h6 style="margin-left: 0px;" class="card-text">
+                            <strong class="pr-1"><label>Hora:</label></strong> {{solicitud.HORA}}
+                        </h6>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <em class="fa fa-map-marker" id="iconstyle"></em>
+                    <div style="margin-left: 0px;" class="col">
+                        <ng-container *ngIf="solicitud.tipoSol == 2;else SolRemota">
+                            <h6 style="margin-left: 0px;" class="card-text">
+                                <strong class="pr-1"><label>Dirección:</label></strong>
+                                <strong style="color:#3DC2C9">{{solicitud.UBI_DIRECCION}}</strong>
+                                <em ngbTooltip="¿Cómo llegar?" 
+                                (click)="abrirModalCroquis(solicitud)" 
+                                style="width: 1.2rem; cursor: pointer; margin-left: 5px;" 
+                                class="fa fa-question-circle-o"></em>
+                            </h6>
+                            <p *ngIf="!solicitud.UBI_DIRECCION.includes('remoto') && isDesktopDevice && !solicitud.IS_CONFIRMACION" style="color:rgb(255, 5, 5); text-align: center;" > *Debes confirmar tu ubicación para aceptar la solicitud.</p>
+                        </ng-container>
+                        <ng-template #SolRemota>
+                            <h6 style="margin-left: 0px;" class="card-text">
+                                <strong class="pr-1"><label>Dirección:</label></strong>
+                                <strong style="color:#3DC2C9">{{solicitud.UBI_DIRECCION}}</strong>
+                            </h6>
+                        </ng-template>
+                    </div>
+                </div>
+                <br>
+                <div class="row" style="text-align: center;">
+                    <div class="col"> 
+                        <h6 class="card-text" >
+                            <span class="view-details" (click)="abrirModalModificarPrecio(solicitud)" >¿Deseas modificar el precio?</span>
+                        </h6>
+                    </div>
+                </div>
+                
+                <div *ngIf="!solicitud.IS_COLLAPSED">
+                    <br>
+                    <hr>
+                    <br>
+                    <div class="row">
+                        <div class="col-12"> 
+                            <img [src]="dominio+solicitud.USU_FOTO" appImgRota [url]="solicitud.USU_SEXO =='M' ? '../../../assets/images/AVATAR-PREDETERMINADO-HOMBRE.png': '../../../assets/images/AVATAR-PREDETERMINADO-MUJER.png'" alt="Foto del Cliente">
+                        </div>
+                    </div>
+                    <div class="row ml-3">
+                        <em class="fa fa-user" id="iconstyle"></em>
+                        <div class="col pl-2">
+                            <h6 class="card-text">
+                                <label>Cliente:</label>&nbsp; {{solicitud.USU_NOMBRES}} {{solicitud.USU_APE_PAT}} {{solicitud.USU_APE_MAT}}
+                            </h6>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row ml-3">
+                        <em class="fa fa-star-o" id="iconstyle"></em>
+                        <div class="col pl-2">
+                            <h6 class="card-text">
+                                <label>Calificación:</label>&nbsp; <ngb-rating  [(rate)]="solicitud.USU_CALIFICACION" [starTemplate]="t" [readonly]="true" 
+                                [max]="5"></ngb-rating> 
+                            </h6>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row ml-3">
+                        <em class="fa fa-check" id="iconstyle"></em>
+                        <div class="col pl-2">
+                            <h6 class="card-text">
+                                <label>Detalles del servicio:</label>&nbsp; {{solicitud.SER_DESCRIPCION}}
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="col-12 my-3"> 
+                        <button type="btn" class="btn" style="background: #3e11bc; color:white" (click)="abrirModalImagenes(solicitud.SOL_ID)"  >Ver imágenes</button>
+                    </div>
+                    
+                    <!-- <div class="col-12 my-3"> 
+                        <h6 class="card-text">
+                            <ng-template #t let-fill="fill">
+                                <span class="star" [class.full]="fill === 100">
+                                <span class="half" [style.width.%]="fill">&#9733;</span>&#9733;
+                                </span>
+                            </ng-template>
+                        </h6>
+                    </div>
+                    <br> -->
+                </div>
+                <br *ngIf="solicitud.IS_COLLAPSED">
+                <div class="row" style="margin-left: 3px">
+                    <span class="view-details" *ngIf="solicitud.IS_COLLAPSED; else Colapsed" (click)="solicitud.IS_COLLAPSED = !solicitud.IS_COLLAPSED" [attr.aria-expanded]="!solicitud.IS_COLLAPSED" aria-controls="collapseDetails">Más detalles</span>
+                    <ng-template #Colapsed>
+                        <span class="view-details" (click)="solicitud.IS_COLLAPSED = !solicitud.IS_COLLAPSED" [attr.aria-expanded]="!solicitud.IS_COLLAPSED" aria-controls="collapseDetails">Menos detalles</span>
+                    </ng-template>
+                </div>
+                <div class="d-flex flex-column justify-content-end" style="position: absolute; bottom: 8px;right: 2rem;">
+                    <button 
+                        (click)="aceptarSolicitud(solicitud, solicitud?.USU_EMAIL, solicitud?.SER_PRECIO_BASE)" class=" btn btn-lg btn-success float-right" [disabled]="cargando"><label style="float: right;"></label>Aceptar</button>
+                </div>
+            </div>
+        </div>
+        <br>
+    </div>
+    <br>
+</div>
+
+<ng-template #no_data>
+    <h3 *ngIf="!cargando" class="text-center container">No se encontraron solicitudes disponibles</h3>
+</ng-template>
+
+<div *ngIf="SOLICITUDES.length > 0 || SOLICITUDES_REMOTAS.length > 0" style="margin-top: 15px; margin-bottom: 20px;" class="row box-footer clearfix">     
+    <div class="col-xl-10 col-lg-9 col-md-9 col-sm-9 col-7">
+        <ngb-pagination *ngIf="SOLICITUDES?.length> itemsPerPage" class="d-flex justify-content-start"  [maxSize]="6" [pageSize]="itemsPerPage"  [collectionSize]="SOLICITUDES?.length + SOLICITUDES_REMOTAS?.length" [(page)]="currentPage"></ngb-pagination>
+    </div>
+    <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-5">
+        <select class="pull-right" [(ngModel)]="itemsPerPage"  (ngModelChange)="prueba($event)" class="form-control form-control-sm custom-select">
+        <option [value]="6">6 elementos</option>
+        <option [value]="10">10 elementos</option>
+        <option [value]="14">14 elementos</option>
+        <option [value]="20">20 elementos</option>                    
+        </select>  
+    </div>    
+</div>
+    
+<!-- </div> -->
+
+
+<!-- MODAL DE MODIFICAR PRECIO  -->
+<ng-template #modalModificarPrecio let-modal >
+    <div class="modal-header">
+        <h4  id="exampleModalLongTitle"><label>Modificación del Precio</label></h4>
+        <button style="color: black;" type="button" (click)="closeModal()" class="close" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    
+    <div class="modal-body" >
+        <app-alerta-modal *ngIf="mostrarMensajeModal" [tipoAlerta]="tipoAlerta">{{mensajeModal}}</app-alerta-modal>
+
+        <div class="form-group">
+            <form [formGroup]="precioForm"  >
+                <div class="d-flex flex-row centrar">
+                    <button (click)="disminuirPrecioBase()" style="color:rgb(245, 241, 241); background-color:  var(--color-primary); float:right" type="btn" class="btn">-</button>
+                    <div class="col-3"  >
+                        <input style="text-align: center;" formControlName="precio"  type="text" class="form-control form-control-sm-2" id="exampleInputPrecio" aria-describedby="emailHelp">
+                        <div *ngIf="precio.invalid && (precio.dirty || precio.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                            <div *ngIf="precio.errors.pattern">
+                            * Solo se permiten caracteres númericos.
+                            </div>
+                            <div *ngIf="precio.errors.required">
+                                * El campo es requerido.
+                            </div>
+                        </div>
+                    </div>
+                    <button (click)="aumentarPrecioBase()"  style="color:rgb(245, 241, 241); background-color: var(--color-primary);"  type="btn" class="btn">+</button>
+                    
+                </div>
+            </form><br>
+            <div class="row">
+                <div class="col">
+                    <p style="float: right;">Precio mínimo: {{precioMinimo}} </p>
+                </div>
+                <div class="col">
+                    <p>Precio máximo: {{precioMaximo}} </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer" >
+        <button (click)="closeModal()" type="button" class="btn btn-danger" data-dismiss="modal"  >Cancelar</button>
+        <button [disabled]="precioForm.invalid || mostrarMensajeModal" (click)="modificarPrecioDeLaSolicitud()" type="button" class="btn btn-success" 
+           >
+            Aceptar
+        </button>
+      <!-- [disabled]="precioForm.get('precio').value > precioMaximo" -->
+    </div>
+</ng-template>
+
+
+
+<!-- MODAL DE IMÁGENES  -->
+<ng-template #modalImagenes let-modal >
+    <div class="modal-header">
+      <h4 id="exampleModalLongTitle"><label>Imágenes del Servicio</label></h4>
+      <button style="color: black;" type="button" (click)="closeModal()" class="close" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <!-- POGRESS BAR  -->
+    <div style="margin-top: 15px;" class="row">
+        <div class="col-xl-12">
+            <div *ngIf="cargaDeDato" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body" >
+        <app-alerta-modal *ngIf="mostrarMensajeModal" [tipoAlerta]="tipoAlerta">{{mensajeModal}}</app-alerta-modal>
+
+        <div class="row">
+            <div class="col-12 carousel_img" style="display: flex;align-items: center;justify-content: center;">
+                <ngb-carousel 
+                    *ngIf="SOLICITUDES_IMAGENES.length > 0; else SinImagen"  
+                    [activeId]="activeSliderId"
+                    [class]="SOLICITUDES_IMAGENES.length==1 ? 'prueba':''" >
+                    <ng-template  ngbSlide  *ngFor="let imagen of SOLICITUDES_IMAGENES" >
+                        <div class="carousel_img_side">
+                            <img class="img_side"  [src]="imagen" appImgRota [url]="'../../../assets/images/no-img.png'" alt="Mil Oficios">
+                        </div>
+                    </ng-template>
+                </ngb-carousel>
+                <ng-template #SinImagen>
+                    <span style="font-size: larger; font-weight: 600;display: flex; justify-content: center;" *ngIf="!cargaDeDato">No hay imágenes registradas</span>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+
+
+<!-- CROQUIS DE COMO LLEGAR AL LUGAR  -->
+<ng-template #modalCroquis let-modal>
+    <div class="modal-header" style="position: sticky;">
+      <h5 id="titulo"><label>¿Cómo llegar?</label></h5>
+      <div id="pac-container">
+        <input id="pac-input " class="pac-container form-control" ngx-google-places-autocomplete [options]='options'
+        (onAddressChange)="handleAddressChange($event)" placeholder="Ingrese una ubicación"  />
+        </div>
+      <button type="button" (click)="closeModal()" class="close" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body" id="map">
+        <app-alerta-modal *ngIf="mostrarAlertaGoogle" [tipoAlerta]="tipoAlerta">{{mensaje}}</app-alerta-modal>
+
+        <br>
+        <agm-map width="750" height="450" [latitude] = "origin.lat" [longitude] = "origin.lng" (mapClick) = "setPosicionGpsPuntoA($event)" [zoom] = "7">
+        <agm-marker [latitude] = "origin.lat"  [longitude] = "origin.lng"></agm-marker>
+        <agm-marker [latitude] = "cliente.UBI_LATITUD"  [longitude] = "cliente.UBI_LONGITUD" [agmFitBounds] = 'true'></agm-marker></agm-map>
+    </div>
+    <br>
+    <div  id="footer" >
+        <div class="row">
+            <label style="margin-left: 2rem; margin-bottom: 0;">Leyenda</label>
+        </div>
+        <div class="row">
+            <p *ngIf="isDesktopDevice;else noLeyendaDesktop" style="margin-left: 2rem; margin-bottom: 0;" >Punto A: Ubicación de Especialista.  </p>
+            <p *ngIf="isDesktopDevice" style="margin-left: 2rem; margin-bottom: 0;" ><label> Hacer clic en el mapa para confirmar la ubicación y conocer la ruta correcta hacia el cliente.</label></p><br>
+            <ng-template #noLeyendaDesktop>
+                <p  style="margin-left: 2rem; margin-bottom: 0;" >Punto A: Ubicación de Especialista.</p>
+            </ng-template>
+        </div>
+        <br>
+        <div class="row">
+            <p style="margin-left: 2rem; margin-bottom: 0;">Punto B: Ubicación de Cliente.</p>
+        </div>
+        <br>
+        <div class="d-flex flex-row mr-3" style="justify-content: end;"  >
+            <div class="modal-footer border-0">
+                <button style="margin-left: 2rem; margin-bottom: 0;" *ngIf="isDesktopDevice;else noDesktop" 
+                    (click)="confirmarUbicacionEspecialista()" 
+                    type="button" class="btn btn-success bold" style="color: #ffffff; float: right; ">Confirmar</button>
+            </div>
+
+            <ng-template #noDesktop>
+                <button style="margin-left: 2rem; margin-bottom: 0;" (click)="closeModal()" type="button" class="btn btn-danger bold" style="color: #ffffff; float: right; "  data-dismiss="modal" >Cerrar</button>
+            </ng-template>
+        </div>
+        <br>
+    </div>
+</ng-template>
+
+
+<!-- MODAL FILTRO  -->
+<ng-template #modalFiltro let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title"><label>Filtros</label></h5>
+        <span type="button" class="close" (click)="modal.dismiss()">&times;</span>
+    </div>
+
+    <div class="modal-body" id="filtro-mod" >
+        <h6 class="my-2">
+            <div class="barra-azul-lateral"></div>
+            <label>Servicio</label>
+        </h6>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-check my-1">
+                    <p class="form-check-label">
+                        <input type="checkbox" id="select-all" class="form-check-input"  [checked]="todosSeleccionados" [(ngModel)]="todosSeleccionados" (change)="checkUncheckAll()">
+                        Seleccionar todos
+                    </p>
+                </div>
+            </div>
+            <div *ngFor="let servicio of SERVICIOS " class="col-sm-4">
+                <div class="form-check my-1">
+                    <p class="form-check-label">
+                        <input type="checkbox" 
+                            (change)="servicio.isSelected = !servicio.isSelected; addRemoveServicio($event)" 
+                            [checked]="servicio.isSelected" class="form-check-input">
+                        {{servicio.SER_NOMBRES}}
+                    </p>
+                </div>
+            </div>         
+        </div>
+
+        <h6 class="my-4">
+            <div class="barra-azul-lateral"></div>
+            <label>Fecha</label>
+        </h6>
+        <div class="row">
+            <div class="col-sm-12 col-md-6">
+                <label for="fecha-inicio">Desde</label>
+                <input type="date" name="fecha-inicio" ngModel max={{filtroFechaFin}} [(ngModel)]="filtroFechaInicio" class="form-control form-control-sm">
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <label for="fecha-fin">Hasta</label>
+                <input type="date" name="fecha-fin" ngModel min={{filtroFechaInicio}} [(ngModel)]="filtroFechaFin" class="form-control form-control-sm">
+            </div>
+        </div>
+        
+        <h6 class="my-4">
+            <div class="barra-azul-lateral"></div>
+            <label>Precio</label>
+        </h6>
+        <div class="row">
+            <div class="col-sm-12 col-md-6">
+                <label for="precio-desde">Desde</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text bg-transparent border-right-0">
+                            S/
+                        </div>
+                    </div>
+                    <input type="text" name="precio-desde" ngModel onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46" [(ngModel)]="filtroPrecioInicio" class="form-control form-control-sm">
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <label for="precio-hasta">Hasta</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text bg-transparent border-right-0">
+                            S/
+                        </div>
+                    </div>
+                    <input type="text" name="precio-hasta" ngModel onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46" [(ngModel)]="filtroPrecioFin" class="form-control form-control-sm">
+                </div>
+            </div>
+        </div>
+
+        <h6 class="my-4">
+            <div class="barra-azul-lateral"></div>
+            <label>Ordenar por</label>
+        </h6>
+        <div class="row">
+            <div class="col">
+                <select name="tipo-orden-select"class="form-control form-control-sm custom-select" [(ngModel)]="ordenPor">
+                    <option [ngValue]=orden_seleccion.order_code *ngFor="let orden_seleccion of ORDENAR_SELECCION"> {{orden_seleccion.order_text}} </option>
+                </select>
+            </div>
+        </div>
+        
+    </div>
+    
+    <div class="modal-footer">
+      <button (click)="closeModal()" type="button" class="btn btn-danger bold" data-dismiss="modal" >Cancelar</button>
+      <button (click)="eliminar_filtro = true; eliminarFiltros()" type="button" class="btn btn-danger bold" data-dismiss="modal" >Eliminar Filtros</button>
+      <!-- [disabled] = "areAllUnchecked()" -->
+      <button (click)="verificarFiltros(); getCheckedServicios();" type="button" class="btn btn-success bold" data-dismiss="modal" >Filtrar</button>
+    </div>
+</ng-template>

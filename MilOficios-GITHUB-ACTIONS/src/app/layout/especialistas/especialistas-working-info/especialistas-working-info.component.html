@@ -1,0 +1,384 @@
+<app-alerta-general 
+    *ngIf="mostrarAlerta"
+    [mostrarAlerta]="mostrarAlerta"
+    [tipoAlerta]="tipoAlerta">
+    {{mensaje}}
+</app-alerta-general>
+
+<div style="margin-top: 15px;" class="row">    
+  <div class="col-xl-12">
+    <div *ngIf="cargandoDatos" class="progress" style="height:.1rem">
+      <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+    </div>
+  </div>   
+</div>
+<br>
+<div class="d-flex" id="wrapper">
+  <app-especialistas-sidebar id="sidebar"></app-especialistas-sidebar>
+    <div class="container" >
+      <div class="card" id="cardstyle">
+          <div class="container">
+              <div class="card-design">
+                  <div class="card border-top-0 border-left-0 border-right-0 pl-2">
+                      <h5 class="" style="background: white;"> 
+                        <label> {{(TIPO_ESPECIALISTA == '0')?'Experiencias Laborales':(TIPO_ESPECIALISTA == '1')?'Clientes destacados':''}} </label>
+                      </h5>
+
+                      <triangular-bar></triangular-bar>
+                      <div class="col-12 my-2">
+                      <button type="button" class="btn btn-sm btn-success float-right" id="actualizarData" (click)="mostrarAlerta = false; 
+                        mensaje='';agregarExperienciaLaboralConContacto()" [disabled]="cargandoDatos || experienciaLaboralForm.invalid">AGREGAR</button>
+                      </div>
+
+                      <div class="card-body" style="margin-top: -1rem;">
+                          <form [formGroup]="experienciaLaboralForm">
+                              <div class="row">
+                                  <div class="col-sm-12 col-lg-6 my-3">
+                                    <div class="barra-azul-lateral"></div>
+                                      <label for="funcionInput">{{(TIPO_ESPECIALISTA == '0')?'Especialidad':(TIPO_ESPECIALISTA == '1')?'Tipo de servicio':''}} *</label>
+                                      <input type="text" id="sizeinput" name="funcionInput" class="form-control" formControlName="exp_especialidad">
+                                      <div *ngIf="exp_especialidad.invalid && (exp_especialidad.dirty || exp_especialidad.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                          <div *ngIf="exp_especialidad.errors.required">
+                                            {{(TIPO_ESPECIALISTA == '0')?'* La especialidad es requerida':' *El tipo de servicio es requerido'}}
+                                            
+                                          </div>
+                                          <div *ngIf="exp_especialidad.errors.maxlength">
+                                            * Se requieren máximo 20 caracteres 
+                                          </div>
+                                          <div *ngIf="exp_especialidad.errors.pattern">
+                                            * Solo se permiten caracteres alfabéticos
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div class="col-sm-12 col-lg-6 my-3">
+                                    <div class="barra-azul-lateral"></div>
+                                      <label for="lugarInput">{{(TIPO_ESPECIALISTA == '0')?'Empresa':(TIPO_ESPECIALISTA == '1')?'Cliente':''}} *</label>
+                                      <input type="text" id="sizeinput" name="lugarInput" class="form-control" formControlName="exp_empresa">
+                                      <div *ngIf="exp_empresa.invalid && (exp_empresa.dirty || exp_empresa.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                          <div *ngIf="exp_empresa.errors.required">
+                                            * {{(TIPO_ESPECIALISTA == '0')?'La empresa es requerida':(TIPO_ESPECIALISTA == '1')?'El cliente es requerido':''}}
+                                          </div>
+                                          <div *ngIf="exp_empresa.errors.maxlength">
+                                            * Se requieren máximo 20 caracteres 
+                                          </div>
+                                          <div *ngIf="exp_empresa.errors.pattern">
+                                            * Solo se permiten caracteres alfabéticos
+                                          </div>
+                                      </div>
+                                  </div>
+                              
+                                  <div class="col-sm-12 col-lg-6 my-3">
+                                    <div class="barra-azul-lateral"></div>
+                                      <label for="fechaInicioInput">Fecha de Inicio *</label>
+                                      <input type="date" id="sizeinput" name="fechaInicioInput" class="form-control" formControlName="exp_fech_ini">
+                                      <div *ngIf="exp_fech_ini.invalid && (exp_fech_ini.dirty || exp_fech_ini.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                          <div *ngIf="exp_fech_ini.errors.required">
+                                            * La fecha de inicio es requerida
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div class="col-sm-12 col-lg-6 my-3">
+                                    <div class="barra-azul-lateral"></div>
+                                      <label for="fechaFinInput">Fecha de Finalización *</label>
+                                      <label class="pull-right" ><input type="checkbox" (change)="procesoDatosCheckExperiencia()" [checked]="isCheckExperiencia"><small > En curso</small></label>
+                                      <input type="date" id="sizeinput" name="fechaFinInput" class="form-control" formControlName="exp_fech_fin">
+                                      <div *ngIf="exp_fech_fin.invalid && (exp_fech_fin.dirty || exp_fech_fin.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                          <div *ngIf="exp_fech_fin.errors.required">
+                                            * La fecha de fin es requerida
+                                          </div>
+                                      </div>
+                                  </div>
+                              
+                                  <div class="col-12">
+                                    <div class="barra-azul-lateral"></div>
+                                      <label for="descripcionInput">Descripción *</label>
+                                      <textarea class="form-control" id="biginput" name="descripcionInput" rows="3" formControlName="exp_descripcion"></textarea>
+                                      <div *ngIf="exp_descripcion.invalid && (exp_descripcion.dirty || exp_descripcion.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                          <div *ngIf="exp_descripcion.errors.required">
+                                            * La descripción es requerida
+                                          </div>
+                                          <div *ngIf="exp_descripcion.errors.maxlength">
+                                            * Se requieren máximo 60 caracteres 
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+              <div class="card-design">
+                  <div class="card border-top-0 border-left-0 border-right-0">
+                      <h5 class="card-header" style="background: white;"><label>Contactos de Referencia</label></h5>
+                      <div class="card-body" style="margin-top: -1rem;">
+                          <form [formGroup]="experienciaLaboralForm">
+                              <div class="row">
+                                  <div class="col-sm-12 col-lg-6 my-3">
+                                    <div class="barra-azul-lateral"></div>
+                                      <label for="nombreInput">Nombres *</label>
+                                      <input type="text" id="sizeinput" name="nombreInput" class="form-control" formControlName="cont_nombres">
+                                      <div *ngIf="cont_nombres.invalid && (cont_nombres.dirty || cont_nombres.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                          <div *ngIf="cont_nombres.errors.required">
+                                            * El nombre es requerido
+                                          </div>
+                                          <div *ngIf="cont_nombres.errors.maxlength">
+                                            * Se requieren máximo 50 caracteres 
+                                          </div>
+                                          <div *ngIf="cont_nombres.errors.pattern">
+                                              * Solo se permiten caracteres alfabéticos
+                                            </div>
+                                      </div>
+                                  </div>
+                                  <div class="col-sm-12 col-lg-6 my-3">
+                                    <div class="barra-azul-lateral"></div>
+                                      <label for="apellidoInput">Apellidos *</label>
+                                      <input type="text" id="sizeinput" name="apellidoInput" class="form-control" formControlName="cont_apellidos">
+                                      <div *ngIf="cont_apellidos.invalid && (cont_apellidos.dirty || cont_apellidos.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                          <div *ngIf="cont_apellidos.errors.required">
+                                            * El apellido es requerido
+                                          </div>
+                                          <div *ngIf="cont_apellidos.errors.maxlength">
+                                            * Se requieren máximo 30 caracteres 
+                                          </div>
+                                          <div *ngIf="cont_apellidos.errors.pattern">
+                                              * Solo se permiten caracteres alfabéticos
+                                            </div>
+                                      </div>
+                                  </div>
+                              
+                                  <div class="col-sm-12 col-lg-6 my-3">
+                                    <div class="barra-azul-lateral"></div>
+                                      <label for="emailInput">Correo Electrónico *</label>
+                                      <input type="email" id="sizeinput" name="emailInput" class="form-control" formControlName="cont_email">
+                                      <div *ngIf="cont_email.invalid && (cont_email.dirty || cont_email.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                          <div *ngIf="cont_email.errors.required">
+                                            * El correo es requerido
+                                          </div>
+                                          <div *ngIf="cont_email.errors.maxlength">
+                                            * Se requieren máximo 60 caracteres 
+                                          </div>
+                                          <div *ngIf="cont_email.errors.pattern">
+                                              * El correo ingresado no tiene un formato válido
+                                            </div>
+                                      </div>
+                                  </div>
+                                  <div class="col-sm-12 col-lg-6 my-3">
+                                    <div class="barra-azul-lateral"></div>
+                                      <label for="celularInput">Celular *</label>
+                                      <input type="text" id="sizeinput" name="celularInput" class="form-control" formControlName="cont_celular">
+                                      <small id="sin_estilo">Ejemplo: +51998745638</small>
+                                      <div *ngIf="cont_celular.invalid && (cont_celular.dirty || cont_celular.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                          <div *ngIf="cont_celular.errors.required">
+                                            * El celular es requerido
+                                          </div>
+                                          <div *ngIf="cont_celular.errors.maxlength">
+                                            * Se requieren máximo 20 caracteres 
+                                          </div>
+                                          <div *ngIf="cont_celular.errors.minlength">
+                                            * Se requieren mínimo 12 caracteres 
+                                          </div>
+                                          <div *ngIf="cont_celular.errors.pattern">
+                                              * Formato incorrecto. Se debe colocar '+' al inicio, seguido de números
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+              <br>
+              <div style="margin-top: 15px;" class="row">    
+                <div class="col-xl-12">
+                  <div *ngIf="cargandoActualizar" class="progress" style="height:.1rem">
+                    <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+                  </div>
+                </div>   
+              </div>
+              
+              <div class="card-design" *ngFor="let EXPERIENCIA_LABORAL of EXPERIENCIAS_LABORALES | slice:(currentPage-1)*itemsPerPage:currentPage*itemsPerPage">
+                  <div class="card border-0">
+                      <h5 class="card-header" style="background: white; border-bottom: 1px solid #24DEEC;" (click)="setCollapsed(EXPERIENCIA_LABORAL); updateValuesExperienciaLaboralUpdate(EXPERIENCIA_LABORAL)" [attr.aria-expanded]="!EXPERIENCIA_LABORAL['IS_COLLAPSED']" aria-controls="collapseExample">
+                          <label>
+                            {{EXPERIENCIA_LABORAL.EXP_ESPECIALIDAD}} - {{EXPERIENCIA_LABORAL.EXP_EMPRESA}} 
+                            <em class="fa fa-chevron-down"></em>
+                          </label>
+                      </h5>
+                      <div class="card-body" id="collapseExample" [ngbCollapse]="EXPERIENCIA_LABORAL['IS_COLLAPSED']">
+                          <form [formGroup]="experienciaLaboralUpdateForm">
+                              <div class="row">
+                                  <div class="col-sm-12 col-lg-6 my-3">
+                                    <div class="barra-azul-lateral"></div>
+                                      <label for="especialidadInput">{{(TIPO_ESPECIALISTA == '0')?'Especialidad':(TIPO_ESPECIALISTA == '1')?'Tipo de Servicio':''}} *</label>
+                                      <input type="text" class="form-control" id="sizeinput" formControlName="exp_especialidad_update">
+                                      <div *ngIf="exp_especialidad_update.invalid && (exp_especialidad_update.dirty || exp_especialidad_update.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                          <div *ngIf="exp_especialidad_update.errors.required">
+                                            * El campo requerido
+                                          </div>
+                                          <div *ngIf="exp_especialidad_update.errors.maxlength">
+                                            * Se requieren máximo 20 caracteres 
+                                          </div>
+                                          <div *ngIf="exp_especialidad_update.errors.pattern">
+                                            * Solo se permiten caracteres alfabéticos
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div class="col-sm-12 col-lg-6 my-3">
+                                    <div class="barra-azul-lateral"></div>
+                                      <label for="empresaInput">{{(TIPO_ESPECIALISTA == '0')?'Empresa':(TIPO_ESPECIALISTA == '1')?'Cliente':''}} *</label>
+                                      <input type="text" class="form-control" id="sizeinput" formControlName="exp_empresa_update">
+                                      <div *ngIf="exp_empresa_update.invalid && (exp_empresa_update.dirty || exp_empresa_update.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                          <div *ngIf="exp_empresa_update.errors.required">
+                                            * {{(TIPO_ESPECIALISTA == '0')?'La empresa es requerida':(TIPO_ESPECIALISTA == '1')?'El cliente es requerido':''}} 
+                                          </div>
+                                          <div *ngIf="exp_empresa_update.errors.maxlength">
+                                            * Se requieren máximo 20 caracteres 
+                                          </div>
+                                          <div *ngIf="exp_empresa_update.errors.pattern">
+                                            * Solo se permiten caracteres alfabéticos
+                                          </div>
+                                      </div>
+                                  </div>
+                              
+                                  <div class="col-sm-12 col-lg-6 my-3">
+                                    <div class="barra-azul-lateral"></div>
+                                      <label for="nombresInput">Nombres de Contacto *</label>
+                                      <input type="text" class="form-control" id="sizeinput" formControlName="cont_nombres_update">
+                                      <div *ngIf="cont_nombres_update.invalid && (cont_nombres_update.dirty || cont_nombres_update.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                          <div *ngIf="cont_nombres_update.errors.required">
+                                            * El nombre es requerido
+                                          </div>
+                                          <div *ngIf="cont_nombres_update.errors.maxlength">
+                                            * Se requieren máximo 50 caracteres 
+                                          </div>
+                                          <div *ngIf="cont_nombres_update.errors.pattern">
+                                              * Solo se permiten caracteres alfabéticos
+                                            </div>
+                                      </div>
+                                  </div>
+                                  <div class="col-sm-12 col-lg-6 my-3">
+                                    <div class="barra-azul-lateral"></div>
+                                      <label for="apellidosInput">Apellidos de Contacto *</label>
+                                      <input type="text" class="form-control" id="sizeinput" formControlName="cont_apellidos_update">
+                                      <div *ngIf="cont_apellidos_update.invalid && (cont_apellidos_update.dirty || cont_apellidos_update.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                          <div *ngIf="cont_apellidos_update.errors.required">
+                                            * El apellido es requerido
+                                          </div>
+                                          <div *ngIf="cont_apellidos_update.errors.maxlength">
+                                            * Se requieren máximo 30 caracteres 
+                                          </div>
+                                          <div *ngIf="cont_apellidos_update.errors.pattern">
+                                              * Solo se permiten caracteres alfabéticos
+                                            </div>
+                                      </div>
+                                  </div>
+                              
+                                  <div class="col-sm-12 col-lg-6 my-3">
+                                    <div class="barra-azul-lateral"></div>
+                                      <label for="emailInput">Correo Electrónico *</label>
+                                      <input type="email" class="form-control" id="sizeinput" formControlName="cont_email_update">
+                                      <div *ngIf="cont_email_update.invalid && (cont_email_update.dirty || cont_email_update.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                          <div *ngIf="cont_email_update.errors.required">
+                                            * El correo es requerido
+                                          </div>
+                                          <div *ngIf="cont_email_update.errors.maxlength">
+                                            * Se requieren máximo 60 caracteres 
+                                          </div>
+                                          <div *ngIf="cont_email_update.errors.pattern">
+                                              * El correo ingresado no tiene un formato válido
+                                            </div>
+                                      </div>
+                                  </div>
+                                  <div class="col-sm-12 col-lg-6 my-3">
+                                    <div class="barra-azul-lateral"></div>
+                                      <label for="celularInput">Celular *</label>
+                                      <input type="text" class="form-control" id="sizeinput" formControlName="cont_celular_update">
+                                      <small>Ejemplo: +51998745638</small>
+                                      <div *ngIf="cont_celular_update.invalid && (cont_celular_update.dirty || cont_celular_update.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                          <div *ngIf="cont_celular_update.errors.required">
+                                            * El celular es requerido
+                                          </div>
+                                          <div *ngIf="cont_celular_update.errors.maxlength">
+                                            * Se requieren máximo 20 caracteres 
+                                          </div>
+                                          <div *ngIf="cont_celular_update.errors.minlength">
+                                            * Se requieren mínimo 12 caracteres 
+                                          </div>
+                                          <div *ngIf="cont_celular_update.errors.pattern">
+                                              * Formato incorrecto. Se debe colocar '+' al inicio, seguido de números
+                                          </div>
+                                      </div>
+                                  </div>
+                              
+                                  <div class="col-sm-12 col-lg-6 my-3">
+                                    <div class="barra-azul-lateral"></div>
+                                      <label for="fechaInicioInput">Fecha Inicio *</label>
+                                      <input type="date" class="form-control" id="sizeinput" formControlName="exp_fech_ini_update">
+                                      <div *ngIf="exp_fech_ini_update.invalid && (exp_fech_ini_update.dirty || exp_fech_ini_update.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                          <div *ngIf="exp_fech_ini_update.errors.required">
+                                            * La fecha de inicio es requerida
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div class="col-sm-12 col-lg-6 my-3">
+                                    <div class="barra-azul-lateral"></div>
+                                      <label for="fechaFinInput">Fecha Fin *</label>
+                                      <label class="pull-right" ><input type="checkbox" (change)="procesoDatosCheckEstudioUpdate()" [checked]="isCheckExperienciaActualizar"><small id="sin_estilo"> En curso</small></label>
+                                      <input type="date" class="form-control" id="sizeinput" formControlName="exp_fech_fin_update">
+                                      <div *ngIf="exp_fech_fin_update.invalid && (exp_fech_fin_update.dirty || exp_fech_fin_update.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                          <div *ngIf="exp_fech_fin_update.errors.required">
+                                            * La fecha de fin es requerida
+                                          </div>
+                                      </div>
+                                  </div>
+                              
+                                  <div class="col-12 my-3">
+                                    <div class="barra-azul-lateral"></div>
+                                      <label for="descripcionInput">Descripción *</label>
+                                      <textarea class="form-control" id="biginput" rows="3" formControlName="exp_descripcion_update"></textarea>
+                                      <div *ngIf="exp_descripcion_update.invalid && (exp_descripcion_update.dirty || exp_descripcion_update.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                          <div *ngIf="exp_descripcion_update.errors.required">
+                                            * La descripción es requerida
+                                          </div>
+                                          <div *ngIf="exp_descripcion_update.errors.maxlength">
+                                            * Se requieren máximo 60 caracteres 
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div *ngIf="experienciaLaboralUpdateForm.invalid || cargandoActualizar; else EsEditable">
+                                  <button type="button" class="btn-sm btn-success float-right" [disabled]="true" id="actualizarData" style="opacity: 60%;" (click)="mostrarAlerta = false; mensajes = []; errorActualizar = []; actualizarExperienciaLaboral(EXPERIENCIA_LABORAL); EXPERIENCIA_LABORAL['IS_NOT_EDITABLE'] = true">ACTUALIZAR</button>
+                              </div>
+                              <ng-template #EsEditable>
+                                  <button type="button" class="btn-sm btn-success float-right" id="actualizarData" style="cursor: pointer;" (click)="mostrarAlerta = false; mensajes = []; errorActualizar = []; actualizarExperienciaLaboral(EXPERIENCIA_LABORAL); EXPERIENCIA_LABORAL['IS_NOT_EDITABLE'] = true">ACTUALIZAR</button>
+                              </ng-template>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+              <br><br>
+              <div class="mx-3">
+                <p> (*) Campo obligatorio</p>
+              </div>
+              <div *ngIf="EXPERIENCIAS_LABORALES?.length > 0" style="margin-top: 15px; margin-bottom: 20px;" class="row box-footer clearfix">     
+                <div class="col-xl-9 col-lg-9 col-md-8 col-sm-7 col-8">
+                  <ngb-pagination *ngIf="EXPERIENCIAS_LABORALES?.length > itemsPerPage" class="d-flex justify-content-start" size="sm" [maxSize]="5" [pageSize]="itemsPerPage"  [collectionSize]="EXPERIENCIAS_LABORALES.length" [(page)]="currentPage"></ngb-pagination>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-4 col-sm-5 col-8">
+                  <select class="pull-right" [(ngModel)]="itemsPerPage" class="form-control form-control-sm custom-select">
+                    <option value="10">10 elementos</option>
+                    <option value="15">15 elementos</option>
+                    <option value="20">20 elementos</option>                    
+                  </select>  
+                </div>    
+              </div>
+              <br>
+              <br>  
+          </div>           
+      </div>
+    </div>
+</div>
+
+<div>
+  <app-especialistas-sidebar id="sidebar2"></app-especialistas-sidebar> 
+</div>

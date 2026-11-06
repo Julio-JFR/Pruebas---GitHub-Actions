@@ -1,0 +1,143 @@
+
+#contentAll{
+    border: transparent; 
+    border-left: 1px solid #24DEEC;
+}
+
+@media(max-width:575px){
+    #espacioInput{
+        margin-top: 1rem;
+    }
+    #opMargen{
+        margin-top: 1rem;
+    }
+    #contentAll{
+        border-left: 0;
+    }
+}
+
+@media(max-width:500px){
+    #contentAll{
+       width: 124%; 
+       margin-left: -25px;
+    }
+    #label-foto{
+        margin-left: 8% !important;
+    }
+    #rowcontenCeleste{
+        width: 80%;
+    }
+}
+
+@media (max-width: 540px) {
+    #sidebar {
+        display: none;
+    }
+}
+
+@media (min-width: 541px) {
+    #sidebar2 {
+        display: none;
+    }
+}
+
+img{
+    margin-left: 40px;
+    margin-top: 20px;
+    width: 200px;
+    height: 200px;
+    position: relative;
+}
+
+#rowcontenCeleste{
+    width: 100%;
+    margin: 0;
+}
+
+
+.raya-separadora-a {
+    background-color: #24deec;
+    height: 1rem;
+    margin-left: 18px;
+}
+
+.raya-separadora-b {
+    background-color: #24deec;
+    margin-top: -1px;
+    max-width: 96%;
+    height: 0.4rem;
+    margin-left: 18px;
+}
+
+.col-6-col-lg-6-raya-separadora-a {
+    flex: 0 0 55%;
+    max-width: 55%;
+}
+
+.triangulo-equilatero-bottom-rigth {
+    width: 0;
+    height: 0;
+    border-right: 8px solid transparent;
+    border-left: 8px solid #24deec;
+    border-bottom: 16px solid #24deec;
+}
+
+
+#usernameInput{
+    height: 3rem;
+}
+
+@media(max-width:500px){
+    #contentAll{
+       width: 124%; 
+       margin-left: -25px;
+    }
+    #label-foto{
+        margin-left: 8% !important;
+    }
+    #rowcontenCeleste{
+        width: 80%;
+    }
+}
+
+@media(max-width:991px){
+    #usernameInput{
+        height: 2.5rem;
+    }
+    
+    #emailInput{
+        height: 2.5rem;
+    }
+    
+    #actualizarButton{
+        height: 2.5rem;
+    }
+    #cambiarPassword{
+        padding-top: 9px;
+        height: 2.5rem;
+    }
+    #categoriasSelect{
+        height: 2.5rem;
+    }
+    #serviciosSelect{
+        height: 2.5rem;
+    }
+    #nivelesSelect{
+        height: 2.5rem;
+    }
+    #guardarEspecial{
+        height: 2.5rem;
+    }
+}
+
+@media(max-width:575px){
+    #espacioInput{
+        margin-top: 1rem;
+    }
+    #opMargen{
+        margin-top: 1rem;
+    }
+    #contentAll{
+        border-left: 0;
+    }
+}

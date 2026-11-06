@@ -1,0 +1,1078 @@
+
+
+<br>
+
+<div class="row contenedor-barra">
+    <div class="col-6 col-md-3 raya-separadora-a" >
+    </div>
+    <div class="triangulo-equilatero-bottom-rigth"></div>
+    <div class="col-12 col-md-12 raya-separadora-b" >
+    </div>
+</div>
+
+<!-------------------------------- CUENTA DEL POSTULANTE ------------------------------->
+<div class="row" *ngIf="!loadingPost">
+
+    <div class="col">
+        <!--
+        <div *ngIf="estado_postulacion!=2 && estado_postulacion!=null" style="display: inline-block;" class="pull-right">
+            <span ngbTooltip="Guardar" [ngClass]="{disabledSpan: loadingCuenta || cuentaForm.invalid}" (click)="actualizarCuenta()" class="fa fa-fw fa-lg fa-save spanAccion"></span>
+        </div>
+        -->
+        <!-------------- ProgressBar ----------->
+        <div class="row">
+            <div class="col-12">
+                <div *ngIf="loadingCuenta" class="progress" style="height:.1rem">
+                    <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<form [formGroup]="cuentaForm" *ngIf="!loadingPost">
+    <div class="container" style="padding-top: 15px;padding-bottom: 50px;">
+        <div class="row justify-content-between">
+            <div class="col-12 col-md-4">
+                    <label for="usuario">Usuario *</label>
+                    <input type="text" class="form-control form-control-sm" id="styleform" formControlName="cuenta_alias" placeholder="usuario">
+                    <div *ngIf="cuenta_alias.invalid && (cuenta_alias.dirty || cuenta_alias.touched)" class="my-1" style="color: rgb(197, 68, 68);" >
+                        <div *ngIf="cuenta_alias.errors.required">
+                            * El alias es requerido
+                        </div>
+                        <div *ngIf="cuenta_alias.errors.minlength">
+                            * Se requieren mínimo 8 caracteres
+                        </div>
+                        <div *ngIf="cuenta_alias.errors.maxlength">
+                            * Se requieren máximo 15 caracteres
+                        </div>
+                    </div>
+                    <label for="contra">Contraseña actual:</label>
+                    
+                    <div class="input-group input-group-sm">
+                        <input type={{PASSWORD_CURRENT_TYPE}} class="form-control" id="styleform" formControlName="cuenta_contra" placeholder="contraseña">
+                                <span (click)="cambiarVistaContrasenaActual()" id="styleeyeicon"><em class={{PASSWORD_CURRENT_ICON}}></em></span>
+                    </div>
+                    <div *ngIf="cuenta_contra.invalid && (cuenta_contra.dirty || cuenta_contra.touched)" class="my-1" style="color: rgb(197, 68, 68);" >
+                        <div *ngIf="cuenta_contra.errors.minlength">
+                            * Se requieren mínimo 8 caracteres
+                        </div>
+                        <div *ngIf="cuenta_contra.errors.maxlength">
+                            * Se requieren máximo 20 caracteres
+                        </div>
+                    </div>
+                    <label for="re-contra">Nueva contraseña:</label>
+                    <div class="input-group input-group-sm">
+                        <input type={{PASSWORD_NEW_TYPE}} [disabled]="deshabilitarCuenta" class="form-control" id="styleform" formControlName="cuenta_contra_nueva" placeholder="nueva contraseña">
+                        
+                                <span (click)="cambiarVistaContrasenaNueva()" id="styleeyeicon"><em class={{PASSWORD_NEW_ICON}} ></em></span>
+                        
+                    </div>
+                    <div *ngIf="cuenta_contra_nueva.invalid && (cuenta_contra_nueva.dirty || cuenta_contra_nueva.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                        <div *ngIf="cuenta_contra_nueva.errors.minlength">
+                            * Se requieren mínimo 8 caracteres
+                        </div>
+                        <div *ngIf="cuenta_contra_nueva.errors.maxlength">
+                            * Se requieren máximo 20 caracteres
+                        </div>
+                        <div *ngIf="cuenta_contra_nueva.errors.passwordValidation">
+                            *{{cuenta_contra_nueva.errors.passwordValidation.mensaje}}
+                          </div>
+                    </div>
+            </div>
+            <div class="fotografia col-12 col-md-4 offset-md-4" >
+                <!-- offset-md-4 mx-auto -->
+                <div class="row text-center">
+                    <div class="col-12">
+                        <span *ngIf="estado_postulacion!=2 && estado_postulacion!=null && MOSTRAR_FOTO"><em accept="image/*"  (click)="open(eliminarPhoto)" ngbTooltip="eliminar foto"
+                            id="icono-foto2" class="fa fa-trash table-bordered"></em>
+                        </span>
+                        
+                        <img  class="img-fluid pull-center" style="border: 1px solid;"  [src]="(loadingCuenta)?  '../../../assets/images/cargando-cuadrado.gif':DOMINIO+MOSTRAR_FOTO" appImgRota [url]="postulanteForm.controls.post_sexo.value == 'M' ? '../../../assets/images/AVATAR-PREDETERMINADO-HOMBRE.png' : '../../../assets/images/AVATAR-PREDETERMINADO-MUJER.png'" alt="Imagen de perfil" >
+                        <span *ngIf="estado_postulacion!=2 && estado_postulacion!=null"><em accept="image/*" class="fa fa-camera table-bordered spanAccion pull-right" id="icono-foto" (click)="open(contentPhoto)"></em></span>
+                        <input type="file" class="d-none">
+                    </div>
+
+                   
+
+                </div>
+                <!--en el src dice: si existe photoSelected entonces se mostrará, sino se muestra la imagen por defecto-->
+            </div>
+            <br>
+        </div>
+    </div>
+</form>
+
+<br>
+
+<div class="col-12" style="display: flex;align-items: center;justify-content: center; margin-bottom: 3rem;">
+    <div *ngIf="estado_postulacion!=2 && estado_postulacion!=null" style="display: inline-block;" class="pull-right">
+        <button [ngClass]="{disabledSpan: loadingCuenta || cuentaForm.invalid}" id="buttonpostular" (click)="actualizarCuenta()" [disabled]="cuentaForm.invalid"><label style="cursor: pointer;">GUARDAR</label></button>
+    </div>
+
+</div>
+
+<!------------------------------------ DATOS PERSONALES -------------------------------->
+<div class="row"  *ngIf="!loadingPost">
+    <div class="col">
+        <h5 style="display: inline-block;"><label>
+            {{
+                postulante?.POST_TIPO == 1? 'Datos del representante':'Datos Personales' 
+            }}
+        </label></h5>
+        <div class="col-12" style="border: 1px solid #24DEEC;"></div>
+
+        
+        <!-------------- ProgressBar ----------->
+        <div class="row">
+            <div class="col-12">
+                <div *ngIf="loadingPost" class="progress" style="height:.1rem">
+                    <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<br>
+
+<!--------------------- FORMULARIO DEL POSTULANTE --------------------->
+<div  *ngIf="!loadingPost" class="container" style="padding-top: 10px;">
+    <form action="" [formGroup]="postulanteForm">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-group">
+                <label>Nombres *</label>
+                <input type="text" [disabled]="deshabilitarPost || loadingPost" class="form-control form-control-sm" id="styleforms" formControlName="post_nombres">
+                <div *ngIf="post_nombres.invalid && (post_nombres.dirty || post_nombres.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                    <div *ngIf="post_nombres.errors.required">
+                        * El nombre es requerido
+                    </div>
+                    <div *ngIf="post_nombres.errors.maxlength">
+                        * Se requieren máximo 50 caracteres
+                    </div>
+                    <div *ngIf="post_nombres.errors.pattern">
+                        * Solo se permiten caracteres alfabéticos
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-group">
+                <label>Apellido Paterno *</label>
+                <input type="text" [disabled]="deshabilitarPost || loadingPost" class="form-control form-control-sm" id="styleforms" formControlName="post_ape_pat">
+                <div *ngIf="post_ape_pat.invalid && (post_ape_pat.dirty || post_ape_pat.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                    <div *ngIf="post_ape_pat.errors.required">
+                        * El apellido paterno es requerido
+                    </div>
+                    <div *ngIf="post_ape_pat.errors.maxlength">
+                        * Se requieren máximo 30 caracteres
+                    </div>
+                    <div *ngIf="post_ape_pat.errors.pattern">
+                        * Solo se permiten caracteres alfabéticos
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4 form-group">
+                <label>Apellido Materno *</label>
+                <input type="text" [disabled]="deshabilitarPost || loadingPost" class="form-control form-control-sm" id="styleforms" formControlName="post_ape_mat">
+                <div *ngIf="post_ape_mat.invalid && (post_ape_mat.dirty || post_ape_mat.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                    <div *ngIf="post_ape_mat.errors.required">
+                        * El apellido materno es requerido
+                    </div>
+                    <div *ngIf="post_ape_mat.errors.maxlength">
+                        * Se requieren máximo 30 caracteres
+                    </div>
+                    <div *ngIf="post_ape_mat.errors.pattern">
+                        * Solo se permiten caracteres alfabéticos
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4 form-group">
+                <label>Email *</label>
+                <input type="text" [disabled]="deshabilitarPost || loadingPost" class="form-control form-control-sm" id="styleforms" formControlName="post_email">
+                <div *ngIf="post_email.invalid && (post_email.dirty || post_email.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                    <div *ngIf="post_email.errors.required">
+                        * El email es requerido
+                    </div>
+                    <div *ngIf="post_email.errors.maxlength">
+                        * Se requieren máximo 60 caracteres
+                    </div>
+                    <div *ngIf="post_email.errors.pattern">
+                        * El formato del correo no es válido
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4 form-group">
+                <label>Celular *</label>
+                <input type="text" [disabled]="deshabilitarPost || loadingPost" class="form-control form-control-sm" id="styleforms" formControlName="post_celular">
+                <div *ngIf="post_celular.invalid && (post_celular.dirty || post_celular.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                    <div *ngIf="post_celular.errors.required">
+                        * El número de celular es requerido
+                    </div>
+                    <div *ngIf="post_celular.errors.maxlength">
+                        * Se requieren máximo 20 caracteres
+                    </div>
+                    <div *ngIf="post_celular.errors.minlength">
+                        * Se requieren mínimo 12 caracteres
+                    </div>
+                    <div *ngIf="post_celular.errors.pattern">
+                        * Formato incorrecto. Se debe colocar '+' al inicio, seguido de números
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4 form-group">
+                <label>DNI *</label>
+                <input type="text" [disabled]="deshabilitarPost || loadingPost" class="form-control form-control-sm" id="styleforms" formControlName="post_dni">
+                <div *ngIf="post_dni.invalid && (post_dni.dirty || post_dni.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                    <div *ngIf="post_dni.errors.required">
+                        * El DNI es requerido
+                    </div>
+                    <div *ngIf="post_dni.errors.maxlength">
+                        * Se requieren maximo 8 caracteres
+                    </div>
+                    <div *ngIf="post_dni.errors.minlength">
+                        * Se requieren minimo 8 caracteres
+                    </div>
+                    <div *ngIf="post_dni.errors.pattern">
+                        * Solo se permiten numeros
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-12 col-md-6 col-lg-4 form-group">
+                <label>RUC *</label>
+                <input type="text" [disabled]="deshabilitarPost || loadingPost" class="form-control form-control-sm" id="styleforms" formControlName="post_ruc">
+                <div *ngIf="post_ruc.invalid && (post_ruc.dirty || post_ruc.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                    <div *ngIf="post_ruc.errors.required">
+                        * El RUC es requerido
+                    </div>
+                    <div *ngIf="post_ruc.errors.maxlength">
+                        * Se requieren máximo 11 caracteres
+                    </div>
+                    <div *ngIf="post_ruc.errors.minlength">
+                        * Se requieren mínimo 11 caracteres
+                    </div>
+                    <div *ngIf="post_ruc.errors.pattern">
+                        * Solo se permiten caracteres numéricos
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4 form-group">
+                <label>Sexo *</label>
+                <select class="form-control form-control-sm custom-select" [disabled]="deshabilitarPost || loadingPost" name="" id="styleforms" formControlName="post_sexo">
+                    <option [ngValue]="null">Seleccionar</option>
+                    <option [ngValue]="'M'">Masculino</option>
+                    <option [ngValue]="'F'">Femenino</option>
+                </select>
+                <div *ngIf="post_sexo.invalid && (post_sexo.dirty || post_sexo.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                    <div *ngIf="post_sexo.errors.required">
+                        * El sexo es requerido
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4">
+                <label>Fecha de nacimiento *</label>
+                <input type="date" [max]="maxFecha" class="form-control form-control-sm" [disabled]="deshabilitarPost || loadingPost" id="styleforms" formControlName="post_nacimiento">
+                <div *ngIf="post_nacimiento.invalid && (post_nacimiento.dirty || post_nacimiento.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                    <div *ngIf="post_nacimiento.errors.required">
+                        * La fecha de nacimiento es requerida
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col" style="padding-top: 30px;font-size: 22px;"><label>Vivienda</label></div>
+        <div class="col-12" style="border: 1px solid #24DEEC;"></div>
+        <br>
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-4 form-group">
+                <label>Direccion *</label>
+                <input type="text" [disabled]="deshabilitarPost || loadingPost" class="form-control form-control-sm" id="styleforms" formControlName="post_direccion">
+                <div *ngIf="post_direccion.invalid && (post_direccion.dirty || post_direccion.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                    <div *ngIf="post_direccion.errors.required">
+                        * La dirección es requerida
+                    </div>
+                    <div *ngIf="post_direccion.errors.maxlength">
+                        * Se requieren máximo 100 caracteres
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4 form-group">
+                <label>País *</label>
+                <select class="form-control form-control-sm custom-select" [disabled]="deshabilitarPost || loadingPost" formControlName="post_pai_id" id="styleforms" (change)="obtenerRegiones(); post_reg_id.setValue(null);post_pro_id.setValue(null);post_dist_id.setValue(null);provincias=[];distritos=[]">
+                    <option [ngValue]=null>Seleccionar</option>
+                    <option *ngFor="let pais of paises" [ngValue]="pais.PAI_ID">{{pais.PAI_NOMBRE}}</option>
+                </select>
+                <div *ngIf="post_pai_id.invalid && (post_pai_id.dirty || post_pai_id.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                    <div *ngIf="post_pai_id.errors.required">
+                        * El país es requerido
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4 form-group">
+                <label>Región *</label>
+                <select class="form-control form-control-sm custom-select" (change)="obtenerProvincias();post_pro_id.setValue(null);post_dist_id.setValue(null);distritos=[]" id="styleforms" formControlName="post_reg_id" [disabled]="deshabilitarPost || loadingPost">
+                    <option [ngValue]=null>Seleccionar</option>
+                    <option *ngFor="let region of regiones" [ngValue]="region.REG_ID">{{region.REG_NOMBRE}}</option>
+                </select>
+                <div *ngIf="post_reg_id.invalid && (post_reg_id.dirty || post_reg_id.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                    <div *ngIf="post_reg_id.errors.required">
+                        * La región es requerida
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4 form-group">
+                <label>Provincia *</label>
+                <select class="form-control form-control-sm custom-select" (change)="obtenerDistritos();post_dist_id.setValue(null)" id="styleforms" formControlName="post_pro_id" [disabled]="deshabilitarPost || loadingPost">
+                    <option [ngValue]=null>Seleccionar</option>
+                    <option *ngFor="let provincia of provincias" [ngValue]="provincia.PRO_ID">{{provincia.PRO_NOMBRE}}</option>
+                </select>
+                <div *ngIf="post_pro_id.invalid && (post_pro_id.dirty || post_pro_id.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                    <div *ngIf="post_pro_id.errors.required">
+                        * La provincia es requerida
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4 form-group">
+                <label>Distrito *</label>
+                <select class="form-control form-control-sm custom-select" [disabled]="deshabilitarPost || loadingPost" id="styleforms" formControlName="post_dist_id">
+                    <option [ngValue]=null>Seleccionar</option>
+                    <option *ngFor="let distrito of distritos" [ngValue]="distrito.DIST_ID">{{distrito.DIST_NOMBRE}}</option>
+                </select>
+                <div *ngIf="post_dist_id.invalid && (post_dist_id.dirty || post_dist_id.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                    <div *ngIf="post_dist_id.errors.required">
+                        * El distrito es requerido
+                    </div>
+                </div>
+            </div>
+        </div>
+       <br>
+    </form>
+</div>
+<br>
+
+<div class="col-12" style="display: flex;align-items: center;justify-content: center;">
+    <div *ngIf="estado_postulacion!=2 && estado_postulacion!=null" style="display: inline-block;" class="pull-right">
+        <button (click)="guardarDatosPostulantes(postulanteForm.value)" id="buttonpostular" [ngClass]="{ disabledSpan: loadingPost || postulanteForm.invalid}" [disabled]="postulanteForm.invalid"><label style="cursor: pointer;">GUARDAR</label></button>
+    </div>
+</div>
+
+<!------------------------------------ DATOS JURIDICOS -------------------------------->
+<div class="row" *ngIf="!loadingPost && postulante.POST_TIPO == 1">
+    <div class="col" *ngIf="postulante.POST_TIPO == 1">
+        <label><h5 style="display: inline-block;">
+            Datos jurídicos
+            </h5></label>
+        <!-- <div *ngIf="estado_postulacion!=2 && estado_postulacion!=null" style="display: inline-block;" class="pull-right">
+            <span ngbTooltip="Guardar" (click)="guardarDatosJuridicos(juridicoForm.value)" class="fa fa-fw fa-lg fa-save spanAccion" [ngClass]="{ disabledSpan: loadingPost }"></span>
+        </div> -->
+        <hr>
+        <!-------------- ProgressBar ----------->
+        <div class="row">
+            <div class="col-12">
+                <div *ngIf="loadingPost" class="progress" style="height:.1rem">
+                    <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<br>
+<div *ngIf="!loadingPost &&  postulante.POST_TIPO == 1" class="container" style="padding-top: 10px;">
+    <form action="" [formGroup]="juridicoForm" >
+        <div class="row">
+            <div class="col-12 form-group">
+                <label>Razón social *</label>
+                <input type="text" [disabled]="deshabilitarPost || loadingPost" class="form-control form-control-sm" formControlName="razonSocial">
+                <div *ngIf="razonSocial.invalid && (razonSocial.dirty || razonSocial.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                    <div *ngIf="razonSocial.errors.required">
+                        * La razón social es requerida
+                    </div>
+                    <div *ngIf="razonSocial.errors.maxlength">
+                        * Se requieren máximo 100 caracteres
+                    </div>
+                    <div *ngIf="razonSocial.errors.pattern">
+                        * Solo se permiten caracteres alfanuméricos
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="col-12 col-md-6  form-group">
+                <label>RUC *</label>
+                <input type="text" [disabled]="deshabilitarPost || loadingPost" class="form-control form-control-sm" formControlName="ruc">
+                <div *ngIf="ruc.invalid && (ruc.dirty || ruc.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                    <div *ngIf="ruc.errors.required">
+                        * El RUC es requerido
+                    </div>
+                    <div *ngIf="ruc.errors.maxlength">
+                        * Se requieren máximo 11 caracteres
+                    </div>
+                    <div *ngIf="ruc.errors.minlength">
+                        * Se requieren mínimo 11 caracteres
+                    </div>
+                    <div *ngIf="ruc.errors.pattern">
+                        * Solo se permiten caracteres numéricos
+                    </div>
+                </div>
+            </div> -->
+            <div class="col-12 col-md-6 form-group">
+                <label>Tipo de empresa *</label>
+                <select class="form-control form-control-sm pl-5 pt-1" [disabled]="deshabilitarPost || loadingPost" formControlName="tipoEmpresa">
+                    <option [ngValue]=null>Seleccionar</option>
+                    <option *ngFor="let empresa of TIPOS_EMPRESA" [ngValue]="empresa.TIP_EMP_ID">{{empresa.TIP_EMP_DESCRIPCION}}</option>
+                </select>
+                <div *ngIf="tipoEmpresa.invalid && (tipoEmpresa.dirty || tipoEmpresa.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                    <div *ngIf="tipoEmpresa.errors.required">
+                        * El tipo de empresa es requerido
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 form-group">
+                <label>Ruc *</label>
+                <input type="text" [disabled]="deshabilitarPost || loadingPost" class="form-control form-control-sm" formControlName="ruc">
+                <div *ngIf="ruc.invalid && (ruc.dirty || ruc.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                    <div *ngIf="ruc.errors.required">
+                        * El ruc es requerido
+                    </div>
+                    <div *ngIf="ruc.errors.maxlength || ruc.errors.minlength">
+                        * Se requieren máximo 11 caracteres
+                    </div>
+                    <div *ngIf="ruc.errors.pattern">
+                        * Solo se permiten caracteres numéricos
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr><br>
+    </form>
+</div>
+<!----- CV ----->
+<div class="container" *ngIf="!loadingPost ">
+    <strong>{{TituloCV}}</strong>
+    <!-------------- ProgressBar ----------->
+    <div class="row">
+        <div class="col-12 border">
+            <div *ngIf="loadingCv" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12" style="padding-top: 8px; border-top: 1px solid #24DEEC;">
+            <label *ngIf="postulante.POST_TIPO == 0; else cvEmpresa" style="text-transform: capitalize;">CV - {{nombre_postulante}}</label>
+            <ng-template #cvEmpresa>
+            <label  style="text-transform: capitalize;">Carta de presentación</label>
+            </ng-template>
+            <a [href]="DOMINIO+urlCv" target="_blank">
+                <span [ngClass]="{'disabledSpan':loadingCv}" ngbTooltip="Ver" class="fa fa-fw fa-lg fa-eye spanAccion pull-right" id="iconstyle"></span>
+            </a>
+            <span [ngClass]="{'disabledSpan':loadingCv}" *ngIf="estado_postulacion!=2 && estado_postulacion!=null" ngbTooltip="Reemplazar archivo" (click)="cvInput.click()" class="fa fa-fw fa-lg fa-retweet pull-right spanAccion" id="iconstyle"></span>
+            <input type="file" class="form-control d-none" id="exampleInputEmail1" accept=".doc, .docx, .pdf" aria-describedby="emailHelp" #cvInput (change)="obtenerCv($event)">
+            <div *ngIf="errorCv" class="my-1" style="color: rgb(197, 68, 68);">
+                {{mensajeErrorCv}}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-12" style="display: flex;align-items: center;justify-content: center; margin-bottom: 3rem;">
+    <div *ngIf="estado_postulacion!=2 && estado_postulacion!=null" style="display: inline-block;" class="pull-right">
+        <button [ngClass]="{disabledSpan: loadingPost}" id="buttonpostular" ngbTooltip="Guardar" (click)="guardarDatosJuridicos(juridicoForm.value)" [disabled]="juridicoForm.invalid"><label style="cursor: pointer;">GUARDAR</label></button>
+    </div>
+</div>
+
+<br>
+<!------------------------------------ DATOS ACADÉMICOS -------------------------------->
+<div class="row" *ngIf="!loadingPost">
+    <div class="col" *ngIf="postulante.POST_TIPO == 0" style="margin-top: 2rem;">
+        <h5 style="display: inline-block;"><label>Datos Académicos</label></h5>
+        <span *ngIf="estado_postulacion!=2 && estado_postulacion!=null" style="margin-top: 10px; font-size: 28px;" ngbTooltip="Agregar" (click)="open(content);nuevoEstudio();" class="fa fa-fw fa-plus-circle fa-lg spanAccion pull-right" [ngClass]="{ disabledSpan: loadingEst }"></span>
+        
+        <div class="col-12" style="border: 1px solid #24DEEC;"></div>
+
+    </div>
+</div>
+<br>
+<!-------------- ProgressBar ----------->
+<div class="row"  *ngIf="!loadingPost">
+    <div class="col-12">
+        <div *ngIf="loadingEst" class="progress" style="height:.1rem">
+            <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+        </div>
+    </div>
+</div>
+<!-------------- TABLA DE ESTUDIOS ------------------>
+<div  *ngIf="!loadingPost" class="table-responsive-sm table-responsive-md table-responsive-lg table-responsive-xl" style="margin-bottom: 3rem; text-align: center;">
+    <table class="table table-hover" *ngIf="postulante.POST_TIPO == 0">
+        <thead>
+            <tr>
+                <th *ngIf="estado_postulacion!=2 && estado_postulacion!=null" scope="col" class="text-center table-border-left" style="min-width: 10rem;">Acciones</th>
+                <th scope="col" class="text-center" style="min-width: 10rem;">Tipo de estudio</th>
+                <th scope="col" class="text-center" style="min-width: 10rem;">Institución</th>
+                <th scope="col" class="text-center" style="min-width: 10rem;">Descripción</th>
+                <th scope="col" class="text-center" style="min-width: 10rem;">Fecha de inicio</th>
+                <th scope="col" class="table-border-rigth" style="min-width: 10rem;">Fecha de fin</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngIf="estudios?.length===0">
+                <td colspan="6"><span>No hay estudios para mostrar</span></td>
+            </tr>
+            <tr *ngFor="let estudio of estudios ; let i = index">
+                <td *ngIf="estado_postulacion!=2 && estado_postulacion!=null" class="detail-button">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-6" id="centradoflex">
+                                <span ngbTooltip="Editar" class="fa fa-fw fa-lg fa-pencil spanAccion" id="iconstyle" (click)="open(content);obtenerEstudioActual(estudio)" [ngClass]="{ disabledSpan: loadingEst }"></span>
+                            </div>
+                            <div class="col-6" id="centradoflex">
+                                <span ngbTooltip="Eliminar" class="fa fa-fw fa-lg fa-trash-o spanAccion" id="iconstyle" (click)="open(contentDelete);obtenerIdEstudio(estudio.EST_ID);eliminacionEstudio = true" [ngClass]="{ disabledSpan: loadingEst }"></span>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td class="text-center">{{estudio.EST_TIPO}}</td>
+                <td class="text-center">{{estudio.EST_DESCRIPCION}}</td>
+                <td>{{estudio.EST_INSTITUCION}}</td>
+                <td>{{estudio.EST_FECH_INI | date: 'dd/MM/yyyy'}}</td>
+                <td>{{(estudio.EST_FECH_FIN == null)? 'En curso':estudio.EST_FECH_FIN | date: 'dd/MM/yyyy'}}</td>
+            </tr>
+            <tr *ngIf="estudios?.length > 0">
+                <td colspan="6"><strong class="pull-right" style="color: #3e11bc;" >Total: {{estudios.length}} {{estudios.length ==1 ? 'elemento' : 'elementos'}}</strong></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!------------------------------------ DATOS EXPERIENCIAS LABORALES -------------------------------->
+<div class="row"  *ngIf="!loadingPost">
+    <div class="col">
+        <h5 style="display: inline-block;">
+            <label>
+            {{
+                postulante?.POST_TIPO == 1? 'Clientes destacados':'Experiencias Laborales'
+            }}</label></h5>
+        <span *ngIf="estado_postulacion!=2 && estado_postulacion!=null" style="margin-top: 10px; font-size: 28px;" ngbTooltip="Agregar" (click)="nuevaExperiencia();openExp(contentExp);visualizarBoton = true" class="fa fa-fw fa-plus-circle fa-lg spanAccion pull-right" [ngClass]="{ disabledSpan: loadingExp }"></span>
+        
+        <div class="col-12" style="border: 1px solid #24DEEC;"></div>
+
+    </div>
+</div>
+<br>
+<!-------------- ProgressBar ----------->
+<div class="row" *ngIf="!loadingPost">
+    <div class="col-12">
+        <div *ngIf="loadingExp" class="progress" style="height:.1rem">
+            <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+        </div>
+    </div>
+</div>
+<!-------------- TABLA DE EXPERIENCIAS LABORALES ------------------>
+<div class="table-responsive-sm table-responsive-md table-responsive-lg table-responsive-xl" style="text-align: center;" *ngIf="!loadingPost">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col" class="text-center table-border-left" style="min-width: 10rem;">Acciones</th>
+                <th scope="col" class="text-center" style="min-width: 10rem;">
+                    {{
+                        postulante?.POST_TIPO == 1? 'Cliente':'Empresa'
+                    }}
+                </th>
+                <th scope="col" class="text-center" style="min-width: 10rem;">
+                    {{
+                        postulante?.POST_TIPO == 1? 'Tipo de servicio':'Especialidad'
+                    }}</th>
+                <th scope="col" class="text-center" style="min-width: 10rem;">Descripción</th>
+                <th scope="col" style="min-width: 10rem;">Fecha de inicio</th>
+                <th scope="col" class="table-border-rigth" style="min-width: 10rem;">Fecha de fin</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngIf="experienciasLaborales?.length===0">
+                <td colspan="6"><span>No hay experiencias laborales para mostrar</span></td>
+            </tr>
+            <tr *ngFor="let experiencia of experienciasLaborales ; let i = index">
+                <td *ngIf="estado_postulacion!=2 && estado_postulacion!=null; else elseTd" class="detail-button">
+                    <div class="row" style="padding: 0px;">
+                        <div class="col-4 icon" id="centradoflex">
+                            <span ngbTooltip="Editar" (click)="openExp(contentExp);obtenerExperienciaActual(experiencia);visualizarBoton = true" class="fa fa-fw fa-lg fa-pencil spanAccion" id="iconstyle" style="margin-left: 9px;" [ngClass]="{ disabledSpan: loadingExp }"></span>
+                        </div>
+                        <div class="col-4 icon" id="centradoflex">
+                            <span ngbTooltip="Eliminar" (click)="open(contentDelete);obtenerIdExperiencia(experiencia.EXP_ID);eliminacionEstudio = false" class="fa fa-fw fa-lg fa-trash-o spanAccion" id="iconstyle" [ngClass]="{ disabledSpan: loadingExp }"></span>
+                        </div>
+                        <div class="col-4 icon" id="centradoflex">
+                            <span ngbTooltip="Ver más" (click)="openExp(contentExp);obtenerExperienciaActual(experiencia);visualizarBoton = false" class="fa fa-fw fa-lg fa-eye spanAccion" id="iconstyle" [ngClass]="{ disabledSpan: loadingExp }"></span>
+                        </div>
+                    </div>
+                </td>
+                <ng-template #elseTd>
+                    <td class="td-center">
+                        <span ngbTooltip="Ver más" (click)="openExp(contentExp);obtenerExperienciaActual(experiencia);visualizarBoton = false" class="fa fa-fw fa-lg fa-eye spanAccion" [ngClass]="{ disabledSpan: loadingExp }"></span>
+                    </td>
+                </ng-template>
+                <td class="text-center">{{experiencia.EXP_EMPRESA}}</td>
+                <td class="text-center">{{experiencia.EXP_ESPECIALIDAD}}</td>
+                <td class="text-center">{{experiencia.EXP_DESCRIPCION}}</td>
+                <td>{{experiencia.EXP_FECH_INI | date: 'dd/MM/yyyy'}}</td>
+                <td>{{(experiencia.EXP_FECH_FIN == null)? 'En curso':experiencia.EXP_FECH_FIN | date: 'dd/MM/yyyy'}}</td>
+            </tr>
+            <tr *ngIf="experienciasLaborales?.length > 0">
+                <td colspan="6"><strong class="pull-right" style="color: #3e11bc;">Total:  {{experienciasLaborales.length}} {{experienciasLaborales.length == 1 ? 'elemento' : 'elementos'}} </strong></td>
+            </tr>
+        </tbody>
+    </table>
+    
+</div>
+<div *ngIf="!loadingPost">
+    <span> (*) Campo obligatorio</span>
+</div>
+<br>
+<!------------------- BOTÓN PARA POSTULAR DE NUEVO------------------>
+<div *ngIf="(estado_postulacion!=2 && estado_postulacion!=3) && estado_postulacion!=null && !loadingPost" class="text-center">
+    <button (click)="open(contentPostulacion)" [disabled]="cuentaForm.invalid || postulanteForm.invalid" class="btn btn-sm btn-outline-info d-inline-block" id="buttonpostular"><label>Postular</label></button>
+</div>
+<app-alerta-modal *ngIf="estado_postulacion==3" tipoAlerta="danger">
+    <em class="fa fa-fw fa-exclamation-triangle"></em>Su cuenta ha sido bloqueada, revise su correo para más detalles. Por favor comuníquese con un administrador
+</app-alerta-modal>
+
+<!----------------- MODAL PARA EDITAR Y AGREGAR ESTUDIOS --------------------->
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <label class="modal-title" id="modal-basic-title" style="font-size: 19px;">Detalles Académicos</label>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click');errorModal = false">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <app-alerta-modal *ngIf="errorModal" [tipoAlerta]="'danger'">{{mensajeModal}}</app-alerta-modal>
+
+        <form [formGroup]="estudioForm">
+            <div class="row">
+                <div class="col-12 col-sm-6">
+                    <label for="">Tipo de estudio *</label>
+                    <input type="text" class="form-control form-control-sm" formControlName="est_tipo">
+                    <div *ngIf="est_tipo.invalid && (est_tipo.dirty || est_tipo.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                        <div *ngIf="est_tipo.errors.required">
+                            * El tipo de estudio es requerido
+                        </div>
+                        <div *ngIf="est_tipo.errors.maxlength">
+                            * Se requieren máximo 20 caracteres
+                        </div>
+                        <div *ngIf="est_tipo.errors.pattern">
+                            * Solo se permiten caracteres alfabéticos
+                        </div>
+                    </div>
+                    <br>
+                </div>
+                <div class="col-12 col-sm-6">
+                    <label for="">Institución *</label>
+                    <input type="text" class="form-control form-control-sm" formControlName="est_institucion">
+                    <div *ngIf="est_institucion.invalid && (est_institucion.dirty || est_institucion.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                        <div *ngIf="est_institucion.errors.required">
+                            * El nombre de la institución es requerido
+                        </div>
+                        <div *ngIf="est_institucion.errors.maxlength">
+                            * Se requieren máximo 20 caracteres
+                        </div>
+                        <div *ngIf="est_institucion.errors.pattern">
+                            * Solo se permiten caracteres alfabéticos
+                        </div>
+                    </div>
+                    <br>
+                </div>
+                <div class="col-12">
+                    <label for="">Descripción *</label>
+                    <input type="text" class="form-control form-control-sm" formControlName="est_descripcion">
+                    <div *ngIf="est_descripcion.invalid && (est_descripcion.dirty || est_descripcion.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                        <div *ngIf="est_descripcion.errors.required">
+                            * La descripción es requerida
+                        </div>
+                        <div *ngIf="est_descripcion.errors.maxlength">
+                            * Se requieren máximo 60 caracteres
+                        </div>
+                        <div *ngIf="est_descripcion.errors.pattern">
+                            * Solo se permiten caracteres alfanuméricos
+                        </div>
+                    </div>
+                    <br>
+                </div>
+                <div class="col-12 col-sm-6">
+                    <label for="">Fecha de Inicio *</label>
+                    <input type="date" [max]="getToday()" [ngClass]="{'colorGris': opacarDateFechaInicioEstudio }" (change)="cambiarDeStyleDateInicioEstudio()" class="form-control form-control-sm" formControlName="est_fech_ini">
+                    <div *ngIf="est_fech_ini.invalid && (est_fech_ini.dirty || est_fech_ini.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                        <div *ngIf="est_fech_ini.errors.required">
+                            * La fecha de inicio es requerida
+                        </div>
+                    </div>
+                    <br>
+                </div>
+                <div class="col-12 col-sm-6">
+                    <label for="">Fecha de Fin *</label>
+                    <label class="pull-right" ><input type="checkbox" (change)="procesoDatosCheckEstudio()" [checked]="isCheckEstudio"><small>  En curso</small></label>
+                    <input type="date" [max]="getToday()" [ngClass]="{'colorGris': opacarDateFechaFinEstudio }" (change)="cambiarDeStyleDateFinEstudio()" class="form-control form-control-sm" formControlName="est_fech_fin">
+                    <div *ngIf="est_fech_fin.invalid && (est_fech_fin.dirty || est_fech_fin.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                        <div *ngIf="est_fech_fin.errors.required">
+                            * La fecha de fin es requerida
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!---------------------- PROGESSBAR ---------------------->
+    <div class="row">
+        <div class="col-xl-12">
+            <div *ngIf="loadingModal" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+    </div>
+    <!-------------------------------------------------------->
+    <div class="modal-footer">
+        <!-- el id del estudio es 0 cuando se trata de agregar uno nuevo pero si es otro cualquier número, significa que actualizará un estudio -->
+        <button type="button" [disabled]="estudioForm.invalid || loadingModal" class="btn btn-sm btn-success" (click)="agregarActualizar()">{{(estudio.EST_ID==0)?'Agregar':'Actualizar'}}</button>
+    </div>
+</ng-template>
+
+<!----------------- MODAL PARA EDITAR Y AGREGAR EXPERIENCIAS LABORALES --------------------->
+<ng-template #contentExp let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <label class="modal-title" id="modal-basic-title" style="font-size: 19px;">
+            {{
+                postulante?.POST_TIPO == 1? 'Clientes destacados':' Experiencias Laborales'
+            }}
+           </label>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click');errorModal = false">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <app-alerta-modal *ngIf="errorModal" [tipoAlerta]="'danger'">{{mensajeModal}}</app-alerta-modal>
+
+        <form [formGroup]="experienciaContactoForm">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                    <h5><strong>{{
+                        postulante?.POST_TIPO == 1? 'Clientes destacados':' Experiencias Laborales'
+                    }}</strong></h5>
+                    <hr>
+                    <br>
+                    <div class="row">
+                        <div class="col-12 col-lg-6">
+                            <label for="">{{
+                                postulante?.POST_TIPO == 1? 'Cliente':'Empresa'
+                            }} *</label>
+                            <input type="text" class="form-control form-control-sm" formControlName="exp_empresa"> <br>
+                            <div *ngIf="exp_empresa.invalid && (exp_empresa.dirty || exp_empresa.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                <div *ngIf="exp_empresa.errors.required">
+                                    * El nombre de la empresa es requerido
+                                </div>
+                                <div *ngIf="exp_empresa.errors.maxlength">
+                                    * Se requieren máximo 20 caracteres
+                                </div>
+                                <div *ngIf="exp_empresa.errors.pattern">
+                                    * Solo se permiten caracteres alfabéticos
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <label for="">{{
+                                postulante?.POST_TIPO == 1? 'tipo de servicio':'Especialidad'
+                            }} *</label>
+                            <input type="text" class="form-control form-control-sm" formControlName="exp_especialidad">
+                            <div *ngIf="exp_especialidad.invalid && (exp_especialidad.dirty || exp_especialidad.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                <div *ngIf="exp_especialidad.errors.required">
+                                    * El nombre de la especialidad es requerida
+                                </div>
+                                <div *ngIf="exp_especialidad.errors.maxlength">
+                                    * Se requieren máximo 20 caracteres
+                                </div>
+                                <div *ngIf="exp_especialidad.errors.pattern">
+                                    * Solo se permiten caracteres alfabéticos
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                        <div class="col-12">
+                            <label for="">Descripción *</label>
+                            <input type="text" class="form-control form-control-sm" formControlName="exp_descripcion">
+                            <div *ngIf="exp_descripcion.invalid && (exp_descripcion.dirty || exp_descripcion.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                <div *ngIf="exp_descripcion.errors.required">
+                                    * La descripción es requerida
+                                </div>
+                                <div *ngIf="exp_descripcion.errors.maxlength">
+                                    * Se requieren máximo 60 caracteres
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="">Fecha de Inicio *</label>
+                            <input type="date" [max]="getToday()" [ngClass]="{'colorGris': opacarDateFechaInicioExperiencia }" (change)="cambiarDeStyleDateInicioExperiencia()" class="form-control form-control-sm" formControlName="exp_fech_ini">
+                            <div *ngIf="exp_fech_ini.invalid && (exp_fech_ini.dirty || exp_fech_ini.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                <div *ngIf="exp_fech_ini.errors.required">
+                                    * La fecha de inicio es requerida
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="">Fecha de Fin *</label>
+                            <label class="pull-right" ><input type="checkbox" (change)="procesoDatosCheckExperiencia()" [checked]="isCheckExperiencia"><small>  En curso</small></label>
+                            <input type="date" [max]="getToday()" [ngClass]="{'colorGris': opacarDateFechaFinExperiencia }" (change)="cambiarDeStyleDateFinExperiencia()" class="form-control form-control-sm" formControlName="exp_fech_fin">
+                            <div *ngIf="exp_fech_fin.invalid && (exp_fech_fin.dirty || exp_fech_fin.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                <div *ngIf="exp_fech_fin.errors.required">
+                                    * La fecha de fin es requerida
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+                <br>
+                <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                    <h5><strong>Contacto de Referencia</strong></h5>
+                    <hr>
+                    <br>
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="">Nombres *</label>
+                            <input type="text" class="form-control form-control-sm" formControlName="cont_nombres">
+                            <div *ngIf="cont_nombres.invalid && (cont_nombres.dirty || cont_nombres.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                <div *ngIf="cont_nombres.errors.required">
+                                    * El nombre del contacto es requerido
+                                </div>
+                                <div *ngIf="cont_nombres.errors.maxlength">
+                                    * Se requieren máximo 50 caracteres
+                                </div>
+                                <div *ngIf="cont_nombres.errors.pattern">
+                                    * Solo se permiten caracteres alfabéticos
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="">Apellidos *</label>
+                            <input type="text" class="form-control form-control-sm" formControlName="cont_apellidos">
+                            <div *ngIf="cont_apellidos.invalid && (cont_apellidos.dirty || cont_apellidos.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                <div *ngIf="cont_apellidos.errors.required">
+                                    * El apellido del contacto es requerido
+                                </div>
+                                <div *ngIf="cont_apellidos.errors.maxlength">
+                                    * Se requieren máximo 30 caracteres
+                                </div>
+                                <div *ngIf="cont_apellidos.errors.pattern">
+                                    * Solo se permiten caracteres alfabéticos
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                        <div class="col-12">
+                            <label for="">Celular *</label>
+                            <input type="text" class="form-control form-control-sm" formControlName="cont_celular">
+                            <div *ngIf="cont_celular.invalid && (cont_celular.dirty || cont_celular.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                <div *ngIf="cont_celular.errors.required">
+                                    *El celular  del contacto es requerido
+                                </div>
+                                <div *ngIf="cont_celular.errors.maxlength">
+                                    * Se requieren máximo 20 caracteres
+                                </div>
+                                <div *ngIf="cont_celular.errors.minlength">
+                                    * Se requieren mínimo 12 caracteres
+                                </div>
+                                <div *ngIf="cont_celular.errors.pattern">
+                                    * Formato incorrecto. Se debe colocar '+' al inicio, seguido de números
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                        <div class="col-12">
+                            <label for="">Correo Electrónico *</label>
+                            <input type="text" class="form-control form-control-sm" formControlName="cont_email">
+                            <div *ngIf="cont_email.invalid && (cont_email.dirty || cont_email.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                <div *ngIf="cont_email.errors.required">
+                                    *El celular  del contacto es requerido
+                                </div>
+                                <div *ngIf="cont_email.errors.pattern">
+                                    * El formato del correo no es válido
+                                </div>
+                                <div *ngIf="cont_email.errors.maxlength">
+                                    * Se requieren máximo 60 caracteres
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!---------------------- PROGESSBAR ---------------------->
+    <div class="row">
+        <div class="col-xl-12">
+            <div *ngIf="loadingModal" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+    </div>
+    <!-------------------------------------------------------->
+    <div class="modal-footer">
+        <button *ngIf="visualizarBoton" [disabled]="loadingModal || experienciaContactoForm.invalid" type="button" class="btn btn-sm btn-success bold" (click)="agregarActualizarExperiencia()">{{(experienciaLaboral.EXP_ID==0)?'Agregar':'Actualizar'}}</button>
+    </div>
+</ng-template>
+
+<!----------------- MODAL PARA CONFIRMAR LA ELIMINACION DE UN REGISTRO --------------------->
+<ng-template #contentDelete let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">¿Está seguro?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click');errorModal = false">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <app-alerta-modal *ngIf="errorModal" [tipoAlerta]="'danger'"><em class="fa fa-fw fa-exclamation-triangle"></em>{{mensajeModal}}</app-alerta-modal>
+        ¿Desea eliminar el registro actual?
+    </div>
+    <!---------------------- PROGESSBAR ---------------------->
+    <div class="row">
+        <div class="col-xl-12">
+            <div *ngIf="loadingModal" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+    </div>
+    <!-------------------------------------------------------->
+    <div class="modal-footer">
+        <!-- el id del estudio es 0 cuando se trata de agregar uno nuevo pero si es otro cualquier número, significa que actualizará un estudio -->
+        <button type="button" class="btn btn-sm btn-success bold" [disabled]="loadingModal" (click)="eliminar()">Confirmar</button>
+        <button type="button" class="btn btn-sm btn-danger bold" [disabled]="loadingModal" (click)="d('Cross click')">Cancelar</button>
+    </div>
+</ng-template>
+
+<!----------------- MODAL PARA SUBIR FOTO --------------------->
+<ng-template #contentPhoto let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Subir foto</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click');errorModal = false;imageChangedEvent = ''">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <app-alerta-modal *ngIf="errorModal" [tipoAlerta]="'danger'"><em class="fa fa-fw fa-exclamation-triangle"></em>{{mensajeModal}}</app-alerta-modal>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-12 mx-auto">
+                    <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="4 / 4" (imageCropped)="imageCropped($event)" [resizeToWidth]="192" [resizeToHeight]="192">
+                    </image-cropper>
+                    <input style="cursor: pointer;" class="btn btn-light" accept="image/png, .jpeg, .jpg" (change)="subirImagen($event)" name="file" type="file" class="form-control" id="exampleFormControlInput1">
+                    <br>
+                    <div *ngIf="errorFoto" style="color: rgb(197, 68, 68);">
+                        <strong>* {{mensajeErrorFoto}}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!---------------------- PROGESSBAR ---------------------->
+    <div class="row">
+        <div class="col-xl-12">
+            <div *ngIf="loadingModal" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+    </div>
+    <!-------------------------------------------------------->
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-success bold" [disabled]="loadingModal || errorFoto || imageChangedEvent == ''" (click)="actualizarFoto();imageChangedEvent = ''">Confirmar</button>
+        <button type="button" class="btn btn-sm btn-danger bold" [disabled]="loadingModal" (click)="d('Cross click');errorFoto = false;errorModal = false;imageChangedEvent = ''">Cancelar</button>
+    </div>
+</ng-template>
+
+<!----------------- MODAL PARA CONFIRMAR LA POSTULACIÓN --------------------->
+<ng-template #contentPostulacion let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title"><em *ngIf="estado_postulacion == 3" class="fa fa-fw fa-exclamation-triangle"></em> {{(estado_postulacion==3)?'¡Alerta!':'Confirmación'}}</h4>
+        <button *ngIf="estado_postulacion != 3" type="button" class="close" aria-label="Close" (click)="d('Cross click');errorModal = false">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        {{(estado_postulacion==3)? 'Su cuenta ha sido bloqueada.':'¿Está seguro de volver a postular?'}}
+    </div>
+    <!---------------------- PROGESSBAR ---------------------->
+    <div class="row">
+        <div class="col-xl-12">
+            <div *ngIf="loadingModal" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+    </div>
+    <!-------------------------------------------------------->
+    <div class="modal-footer">
+        <!-- el id del estudio es 0 cuando se trata de agregar uno nuevo pero si es otro cualquier número, significa que actualizará un estudio -->
+        <div *ngIf="estado_postulacion != 3">
+            <button type="button" class="btn btn-sm btn-success" [disabled]="loadingModal" (click)="insertarPostulacion()">Confirmar</button>
+            
+            <button style="margin-left: 10px;" type="button" class="btn btn-sm btn-danger bold" [disabled]="loadingModal" (click)="d('Cross click')">Cancelar</button>
+        </div>
+        <div *ngIf="estado_postulacion == 3">
+            <button type="button" class="btn btn-sm btn-success" [disabled]="loadingModal" (click)="cerrarSesion()">Aceptar</button>
+        </div>
+    </div>
+</ng-template>
+
+<!----------------- MODAL DE AVISO DE BLOQUEO DEL POSTULANTE --------------------->
+<ng-template #contentBloqueo>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Bloqueado</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click');errorModal = false">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <app-alerta-modal *ngIf="errorModal" [tipoAlerta]="'danger'"><em class="fa fa-fw fa-exclamation-triangle"></em>{{mensajeModal}}</app-alerta-modal>
+        Esta cuenta ha sido bloqueada, se le redigirá a la pantalla principal
+    </div>
+    <!---------------------- PROGESSBAR ---------------------->
+    <div class="row">
+        <div class="col-xl-12">
+            <div *ngIf="loadingModal" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+    </div>
+    <!-------------------------------------------------------->
+    <div class="modal-footer">
+        <!-- el id del estudio es 0 cuando se trata de agregar uno nuevo pero si es otro cualquier número, significa que actualizará un estudio -->
+        <button type="button" class="btn btn-sm btn-danger" [disabled]="loadingModal" (click)="redirigirBloqueo()">Aceptar</button>
+    </div>
+</ng-template>
+
+<!----------------- MODAL PARA ELIMINAR FOTO --------------------->
+<ng-template #eliminarPhoto let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Eliminar foto</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click');errorModal = false;imageChangedEvent = ''">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <app-alerta-modal *ngIf="errorModal" [tipoAlerta]="'danger'"><em class="fa fa-fw fa-exclamation-triangle"></em>{{mensajeModal}}</app-alerta-modal>
+        <span>¿Está seguro de eliminar su foto?</span>
+    </div>
+    <!---------------------- PROGESSBAR ---------------------->
+    <div class="row">
+        <div class="col-xl-12">
+            <div *ngIf="loadingModal" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+    </div>
+    <!-------------------------------------------------------->
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-success bold" [disabled]="loadingModal" (click)="eliminarFoto()" >Confirmar</button>
+        <button type="button" class="btn btn-sm btn-danger bold" [disabled]="loadingModal" (click)="d('Cross click')">Cancelar</button>
+    </div>
+</ng-template>

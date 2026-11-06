@@ -1,0 +1,82 @@
+<app-alerta-general 
+    *ngIf="mostrarAlerta"
+    [tipoAlerta]="tipoAlerta">
+    {{mensaje}}
+</app-alerta-general>
+
+<app-page-header [heading]="'Cambiar Contraseña'"></app-page-header>
+<div *ngIf="cargando" class="fixed-top progress" style="position: absolute; height:.1rem">
+    <ngb-progressbar class="indeterminate" type="primary" height="500%" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+</div>
+<div class="container my-5">
+    <form [formGroup]="contrasenaForm">
+        <div class="col-12 password-form">
+          <label for="password-enter">Nueva Contraseña</label>
+          <div class="input-group">
+            <input type={{PASSWORD_CURRENT_TYPE}} name="password-enter" class="form-control border-right-0" formControlName="form_contrasena_confimada">
+            <div class="input-group-prepend">
+              <div class="input-group-text bg-transparent border-left-0">
+                <span (click)="cambiarVistaContrasenaActual()"><em class={{PASSWORD_CURRENT_ICON}}></em></span>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="form_contrasena_confimada.invalid && (form_contrasena_confimada.dirty || form_contrasena_confimada.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+            <div *ngIf="form_contrasena_confimada.errors.required">
+              * La contraseña nueva es requerida
+            </div>
+            <div *ngIf="form_contrasena_confimada.errors.minlength">
+              * Se requieren mínimo 8 caracteres 
+            </div>
+            <div *ngIf="form_contrasena_confimada.errors.maxlength">
+              * Se requieren máximo 20 caracteres 
+            </div>
+            <div *ngIf="form_contrasena_confimada.errors.passwordValidation">
+              *{{form_contrasena_confimada.errors.passwordValidation.mensaje}}
+            </div>
+          </div>
+        </div>
+        <div class="col-12 password-form my-5">
+          <label for="password-confirm">Confirmar Contraseña</label>
+          <div class="input-group">
+            <input type={{PASSWORD_NEW_TYPE}} name="password-confirm" class="form-control border-right-0" formControlName="form_contrasena_nueva">
+            <div class="input-group-prepend">
+              <div class="input-group-text bg-transparent border-left-0">
+                <span (click)="cambiarVistaContrasenaNueva()"><em class={{PASSWORD_NEW_ICON}}></em></span>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="form_contrasena_nueva.invalid && (form_contrasena_nueva.dirty || form_contrasena_nueva.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+            <div *ngIf="form_contrasena_nueva.errors.required">
+              * La contraseña de confirmación es requerida
+            </div>
+            <div *ngIf="form_contrasena_nueva.errors.minlength">
+              * Se requieren mínimo 8 caracteres 
+            </div>
+            <div *ngIf="form_contrasena_nueva.errors.maxlength">
+              * Se requieren máximo 20 caracteres 
+            </div>
+          </div>
+          <div *ngIf="form_contrasena_nueva.value !== form_contrasena_confimada.value && (form_contrasena_nueva.touched || form_contrasena_nueva.dirty)  " class="my-1" style="color: rgb(197, 68, 68);"  >
+            * Las contraseñas deben ser iguales.
+          </div>
+        </div>
+        <button type="button" class="btn btn-success float-right my-2" (click)="cambiarContrasena()" [disabled]="contrasenaForm.invalid || cargando">Enviar</button>
+    </form>
+</div>
+
+
+<!--MODAL PARA CONFIRMAR EL CAMBIO DE CONTRASEÑA-->
+<ng-template #modalConfirmarCambio let-modal>
+  
+    
+    <div class="modal-body">
+      <h6 *ngIf="mensaje_modal===true">{{mensaje}}</h6>
+      <br>
+      <h6> A continuación se le redireccionará al login correspondiente.</h6>
+    </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-success" (click)="redireccion()">Confirmar</button>
+  </div>
+
+</ng-template>

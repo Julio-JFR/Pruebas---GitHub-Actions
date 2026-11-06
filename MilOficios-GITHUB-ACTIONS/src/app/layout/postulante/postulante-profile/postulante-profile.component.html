@@ -1,0 +1,321 @@
+<!-- ALERTAS -->
+<app-alerta-general 
+    *ngIf="alertaGeneral || alertaPostulacion"
+    [tipoAlerta]="tipoAlerta">
+    {{mensajeAlerta}}
+</app-alerta-general>
+
+<div *ngIf="!alertaGeneral" class="position-absolute col-12 col-md-12 col-xl-12 mr-3 d-flex flex-row-reverse">
+    <app-alerta-general 
+        *ngIf="errorCuenta"
+        [tipoAlerta]="'danger'">
+        {{mensajeErrorCuenta}}
+    </app-alerta-general>
+    <app-alerta-general 
+        *ngIf="errorPost"
+        [tipoAlerta]="'danger'">
+        {{mensajeErrorPostulante}}
+    </app-alerta-general>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div *ngIf="loadingCuenta" class="progress" style="height:.1rem">
+            <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex" id="wrapper">
+    <app-postulante-sidebar id="sidebar"></app-postulante-sidebar>  
+
+    <div class="container">
+        <div id="lineaIntermedia" class="barra-azul-lateral"></div>
+        
+        <div class="d-flex" style="margin-left: 1.5rem;align-items: center;justify-content: space-between;">
+            <app-page-header [heading]="'Mi Perfil'"></app-page-header>
+            <button class="btn btn-sm btn-success " 
+                *ngIf="estado_postulacion!=2 && estado_postulacion!=3 && estado_postulacion!=null"
+                id="postularBoton" 
+                (click)="open(contentPostulacion)" [disabled]="cuentaForm.invalid">POSTULAR</button>
+        </div>
+        <div  style="overflow: hidden;">
+            <triangular-bar [isProfile]="true"></triangular-bar>
+        </div>
+        <br>
+        
+        <div class="card  mx-4">
+            <div class="row container">
+                <div>
+                    <img *ngIf="!cargandoFoto || !postulante" src="../../../../assets/images/cargando-cuadrado.gif" alt="loading-gif" class="table-bordered">
+                    <img 
+                        *ngIf="MOSTRAR_FOTO && cargandoFoto && postulante.POST_SEXO==='F'" class="table-bordered" 
+                        [src]="DOMINIO +MOSTRAR_FOTO" appImgRota 
+                        [url]="'../../../../assets/images/AVATAR-PREDETERMINADO-MUJER.png'"> 
+                    <img 
+                        *ngIf="MOSTRAR_FOTO && cargandoFoto && postulante.POST_SEXO==='M'" class="table-bordered" 
+                        [src]="DOMINIO +MOSTRAR_FOTO" appImgRota 
+                        [url]="'../../../../assets/images/AVATAR-PREDETERMINADO-HOMBRE.png'"> 
+                        
+                    <span *ngIf="estado_postulacion!=2 && estado_postulacion!=null && cargandoFoto"><em  ngbTooltip="Actualizar foto"  class="fa fa-camera" (click)="open(contentPhoto)" ></em></span>
+                </div>              
+                <div id="label-foto" class="ml-5">
+                    <form >
+                        <ng-template #t let-fill="fill">
+                            <span class="star" [class.full]="fill === 100">
+                              <span class="half" [style.width.%]="fill">&#9733;</span>&#9733;
+                            </span>
+                        </ng-template>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card-design my-4">
+                <div class="card border-top-0 border-left-0 border-right-0">
+                    <div class="card-body pt-0 pl-0">
+                        <form  [formGroup]="cuentaForm" *ngIf="cuentaForm">
+                            <div class="row mb-3">
+                                <div class="col-12 col-md-6">
+                                    <div class="barra-azul-lateral"></div>
+                                    <label  for="usernameInput">Nombre de Usuario *</label>
+                                    <input formControlName="cuenta_alias" type="text" 
+                                        class="form-control form-control-sm" id="usernameInput" 
+                                        name="usernameInput">
+                                        <div *ngIf="cuenta_alias.invalid && (cuenta_alias.dirty || cuenta_alias.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                        <div *ngIf="cuenta_alias.errors.required">
+                                            * El campo es requerido
+                                        </div>
+                                        <div *ngIf="cuenta_alias.errors.minlength">
+                                            * Se requieren mínimo 8 caracteres
+                                        </div>
+                                        <div *ngIf="cuenta_alias.errors.pattern">
+                                            * Solo se permite caracteres alfanúmericos.
+                                        </div>
+                                        <div *ngIf="cuenta_alias.errors.maxlength">
+                                            * Se requieren máximo 15 caracteres 
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-6 d-flex pt-3" style="align-items: center;">
+                                    <a [href]="(dominioUrl+postulante.POST_CV)" target="_blank" rel="noopener">
+                                        <span 
+                                            ngbTooltip="{{(postulante.POST_TIPO==0)?'Ver cv':'Ver presentación'}}" 
+                                            class="download pull-right" style="margin-top: 0;">
+                                            <em class="fa fa-fw fa-download"></em>
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <div class="barra-azul-lateral"></div>
+                                    <label  for="usernameInput">Contraseña actual *</label>
+                                    <input formControlName="cuenta_contra" type="text" 
+                                        class="form-control form-control-sm" id="usernameInput" 
+                                        name="usernameInput">
+                                        <div *ngIf="cuenta_contra.invalid && (cuenta_contra.dirty || cuenta_contra.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                        <div *ngIf="cuenta_contra.errors.minlength">
+                                            * Se requieren mínimo 8 caracteres
+                                        </div>
+                                        <div *ngIf="cuenta_contra.errors.maxlength">
+                                            * Se requieren máximo 20 caracteres 
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-md-6">
+                                    <div class="barra-azul-lateral"></div>
+                                    <label  for="usernameInput">Nueva Contraseña *</label>
+                                    <input formControlName="cuenta_contra_nueva" type="text" 
+                                        class="form-control form-control-sm" id="usernameInput" 
+                                        name="usernameInput">
+                                        <div *ngIf="cuenta_contra_nueva.invalid && (cuenta_contra_nueva.dirty || cuenta_contra_nueva.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                        <div *ngIf="cuenta_contra_nueva.errors.minlength">
+                                            * Se requieren mínimo 8 caracteres
+                                        </div>
+                                        <div *ngIf="cuenta_contra_nueva.errors.maxlength">
+                                            * Se requieren máximo 20 caracteres 
+                                        </div>
+                                        <div *ngIf="cuenta_contra_nueva.errors.passwordValidation">
+                                            *{{cuenta_contra_nueva.errors.passwordValidation.mensaje}}
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <br>
+                            <div class="row" 
+                                *ngIf="estado_postulacion!=2 && estado_postulacion!=3 && estado_postulacion!=null">
+                                <div class="col-12 col-lg-6 my-3">
+                                  <button 
+                                    class="btn btn-sm btn-success float-right"
+                                    id="actualizarButton" 
+                                    [disabled]="cuentaForm.invalid"
+                                    (click)="mostrarAlerta = false; mensajeInicio = '';actualizarCuenta()" 
+                                    >ACTUALIZAR</button>
+                                </div>
+                                <div class="col-12 col-lg-6 my-3">
+                                    <button 
+                                      class="btn btn-sm btn-success float-right"
+                                      id="actualizarButton" 
+                                      (click)="open(modalUpdateCv)"
+                                      >ACTUALIZAR CV</button>
+                                  </div>
+                              </div>
+                            <br><br>
+                            <div class="row">
+                                <p> (*) Campo obligatorio</p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <app-postulante-sidebar id="sidebar2"></app-postulante-sidebar>  
+</div>
+  
+
+<!----------------- MODAL PARA SUBIR FOTO --------------------->
+<ng-template #contentPhoto let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Actualizar imagen de perfil</h4>
+        <span type="button" class="close" (click)="modal.dismiss()">&times;</span>
+    </div>
+    <div class="modal-body">
+        <app-alerta-modal *ngIf="mostrarAlertaModal" [tipoAlerta]="tipoAlertaModal">{{mensajeModal}}</app-alerta-modal>
+
+        <div class="row">
+            <image-cropper
+              [imageChangedEvent]="imageChangedEvent"
+              [maintainAspectRatio]="true"
+              [aspectRatio]="4 / 4"
+              (imageCropped)="imageCropped($event)"
+              [resizeToWidth]="192"
+              [resizeToHeight]="192"
+            ></image-cropper>
+            <div class="col-12">
+                <input type="file" accept="image/png, .jpeg, .jpg" name="fotoInput"
+                 class="form-control" (change)="subirFoto($event)">
+                <div *ngIf="errorFoto"  class="my-1" style="color: rgb(197, 68, 68);">
+                    {{mensajeErrorFoto}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="margin-top: 15px;" class="row">    
+        <div class="col-xl-12">
+          <div *ngIf="loadingModal" class="progress" style="height:.1rem">
+            <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+          </div>
+        </div>   
+    </div>
+    <div class="modal-footer">
+        <button type="button" style="color: #fff" class="btn btn-danger fw-bold" (click)="modal.dismiss()">Cancelar</button>
+        <button type="button" (click)="actualizarFoto()" style="color: #fff" class="btn btn-success fw-bold" [disabled]="!croppedImage " >Aceptar</button>
+    </div>
+</ng-template>
+
+
+
+<!----------------- MODAL PARA ELIMINAR FOTO --------------------->
+<ng-template #eliminarPhoto let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Eliminar foto</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click');errorModal = false;imageChangedEvent = ''">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <app-alerta-modal *ngIf="errorModal" [tipoAlerta]="'danger'"><em class="fa fa-fw fa-exclamation-triangle"></em>{{mensajeModal}}</app-alerta-modal>
+        <span>¿Está seguro de eliminar su foto?</span>
+    </div>
+    <!---------------------- PROGESSBAR ---------------------->
+    <div class="row">
+        <div class="col-xl-12">
+            <div *ngIf="loadingModal" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+    </div>
+    <!-------------------------------------------------------->
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-success bold" [disabled]="loadingModal" (click)="eliminarFoto()" >Confirmar</button>
+        <button type="button" class="btn btn-sm btn-danger bold" [disabled]="loadingModal" (click)="d('Cross click')">Cancelar</button>
+    </div>
+</ng-template>
+
+
+<!----------------- MODAL PARA CONFIRMAR LA POSTULACIÓN --------------------->
+<ng-template #contentPostulacion let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title"><em *ngIf="estado_postulacion == 3" class="fa fa-fw fa-exclamation-triangle"></em> {{(estado_postulacion==3)?'¡Alerta!':'Confirmación'}}</h4>
+        <button *ngIf="estado_postulacion != 3" type="button" class="close" aria-label="Close" (click)="d('Cross click');errorModal = false">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        {{(estado_postulacion==3)? 'Su cuenta ha sido bloqueada.':'¿Está seguro de volver a postular?'}}
+    </div>
+    <!---------------------- PROGESSBAR ---------------------->
+    <div class="row">
+        <div class="col-xl-12">
+            <div *ngIf="loadingModal" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+    </div>
+    <!-------------------------------------------------------->
+    <div class="modal-footer">
+        <!-- el id del estudio es 0 cuando se trata de agregar uno nuevo pero si es otro cualquier número, significa que actualizará un estudio -->
+        <div *ngIf="estado_postulacion != 3">
+            <button type="button" class="btn btn-sm btn-success" [disabled]="loadingModal" (click)="insertarPostulacion()">Confirmar</button>
+            
+            <button style="margin-left: 10px;" type="button" class="btn btn-sm btn-danger bold" [disabled]="loadingModal" (click)="d('Cross click')">Cancelar</button>
+        </div>
+        <div *ngIf="estado_postulacion == 3">
+            <button type="button" class="btn btn-sm btn-success" [disabled]="loadingModal" (click)="cerrarSesion()">Aceptar</button>
+        </div>
+    </div>
+</ng-template>
+
+
+<ng-template #modalUpdateCv let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Actualizar cv </h4>
+        <span type="button" class="close" (click)="modal.dismiss(); mostrarAlertaModal = false; mensajeModal = '' ">&times;</span>
+    </div>
+    <div class="modal-body">
+        <app-alerta-modal *ngIf="mostrarAlertaModal" [tipoAlerta]="tipoAlertaModal">{{mensajeModal}}</app-alerta-modal>
+        <div class="container">
+            <div class="border rounded-lg py-2 pl-1">
+                <label for="file-upload" class="border rounded-lg inputFile">
+                    <i class="fa fa-cloud-upload"></i>Elegir archivo
+                </label>
+                <input id="file-upload" type="file" 
+                    #inputCV
+                    accept=".pdf" (change)="subirArchivoCV($event)"  name="file" type="file"/>
+                <label class="ml-2 text-gray-300">{{tituloArchivo ? tituloArchivo :'Ningún archivo seleccionado'}}</label>
+            </div>
+        </div>
+    </div>
+    <div style="margin-top: 15px;" class="row">    
+        <div class="col-xl-12">
+          <div *ngIf="loadingModal" class="progress" style="height:.1rem">
+            <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+          </div>
+        </div>   
+    </div>
+    <div class="modal-footer">
+        <button type="button" style="color: #fff" class="btn btn-danger bold" (click)="modal.dismiss();
+        mostrarAlertaModal = false; mensajeModal = '' ">Cancelar</button>
+        <button (click)="mostrarAlertaModal = false; mensajeModal = ' '; mostrarAlerta = false; mensajeInicio = ' '; guardarCv()" 
+            type="button" style="color: #fff" class="btn btn-success bold" >Aceptar</button>
+    </div>
+</ng-template>

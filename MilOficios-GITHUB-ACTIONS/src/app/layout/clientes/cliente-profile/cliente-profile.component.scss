@@ -1,0 +1,399 @@
+//INPUTS 
+
+#contentAll{
+    margin-left: 2rem;
+    border-left: 1px solid #24DEEC;
+}
+
+.barra{
+    float:left;
+    width: 8px;
+    height: 22px;
+    margin-right: .5rem;
+    background-color: #24DEEC;
+}
+
+@media(min-width:994px){
+    #wrapper{
+        margin-top: .9rem;
+    }
+}
+
+@media(max-width:540px){
+    #wrapper{
+        margin-top: 2rem;
+    }
+    .container{
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .card{
+        margin-right: 0rem !important;
+        margin-left: .9rem !important;
+    }
+}
+
+select {
+    background-image: url("../../../../assets/images/select.png");
+    background-size: 25px 25px;
+}
+
+#usernameInput{
+    border-radius: 2rem;
+    height: 3rem;
+}
+#estado-select{
+    border-radius: 2rem;
+    height: 3rem;
+}
+#emailInput{
+    border-radius: 2rem;
+    height: 3rem;
+}
+
+#botonActualizar{
+    height: 3rem;
+    width: 100%;
+    color: white;
+    background-color: #3E11BC;
+    border-radius: 2rem;
+}
+
+#botonActualizar:hover{
+    background: #24DEEC;
+    color: #3E11BC;
+}
+
+#cambiarContraseña{
+    height: 3rem;
+    width: 100%;
+    color: white;
+    background-color: #3E11BC;
+    border-radius: 2rem;
+}
+#cambiarContraseña:hover{
+    background: #24DEEC;
+    color: #3E11BC;
+}
+
+.raya-Datos{
+    background-color:#24DEEC;
+    margin-top: -1px;
+    max-width: 93%;
+    height: 0.1rem;
+    margin-left: 18px;
+}
+
+.card{
+    height: auto;
+    width: 100%;
+}
+
+img{
+    margin-left: 20px;
+    margin-top: 20px;
+    width: 200px;
+    height: 200px;
+    position: relative;
+}
+
+label{
+    font-weight: bold;
+    white-space: nowrap;
+    color: #3E11BC;
+}
+
+
+#label-foto{
+    margin-top: 10px;
+    margin-left: 1.5rem;
+}
+
+
+h5 {
+    white-space: nowrap;
+}
+
+span:hover{
+    cursor: pointer;
+}
+
+.change-password{
+    color: rgb(0, 0, 141);
+}
+
+.change-password:hover{
+    color: rgb(67, 186, 255);
+    text-decoration: underline;
+}
+
+.filtroSelect{
+    width: 100%;
+    height: 35px;
+}
+
+.card-design{
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.fa-camera{
+    position: absolute;
+    margin-top: 25px;
+    margin-left: -30px;
+    border-width: 5px;
+    background-color: white;
+}
+
+.hide {
+    display: none;
+}
+  
+.rating {  
+    direction: rtl;
+}
+  
+.rating > label {
+    display: inline;
+    position: relative;
+    font-size: 1.3rem;
+    //cursor: pointer;
+    color: #888;
+}
+  
+/*
+.rating > label:hover:before,
+.rating > label:hover ~ label:before,*/
+
+.rating > input.radio-btn:checked ~ label:before {
+    content: "\2605";
+    position: absolute;
+    color: #FFD700;
+}
+
+.star {
+    position: relative;
+    display: inline-block;
+    font-size: 2rem;
+    color: #888
+  }
+  .full {
+    color: red;
+  }
+  .half {
+    position: absolute;
+    display: inline-block;
+    overflow: hidden;
+    color: #FFD700;
+  }
+
+.pos-icon{
+    position: relative;
+    left: -2.1rem;
+    // bottom: -0.2rem;
+    background-color: var(--color-primary);
+    padding: 3px;
+    z-index: 100;
+    border-radius: 1rem;
+    color:#fff;
+    height: 2.3rem;
+    width: 2rem;
+}
+
+#lineaIntermedia{
+    position: absolute;
+    height: 55rem;
+    width: 1px;
+}
+
+.centrar{
+    display: flex;
+    justify-content: center;
+}
+
+.centrar-hijo{
+    align-self: center;
+}
+
+#eyePass{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    background: #3E11BC;
+    height: 2rem;
+    width: 2rem;
+
+    position: absolute;
+    border-radius: 2rem;
+    margin-left: 90%;
+    margin-top: 3px;
+    z-index: 10;
+}
+
+.card-header{
+    background-color: white;
+    border-bottom: white;
+    margin-left: -1.5rem;
+}
+
+#passwordInputCurrent{
+    border-radius: 2rem;
+}
+
+#passwordInputNew{
+    border-radius: 2rem;
+}
+
+@media(max-width:450px){
+    #eyePass{
+        margin-left: 88%;
+    }
+}
+
+@media(max-width:400px){
+    #eyePass{
+        margin-left: 86%;
+    }
+}
+
+@media(max-width:300px){
+    #eyePass{
+        margin-left: 79%;
+    }
+}
+
+@media(max-width:768px){
+    .space{
+        margin-top: 1rem;
+    }
+}
+
+
+@media(max-width:991px){
+    #usernameInput{
+        height: 2.5rem;
+    }
+    #estado-select{
+        height: 2.5rem;
+    }
+    #emailInput{
+        height: 2.5rem;
+    }
+    #botonActualizar{
+        height: 2.5rem;
+    }
+    #cambiarContraseña{
+        height: 2.5rem;
+    }
+    #lineaIntermedia{
+        height: 53rem;
+    }
+    #cambiarPassword{
+        padding-top: 7px;
+        height: 2.5rem;
+    }
+    #actualizarButton{
+        height: 2.5rem;
+    }
+}
+
+@media(max-width:840px){
+    #botonActualizar{
+        margin-right: 0px;
+    }
+
+    #cambiarContraseña{
+        margin-right: 0px;
+    }
+}
+
+@media(max-width:540px){
+    #contentAll{
+        border-left: 0px;
+        margin-left: 0;
+    }
+    .h2{
+        font-size: 1.5rem;
+    }
+    #lineaIntermedia{
+        display: none;
+    } 
+    :host ::ng-deep .card{
+        width: unset;
+    }
+}
+
+@media(max-width:539px){
+    #sidebar{
+        display: none;
+    }
+   
+   
+}
+
+@media(min-width: 540px){
+    #sidebar2{
+        display: none;
+    }
+}
+
+.bold {
+    font-weight: bold;
+    color: white;
+}
+
+@media (max-width: 380px) {
+    .fs {
+        font-size: 13px;
+    }
+}
+
+#cambiarPassword{
+    background: #3e11bc;
+    border: transparent;
+    padding-top: 5px;
+    width: 100%;
+    height: 3rem;
+    border-radius: 2rem;
+}
+
+#cambiarPassword:hover {
+    background: #24deec;
+    color: #3e11bc;
+}
+
+
+#actualizarButton{
+    background: #3e11bc;
+    border: transparent;
+    width: 100%;
+    height: 3rem;
+    border-radius: 2rem;
+}
+
+#actualizarButton:hover {
+    background: #24deec;
+    color: #3e11bc;
+}
+
+input[type="file"] {
+    display: none;
+}
+.inputFile{
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 3px 10px;
+    cursor: pointer;
+    background-color: #e7e7ed;
+    color: black;
+    font-weight: 500;
+    letter-spacing: 0.025em;
+}
+
+
+.contenedor-barra{
+    width: 100%;
+    padding-left: 10px;
+}
+  

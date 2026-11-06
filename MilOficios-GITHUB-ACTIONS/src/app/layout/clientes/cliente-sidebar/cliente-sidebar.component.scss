@@ -1,0 +1,217 @@
+
+//SIDEBAR - PANTALLAS GRANDES
+
+#sidebar-wrapper .sidebar-heading {
+  padding: 0.875rem 1.25rem;
+  font-size: 1.2rem;
+  color: #3E11BC; 
+}
+
+#botones{
+  min-width: 20%;
+  margin: 0;
+  border-color: #F9F9F9;
+  padding: 0;
+  border-radius: 0;
+}
+
+.btn-secondary{
+  color: white;
+  background-color: #3E11BC;
+}
+
+#sideCard{
+  border-color: #3E11BC; 
+  border-radius: 1rem;
+  border-width: 2px;
+  width: 16rem;
+}
+
+#fila1{
+  margin-top: 5px;  
+}
+
+#ultimafila{
+  border-bottom-left-radius: 0.8rem;
+  border-bottom-right-radius: 0.8rem;
+}
+
+em {
+  width: 30px;
+}
+
+.raya-separadora-b{
+  background-color:#24DEEC;
+  margin-top: -1px;
+  max-width: 88%;
+  height: 0.1rem;
+  margin-left: 18px;
+}
+
+
+.list-group {
+  a.list-group-item {
+      border-radius: 0;
+      color: #3e11bc;
+      text-decoration: none;
+      .fa {
+         // margin-right: 10px;
+         font-size:18px;
+         text-align: center;
+      }
+      border: 0 solid transparent;            
+      span{
+          font-size:12px;
+      }            
+  }
+  a:hover {
+      background: #3e11bc;
+      color: #fff;
+  }
+  a.router-link-active {
+      color: #fff;
+      background: #3e11bc;
+      font-weight: bold;
+  }
+  .header-fields {
+      padding-top: 10px;
+
+      > .list-group-item:first-child {
+          border-top: 1px solid rgba(255, 255, 255, 0.2);
+      }
+  }    
+} 
+  
+
+@media screen and (max-width: 992px) {
+  /*#sidebar-wrapper{
+    display: none !important;
+  }*/
+}
+
+@media (min-width: 992px) {
+  .navbar-toggler{
+    display: none !important;
+  }
+}
+/*
+@media (min-width: 992px) {
+  #sidebar-wrapper{
+    
+  }
+}*/
+
+#barr{
+  float:left;
+  width: 8px;
+  height: 22px;
+  margin-right: .5rem;
+  background-color: #24DEEC;
+  margin-left: 18px;
+  margin-top: 16px;
+}
+
+.toggle-button {
+  width: 18rem;
+  cursor: pointer;
+  padding: 12px;
+  bottom: 0;
+  color: #3e11bc;
+  background: #fff;
+  em {
+      font-size: 23px;
+  }
+  &:hover {
+      background: #3e11bc;
+      color: #fff;
+  }
+  border-top: 1px solid #3e11bc;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -ms-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+  text-align:center;      
+}
+
+#iconosSide{
+  font-size: 28px;
+}
+
+/*
+.collapsed {
+  width: 60px;
+  .sidebar-heading{
+    display: none;
+  }
+  .raya-separadora-b{
+    background: transparent;
+  }
+
+  #barr{
+    display: none;
+  }
+
+  #fila1{
+    border-top-right-radius: 14px;
+    border-top-left-radius: 14px;
+    margin-top: -1px;
+  }
+
+  span {
+    display: none;
+  }
+  .list-group{
+    text-align:center;
+  }
+}
+*/ 
+
+@media(max-width:1280px){
+  #sideCard{
+    width: 14rem;
+  }
+}
+
+@media(max-width:1024px){
+  #sideCard{
+    width: 13rem;
+  }
+}
+
+@media(max-width:540px){
+  #sideCard{
+    display: none;
+  }
+}
+
+//SIDEBAR 2 - PANTALLAS MÓVILES
+
+#sidebarResponsive{
+  top: 95%;
+  position: fixed;
+  z-index: 10;
+  width: 103%;
+  margin-top: -15px;
+  margin-left: -16px;
+}
+
+@media(max-height:667px){
+  #sidebarResponsive{
+    top: 94%;
+  }
+}
+
+@media(max-height:568px){
+  #sidebarResponsive{
+    top: 93%;
+  }
+}
+
+@media(min-width:541px){
+  #sidebarResponsive{
+    display: none;
+
+  }
+}
+

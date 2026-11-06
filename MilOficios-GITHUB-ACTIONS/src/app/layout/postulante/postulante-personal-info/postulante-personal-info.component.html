@@ -1,0 +1,306 @@
+<!-- ALERTAS -->
+<app-alerta-general 
+    *ngIf="alertaGeneral || alertaPostulacion"
+    [tipoAlerta]="tipoAlerta">
+    {{mensajeAlerta}}
+</app-alerta-general>
+<app-alerta-general 
+    *ngIf="errorPost"
+    [tipoAlerta]="tipoAlerta">
+    {{mensajeErrorPostulante}}
+</app-alerta-general>
+<div class="d-flex" id="wrapper">
+    <app-postulante-sidebar id="sidebar"></app-postulante-sidebar>
+
+    <div class="container">
+        <div class="card" id="cardstyle">
+            <div class="container">
+                <div class="card-design">
+                    <div class="card border-top-0 border-left-0 border-right-0 border-bottom-0">
+                        <div class="d-flex justify-content-sm-between flex-sm-row flex-column  align-items-center">
+                            <h4 class="card-header" style="background: white;"><label>{{postulante?.POST_TIPO== 0 ? 'Datos personales' : 'Datos del representante'}}</label></h4>
+                            <button class="btn btn-sm btn-success " id="postularBoton" *ngIf="estado_postulacion!=2 && estado_postulacion!=3 && estado_postulacion!=null" 
+                            (click)="open(contentPostulacion)" [disabled]="postulanteForm.invalid || cargando">POSTULAR</button>
+                        </div>
+                        
+                        <div  style="overflow: hidden;">
+                            <triangular-bar [isProfile]="true"></triangular-bar>
+                        </div>
+
+                        <div class="card-body pb-0" style="margin-top: -1rem;">
+                            <div *ngIf="cargando" class="fixed-top progress" style="position: absolute; height:.14rem">
+                                <ngb-progressbar class="indeterminate" type="primary" height="500%" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+                            </div>
+
+                            <form  [formGroup]="postulanteForm"  class="form-group" >
+                                <div class="row">
+                                    <div class="col-sm-12 col-lg-6 my-2">
+                                        <label for="nombreInput">Nombres *</label>
+                                        <input type="text" id="sizeinput" name="nombreInput" class="form-control" formControlName="post_nombres">
+                                        <div *ngIf="post_nombres.invalid && (post_nombres.dirty || post_nombres.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                            <div *ngIf="post_nombres.errors.required">
+                                                * El nombre es requerido
+                                            </div>
+                                            <div *ngIf="post_nombres.errors.maxlength">
+                                                * Se requieren máximo 50 caracteres
+                                            </div>
+                                            <div *ngIf="post_nombres.errors.pattern">
+                                                * Solo se permiten caracteres alfabéticos
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-lg-6 my-2">
+                                        <label for="dniInput">Apellido Paterno *</label>
+                                        <input type="text" id="sizeinput" name="dniInput" class="form-control" formControlName="post_ape_pat">
+                                        <div *ngIf="post_ape_pat.invalid && (post_ape_pat.dirty || post_ape_pat.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                            <div *ngIf="post_ape_pat.errors.required">
+                                                * El apellido paterno es requerido
+                                            </div>
+                                            <div *ngIf="post_ape_pat.errors.maxlength">
+                                                * Se requieren máximo 30 caracteres
+                                            </div>
+                                            <div *ngIf="post_ape_pat.errors.pattern">
+                                                * Solo se permiten caracteres alfabéticos
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12 col-lg-6 my-2">
+                                        <label for="nombreInput">Apellido Materno *</label>
+                                        <input type="text" id="sizeinput" name="nombreInput" class="form-control" formControlName="post_ape_mat">
+                                        <div *ngIf="post_ape_mat.invalid && (post_ape_mat.dirty || post_ape_mat.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                            <div *ngIf="post_ape_mat.errors.required">
+                                                * El apellido materno es requerido
+                                            </div>
+                                            <div *ngIf="post_ape_mat.errors.maxlength">
+                                                * Se requieren máximo 30 caracteres
+                                            </div>
+                                            <div *ngIf="post_ape_mat.errors.pattern">
+                                                * Solo se permiten caracteres alfabéticos
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-lg-6 my-2">
+                                        <label for="dniInput">Email *</label>
+                                        <input type="text" id="sizeinput" name="dniInput" class="form-control" formControlName="post_email">
+                                        <div *ngIf="post_email.invalid && (post_email.dirty || post_email.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                            <div *ngIf="post_email.errors.required">
+                                                * El email es requerido
+                                            </div>
+                                            <div *ngIf="post_email.errors.maxlength">
+                                                * Se requieren máximo 60 caracteres
+                                            </div>
+                                            <div *ngIf="post_email.errors.pattern">
+                                                * El formato del correo no es válido
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12 col-lg-6 my-2">
+                                        <label for="nombreInput">Celular *</label>
+                                        <input type="text" id="sizeinput" name="nombreInput" class="form-control" formControlName="post_celular">
+                                        <div *ngIf="post_celular.invalid && (post_celular.dirty || post_celular.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                            <div *ngIf="post_celular.errors.required">
+                                                * El número de celular es requerido
+                                            </div>
+                                            <div *ngIf="post_celular.errors.maxlength">
+                                                * Se requieren máximo 20 caracteres
+                                            </div>
+                                            <div *ngIf="post_celular.errors.minlength">
+                                                * Se requieren mínimo 12 caracteres
+                                            </div>
+                                            <div *ngIf="post_celular.errors.pattern">
+                                                * Formato incorrecto. Se debe colocar '+' al inicio, seguido de números
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-lg-6 my-2">
+                                        <label for="dniInput">DNI *</label>
+                                        <input type="text" id="sizeinput" name="dniInput" class="form-control" formControlName="post_dni">
+                                        <div *ngIf="post_dni.invalid && (post_dni.dirty || post_dni.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                            <div *ngIf="post_dni.errors.required">
+                                                * El DNI es requerido
+                                            </div>
+                                            <div *ngIf="post_dni.errors.maxlength">
+                                                * Se requieren maximo 8 caracteres
+                                            </div>
+                                            <div *ngIf="post_dni.errors.minlength">
+                                                * Se requieren minimo 8 caracteres
+                                            </div>
+                                            <div *ngIf="post_dni.errors.pattern">
+                                                * Solo se permiten numeros
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12 col-lg-6 my-2">
+                                        <label for="nombreInput">RUC *</label>
+                                        <input type="text" id="sizeinput" name="nombreInput" class="form-control" formControlName="post_ruc">
+                                        <div *ngIf="post_ruc.invalid && (post_ruc.dirty || post_ruc.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                            <div *ngIf="post_ruc.errors.required">
+                                                * El RUC es requerido
+                                            </div>
+                                            <div *ngIf="post_ruc.errors.maxlength">
+                                                * Se requieren máximo 11 caracteres
+                                            </div>
+                                            <div *ngIf="post_ruc.errors.minlength">
+                                                * Se requieren mínimo 11 caracteres
+                                            </div>
+                                            <div *ngIf="post_ruc.errors.pattern">
+                                                * Solo se permiten caracteres numéricos
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12 col-lg-6 my-2">
+                                        <label for="nombreInput">Sexo *</label>
+                                        <select class="form-control form-control-sm custom-select" id="styleforms" formControlName="post_sexo">
+                                            <option [ngValue]="null">Seleccionar</option>
+                                            <option [ngValue]="'M'">Masculino</option>
+                                            <option [ngValue]="'F'">Femenino</option>
+                                        </select>
+                                        <div *ngIf="post_sexo.invalid && (post_sexo.dirty || post_sexo.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                            <div *ngIf="post_sexo.errors.required">
+                                                * El sexo es requerido
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12 col-lg-6 my-2">
+                                        <label for="nombreInput">Fecha de nacimiento *</label>
+                                        <input type="date" [max]="maxFecha" id="sizeinput" name="fechaInput" class="form-control" formControlName="post_nacimiento">
+                                        <div *ngIf="post_nacimiento.invalid && (post_nacimiento.dirty || post_nacimiento.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                            <div *ngIf="post_nacimiento.errors.required">
+                                                * La fecha de nacimiento es requerida
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12 col-lg-6 my-2">
+                                        <label for="lista-paises">País *</label>
+                                        <div id="lista-paises">
+                                            <select name="paises-select" 
+                                                id="sizeinput" 
+                                                class="form-control form-control-sm custom-select" 
+                                                formControlName="post_pai_id"
+                                                (change)="obtenerRegiones()">
+                                              <option [ngValue]=null> Seleccionar </option>
+                                              <option [ngValue]="pais.PAI_ID" *ngFor="let pais of paises">{{pais.PAI_NOMBRE}}</option>
+                                            </select>
+                                        </div>
+                                        <div *ngIf="post_pai_id.invalid && (post_pai_id.dirty || post_pai_id.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                            <div *ngIf="post_pai_id.errors.required">
+                                                * El país es requerido
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12 col-lg-6 my-2">
+                                        <label for="lista-regiones">Región *</label>
+                                        <div id="lista-regiones">
+                                            <select name="regiones-select" id="sizeinput" class="form-control form-control-sm custom-select" formControlName="post_reg_id" (change)="obtenerProvincias()">
+                                              <option [ngValue]=null> Seleccionar </option>
+                                              <option [ngValue]="region.REG_ID" *ngFor="let region of regiones">{{region.REG_NOMBRE}}</option>
+                                            </select>
+                                        </div>
+                                        <div *ngIf="post_reg_id.invalid && (post_reg_id.dirty || post_reg_id.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                            <div *ngIf="post_reg_id.errors.required">
+                                                * La región es requerida
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12 col-lg-6 my-2">
+                                        <label for="lista-provincia">Provincia *</label>
+                                        <div id="lista-provincia">
+                                            <select name="provincia-select" id="sizeinput" class="form-control form-control-sm custom-select" formControlName="post_pro_id" (change)="obtenerDistritos()">
+                                              <option [ngValue]=null>Seleccionar </option>
+                                              <option [ngValue]="PROVINCIA.PRO_ID" *ngFor="let PROVINCIA of provincias">{{PROVINCIA.PRO_NOMBRE}}</option>
+                                            </select>
+                                        </div>
+                                        <div *ngIf="post_pro_id.invalid && (post_pro_id.dirty || post_pro_id.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                            <div *ngIf="post_pro_id.errors.required">
+                                                * La provincia es requerida
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-lg-6 my-2">
+                                        <label for="lista-distritos">Distrito *</label>
+                                        <div id="lista-distritos">
+                                            <select name="distritos-select" id="sizeinput" class="form-control form-control-sm custom-select" formControlName="post_dist_id">
+                                              <option [ngValue]=null>Seleccionar</option>
+                                              <option [ngValue]="DISTRITO.DIST_ID" *ngFor="let DISTRITO of distritos">{{DISTRITO.DIST_NOMBRE}}</option>
+                                            </select>
+                                        </div>
+                                        <div *ngIf="post_dist_id.invalid && (post_dist_id.dirty || post_dist_id.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                            <div *ngIf="post_dist_id.errors.required">
+                                                * El distrito es requerido
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="direccionInput">Dirección *</label>
+                                        <input type="text" id="sizeinput" name="direccionInput" class="form-control" formControlName="post_direccion">
+                                        <div *ngIf="post_direccion.invalid && (post_direccion.dirty || post_direccion.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                            <div *ngIf="post_direccion.errors.required">
+                                                * La dirección es requerida
+                                            </div>
+                                            <div *ngIf="post_direccion.errors.maxlength">
+                                                * Se requieren máximo 100 caracteres
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <div class="d-flex justify-content-center col-12 my-2 pb-4" *ngIf="estado_postulacion!=2 && estado_postulacion!=3 && estado_postulacion!=null" >
+                            <button  class="btn btn-sm btn-success float-right " id="actualizarButton" (click)="actualizarPostulante()" [disabled]="postulanteForm.invalid || cargando">ACTUALIZAR</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <app-postulante-sidebar id="sidebar2"></app-postulante-sidebar>
+</div>
+
+
+
+<!----------------- MODAL PARA CONFIRMAR LA POSTULACIÓN --------------------->
+<ng-template #contentPostulacion let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title"><em *ngIf="estado_postulacion == 3" class="fa fa-fw fa-exclamation-triangle"></em> {{(estado_postulacion==3)?'¡Alerta!':'Confirmación'}}</h4>
+        <button *ngIf="estado_postulacion != 3" type="button" class="close" aria-label="Close" (click)="d('Cross click');errorModal = false">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        {{(estado_postulacion==3)? 'Su cuenta ha sido bloqueada.':'¿Está seguro de volver a postular?'}}
+    </div>
+    <!---------------------- PROGESSBAR ---------------------->
+    <div class="row">
+        <div class="col-xl-12">
+            <div *ngIf="loadingModal" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+    </div>
+    <!-------------------------------------------------------->
+    <div class="modal-footer">
+        <!-- el id del estudio es 0 cuando se trata de agregar uno nuevo pero si es otro cualquier número, significa que actualizará un estudio -->
+        <div *ngIf="estado_postulacion != 3">
+            <button type="button" class="btn btn-sm btn-success" [disabled]="loadingModal" (click)="insertarPostulacion()">Confirmar</button>
+            
+            <button style="margin-left: 10px;" type="button" class="btn btn-sm btn-danger bold" [disabled]="loadingModal" (click)="d('Cross click')">Cancelar</button>
+        </div>
+        <div *ngIf="estado_postulacion == 3">
+            <button type="button" class="btn btn-sm btn-success" [disabled]="loadingModal" (click)="cerrarSesion()">Aceptar</button>
+        </div>
+    </div>
+</ng-template>

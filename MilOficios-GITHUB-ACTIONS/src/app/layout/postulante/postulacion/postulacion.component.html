@@ -1,0 +1,173 @@
+<app-alerta-general 
+    *ngIf="error"
+    tipoAlerta="danger">
+    {{mensajeError}}
+</app-alerta-general>
+
+<app-page-header [heading]="'Postulaciones'"></app-page-header>
+<br>
+<div class="row" style="width: 100%;margin:0">
+    <div class="col-6 col-md-3 raya-separadora-a">
+    </div>
+    <div class="triangulo-equilatero-bottom-rigth"></div>
+    <div class="col-12 raya-separadora-b">
+    </div>
+</div>
+<br>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-xl-12">
+            <!-------------- ProgressBar ----------->
+            <div style="margin-top: 15px;" class="row">
+                <div class="col-12">
+                    <div *ngIf="loading" class="progress" style="height:.1rem">
+                        <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100"
+                            [striped]="true" [animated]="true"></ngb-progressbar>
+                    </div>
+                </div>
+            </div>
+
+            <!----------------- Tabla ---------------->
+            <div class="table-responsive-sm table-responsive-md table-responsive-lg table-responsive-xl">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="text-center table-border-left" scope="col">Acción</th>
+                            <th class="line  text-center" scope="col">Estado</th>
+                            <th class="line  text-center" scope="col" style="min-width: 11rem;">Fecha de postulación
+                            </th>
+                            <th class="line text-center table-border-rigth" scope="col">Motivo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngIf="postulaciones?.length===0 && !loading">
+                            <td colspan="4"><span>No hay postulaciones para mostrar</span></td>
+                        </tr>
+                        <tr
+                            *ngFor="let postulacion of postulaciones | slice:(currentPage-1)*itemsPerPage:currentPage*itemsPerPage ; let i = index">
+                            <td class="text-center align-middle"><span *ngIf="postulacion.POS_ESTADO != 2"
+                                    ngbTooltip="Ver detalles" class="spanAccion"
+                                    (click)="open(content);obtenerPostulacionActual(postulacion)"><em
+                                        class="fa fa-fw fa-eye iconEye"></em></span></td>
+                            <td class="text-center">
+                                {{postulacion.POS_ESTADO==0?'Aceptado':(postulacion.POS_ESTADO==1)?'Rechazado':'Pendiente'}}
+                            </td>
+                            <td class="text-center">{{postulacion.POS_FECHA | date: 'dd/MM/yyyy'}}</td>
+                            <td class="text-center w-50">{{(postulacion.POS_MOT_RECHAZO == null)?"La postulación está en estado pendiente porque aún no ha sido revisada":postulacion.POS_MOT_RECHAZO}}</td>
+                        </tr>
+                        <tr *ngIf="postulaciones?.length > 0">
+                            <td colspan="4"><strong class="pull-right" style="color: #3e11bc;">Total:
+                                    {{postulaciones.length}} {{postulaciones.length == 1 ? 'elemento' :'elementos'}}</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!---------------PAGINACIÓN------------->
+            <div *ngIf="postulaciones?.length>0" style="margin-top: 5px;" class="row box-footer clearfix">
+                <div class="col-xl-10 col-lg-9 col-md-9 col-sm-9 col-7">
+                    <ngb-pagination *ngIf="postulaciones?.length>10" class="d-flex justify-content-start" size="sm"
+                        [maxSize]="5" [pageSize]="itemsPerPage" [collectionSize]="postulaciones?.length"
+                        [(page)]="currentPage"></ngb-pagination>
+                </div>
+                <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-7">
+                    <select class="pull-right" [(ngModel)]="itemsPerPage"
+                        class="form-control form-control-sm custom-select">
+                        <option value="10">10 elementos</option>
+                        <option value="15">15 elementos</option>
+                        <option value="20">20 elementos</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center mt-5">
+        <button class="btn btn-sm btn-success self-center " id="postularBoton" (click)="open(modalConfirmacion)">Cancelar postulacion</button>
+    </div>
+</div>
+
+<!----------------- MODAL PARA MOSTRAR DETALLES DE LA POSTULACIÓN RECHAZADA --------------------->
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Detalle de la postulación</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <label>Estado</label>
+                    <input type="text" class="form-control form-control-sm"
+                        [ngModel]="(detalle_postulacion.POS_ESTADO==0)?'Aceptado':(detalle_postulacion.POS_ESTADO==1)?'Rechazado':'Pendiente'"
+                        disabled><br>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label>Fecha de postulación</label>
+                    <input type="text" class="form-control form-control-sm"
+                        [ngModel]="detalle_postulacion.POS_FECHA | date: 'dd/MM/yyyy'" disabled><br>
+                </div>
+                <div class="col-12">
+                    <label>Motivo de rechazo</label>
+                    <input type="text" class="form-control form-control-sm"
+                        [ngModel]="detalle_postulacion.POS_MOT_RECHAZO" disabled> <br>
+                    <textarea class="form-control" cols="30" rows="6" [ngModel]="detalle_postulacion.POS_MSJ_RECHAZO"
+                        disabled></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<!----------------- MODAL DE AVISO DE BLOQUEO DEL POSTULANTE --------------------->
+<ng-template #contentBloqueo let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Bloqueado</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click');errorModal = false">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <app-alerta-modal *ngIf="errorModal" tipoAlerta="danger"><em class="fa fa-fw fa-exclamation-triangle"></em>{{mensajeModal}}</app-alerta-modal>
+        Esta cuenta ha sido bloqueada, se le redigirá a la pantalla principal
+    </div>
+    <!---------------------- PROGESSBAR ---------------------->
+    <div class="row">
+        <div class="col-xl-12">
+            <div *ngIf="loadingModal" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true"
+                    [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+    </div>
+    <!-------------------------------------------------------->
+    <div class="modal-footer">
+        <!-- el id del estudio es 0 cuando se trata de agregar uno nuevo pero si es otro cualquier número, significa que actualizará un estudio -->
+        <button type="button" class="btn btn-sm btn-danger" [disabled]="loadingModal"
+            (click)="redirigirBloqueo()">Aceptar</button>
+    </div>
+</ng-template>
+
+<!---------------------------MODAL DE CONFIRMACIÓN PARA COBRAR BONO--------------------------------->
+<ng-template #modalConfirmacion let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title"><label>Confirmación</label></h4>
+      <span [ngClass]="{'disabledSpan': loadingConfirmar}" type="button" class="close" (click)="modal.dismiss()">&times;</span>
+    </div>
+    <div class="modal-body">
+      ¿Estás seguro de cancelar la postulación?
+    </div>
+    <div style="margin-top: 15px;" class="row">    
+      <div class="col-xl-12">
+          <div *ngIf="loadingConfirmar" class="progress" style="height:.1rem">
+              <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+          </div>
+      </div>   
+    </div>
+    <div class="modal-footer" >
+      <button [disabled]="loadingConfirmar" type="button" style=" width: auto;" class="btn btn-success" (click)="cancelarPostulacion()">Aceptar</button>
+    </div>
+</ng-template>

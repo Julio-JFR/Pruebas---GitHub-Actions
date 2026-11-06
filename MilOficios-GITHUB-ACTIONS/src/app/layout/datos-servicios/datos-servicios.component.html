@@ -1,0 +1,369 @@
+<app-alerta-general 
+    *ngIf="mostrarAlertaGoogle"
+    [tipoAlerta]="tipoAlerta">
+    {{mensaje}}
+</app-alerta-general>
+<app-page-header [heading]="'Solicitar servicio'"></app-page-header>
+<div class="row" style="width: 100%;margin:0">
+  <div class="col-6 col-md-3 raya-separadora-a">
+  </div>
+  <div class="triangulo-equilatero-bottom-rigth"></div>
+  <div class="col-12 raya-separadora-b">
+  </div>
+</div>
+<div style="margin-top: 15px;" class="row">
+  <div class="col-xl-12">
+    <div *ngIf="cargandoDatos" class="progress" style="height:.1rem">
+      <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true"
+        [animated]="true"></ngb-progressbar>
+    </div>
+  </div>
+</div>
+<br>
+<div class="row col-12">
+  <div class=" col-xl-5 col-lg-5 col-md-5 col-sm-12 col-12" style="margin-left: 4%;">
+    <form [formGroup]="servicioForm">
+      <div class="form-group">
+        <h5 class="bold-tipografy" (click)="goToMisSolicitudes()">Servicio solicitado</h5>
+        <input disabled readonly formControlName="nombreServicio"
+          (change)="obtenerCambioNombreServicio(nombreServicio.value,servicioSolicitado.SER_NOMBRES)"
+          class="form-control" type="text" id="example-input">
+        <div *ngIf="(nombreServicio.dirty || nombreServicio.touched)" class="my-1" style="color: rgb(255,0,0);">
+          <div *ngIf="nombreServicio.value !== servicioSolicitado.SER_NOMBRES">
+            * El campo no puede ser modificado.
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <h5 class="margen-titulo bold-tipografy">Imágenes de referencia</h5>
+        <div class="form-group mx-4">
+          <div class="row my-4">
+            <label for="exampleFormControlFile1">Subir Imágenes <strong> (Se permite .jpg .png .jpeg)</strong></label>
+            <input multiple (change)="cargarImagenes($event)" accept="image/png, .jpeg, .jpg" type="file"
+              class="form-control-file" style="border-radius: 0;" id="resetInput">
+            <div *ngIf="mostrarAlertaArchivo" style="color: rgb(255,0,0);">
+              <strong>* {{mensaje}}</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="carousel_img">
+          <div *ngIf="IMAGENES.length <= 0">
+            <div class="carousel_img_side">
+              <img class="img_side"
+                src="../../../assets/images/ICONO-PREDETERMINADO.png"
+                alt="Mil Oficios">
+            </div>
+          </div>
+          <ngb-carousel *ngIf="IMAGENES.length > 0" [activeId]="activeSliderId" [class]="IMAGENES.length==1 ? 'prueba':''">
+
+            <ng-template ngbSlide *ngFor="let imagen of IMAGENES">
+              <div class="carousel_img_side">
+                <img class="img_side" src={{imagen.IMG}} alt="Mil Oficios">
+              </div>
+            </ng-template>
+          </ngb-carousel>
+        </div>
+        <ul class="carousel-thumbnail my-5">
+          <li class="carousel-thumbnail__item list-inline-item" *ngFor="let imagen of IMAGENES">
+            <a class="selected">
+              <span ngbTooltip="Eliminar" (click)="abrirModalImagen(imagen)" id="ejecutar"
+                class="btn btn-rounded icono-eliminar">
+                <em class="fa fa-times "></em>
+              </span>
+              <img class="carousel-thumbnail__img" [src]="imagen.IMG" alt="Imagen del servicio">
+            </a>
+          </li>
+        </ul>
+        <p class="form-group" style="color: rgb(255,0,0); font-weight: bold;" *ngIf="imagenInvalida && IMAGENES.length==0">
+          * La imagen es requerida.
+        </p>
+      </div>
+
+      <div class="form-group">
+        <h5 class="bold-tipografy">Descripción</h5>
+        <input disabled readonly formControlName="descripcionServicio"
+          (change)="obtenerCambioDescripcionServicio(descripcionServicio.value,servicioSolicitado.SER_DESCRIPCION)"
+          class="form-control" type="text" id="example-input">
+        <div *ngIf="(descripcionServicio.dirty || descripcionServicio.touched)" class="my-1"
+          style="color: rgb(255,0,0);">
+          <div *ngIf="descripcionServicio.value !== servicioSolicitado.SER_DESCRIPCION">
+            * El campo no puede ser modificado.
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <h5 class="bold-tipografy">Imagen del servicio</h5>
+      </div>
+      <img class="centrar-img magen-servicio" [src]="DOMINIO + IMG_SERVICIO" appImgRota
+        [url]="'../../../assets/images/no-img.png'" alt="descripcionServicio">
+    </form>
+  </div>
+  <div class=" col-xl-5 col-lg-5 col-md-5 col-sm-12 col-12 columna2">
+    <div class="margen-cliente">
+      <form [formGroup]="clienteForm" *ngIf="clienteForm">
+
+        <div class="form-group">
+          <h5 class="bold-tipografy">Comentario *</h5>
+          <textarea formControlName="descripcion" style="resize: none;" class="form-control" id="descripcion" rows="4"
+            aria-describedby="emailHelp"></textarea>
+          <div *ngIf="descripcion.invalid && (descripcion.dirty || descripcion.touched)" class="my-1"
+            style="color: rgb(255,0,0); font-weight: bold">
+            <div *ngIf="descripcion.errors.required">
+              * El campo es requerido.
+            </div>
+            <div *ngIf="descripcion.errors.pattern">
+              * El formato del requisito no es válido.
+            </div>
+            <div *ngIf="descripcion.errors.maxlength">
+              * Se requieren máximo 200 caracteres.
+            </div>
+          </div>
+        </div>
+        <div  class="row ml-3" *ngIf="servicioSolicitado.SER_REMOTO>0">
+          <!--Solo muestra el casillero cuando SER_REMOTO puede ser solo remoto o presencial o remoto -->
+          
+          <div class="form-check form-switch">
+            <h5>
+              <input formControlName="remoto" type="checkbox" id="servicioRemoto" value="servicioRemoto"
+                class="form-check-input" style="margin-top:0.4rem;" (change)="checkServicioRemoto()">&nbsp;Servicio remoto
+              </h5>
+          </div>
+        </div>
+        <div *ngIf="servicioRemoto && (servicioSolicitado.SER_REMOTO == 0 || servicioSolicitado.SER_REMOTO== 2)" class="form-group">
+          <div>
+            <h5 class="bold-tipografy">Dirección</h5>
+          </div>
+          <input readonly name="direccion_remota" id="direccion_remota" formControlName="direccion_remota" type="text"
+            class="form-control">
+        </div>
+        <!--SE MOSTRARÁ CUANDO EL SERVICIO NO SEA REMOTO (SER_REMOTO = 0 )-->
+        <div *ngIf="!servicioRemoto" class="form-group">
+          <div>
+            <h5 class="bold-tipografy">Dirección *</h5>
+            <!-- <h5 class="bold-tipografy">Dirección</h5> -->
+          </div>
+          <input name="direccion" id="direccion" formControlName="direccion" type="text" class="form-control"
+            aria-describedby="emailHelp" required>
+            
+          <div *ngIf="direccion.invalid && (direccion.dirty || direccion.touched)" class="my-1"
+            style="color: rgb(255,0,0); font-weight: bold;">
+
+            <div *ngIf="direccion.errors.pattern">
+              * El formato de la dirección no es válida.
+            </div>
+            <div *ngIf="direccion.errors.maxlength">
+              * Se requieren máximo 100 caracteres.
+            </div>
+          </div>
+          <div style="color: rgb(255,0,0); font-weight: bold;" *ngIf="(clienteForm?.get('direccion').value)?.length==0 && (clienteForm?.controls.remoto.value==false || clienteForm?.controls.remoto.value==null)">
+            * Es necesario ingresar una dirección.
+          </div>
+        </div>
+
+        <!--SE MOSTRARÁ CUANDO EL SERVICIO NO SEA REMOTO (SER_REMOTO = 0 )-->
+        <div *ngIf="!servicioRemoto" class="row">
+          <div class="form-group col-12 bold-tipografy">
+            <button ngbTooltip="Ingrese su ubicación en el mapa" (click)="abrirModalCroquis()"
+              class="btn btnUbicacion">Seleccionar ubicación</button>
+          </div>
+          <p class="form-group ml-3" *ngIf="clickeoMapa==false" style="color: rgb(255,0,0); font-weight: bold;">
+            No se ha seleccionado la ubicación.
+          </p>
+        </div>
+
+        <div class="form-group col">
+          <!-- <h5 class="form-group row margen-input" >Resumen del lugar (*)</h5> -->
+          <div #mapados id="mapdos" *ngIf="origin != null" class="invisibleMapa">
+            <agm-map width="750" height="450" [latitude]="origin.lat" [longitude]="origin.lng">
+            </agm-map>
+          </div>
+        </div>
+
+
+        <div class="form-group">
+          <h5 class="bold-tipografy">Nombre Completo</h5>
+          <input disabled readonly formControlName="nombreCompleto" type="text"
+            (change)="obtenerCambioNombreUsuario(nombreCompleto.value, nombreCliente)" class="form-control"
+            id="exampleInputEmail1" aria-describedby="emailHelp">
+          <div *ngIf="(nombreCompleto.dirty || nombreCompleto.touched)" class="my-1" style="color: rgb(255,0,0);font-weight: bold;">
+            <div *ngIf="nombreCompleto.value != nombreCliente" style="font-weight: bold;">
+              * El campo no puede ser modificado.
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <h5 class="bold-tipografy">Celular</h5>
+          <input disabled readonly id="cel" formControlName="celular" type="text" class="form-control"
+            aria-describedby="emailHelp" (change)="obtenerCambioCelular(celular.value,CLIENTE.USU_CELULAR)">
+          <div *ngIf="direccion.invalid && (direccion.dirty || direccion.touched)" class="my-1"
+            style="color: rgb(255,0,0); font-weight: bold;" >
+            <div *ngIf="celular.errors.pattern">
+              * El formato no es válido.
+            </div>
+            <div *ngIf="celular.errors.minlength">
+              * Se requieren mínimo 12 caracteres.
+            </div>
+            <div *ngIf="celular.errors.maxlength">
+              * Se requieren máximo 20 caracteres.
+            </div>
+          </div>
+
+          <div *ngIf="(celular.dirty || celular.touched)" class="my-1" style="color: rgb(255,0,0);">
+            <div *ngIf="celular.value !== CLIENTE.USU_CELULAR" style="font-weight: bold;">
+              * El campo no puede ser modificado .
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <h5 class="bold-tipografy">Fecha *</h5>
+          <input formControlName="fecha" [min]="obtenerFechaActual()" class="form-control opacity" type="date"
+            id="example-date-input">
+          <div *ngIf="fecha.invalid && (fecha.dirty || fecha.touched)" class="my-1" style="color: rgb(255,0,0); font-weight: bold;">
+            <div *ngIf="fecha.errors.required">
+              * El campo es requerido.
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <h5 class="bold-tipografy">Hora *</h5><br>
+          <ngb-timepicker formControlName="hora" class="notranslate bold-tipografy" [seconds]="seconds"
+            [meridian]="meridian" id="example-hora-input"></ngb-timepicker>
+        </div>
+        <br>
+
+        <h5 class="form-group bold-tipografy" (click)="collapse.toggle()"
+        [attr.aria-expanded]="isCollapsed"><em class="fa fa-chevron-{{isCollapsed? 'down' : 'up'}} mr-2" style="cursor: pointer;"></em>Añadir datos de contacto (opcional)
+        </h5><br>
+
+        <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+          <div class="form-group">
+            <label for="example-nombre-input bold-tipografy">Nombre</label>
+            <input class="form-control " type="text" id="example-nombre-input" formControlName="nombre_otroContacto">
+            <div *ngIf="nombre_otroContacto.invalid && (nombre_otroContacto.dirty || nombre_otroContacto.touched)"
+              class="my-1" style="color: rgb(255,0,0);font-weight: bold;">
+              <div *ngIf="nombre_otroContacto.errors.pattern" >
+                * El formato no es válido.
+              </div>
+              <div *ngIf="nombre_otroContacto.errors.maxlength" >
+                * Se requieren máximo 50 caracteres.
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="example-celular-input bold-tipografy">Celular</label>
+            <input class="form-control " type="text" id="example-celular-input" formControlName="celular_otroContacto">
+            <small style="opacity: 65%;
+                            font-style: italic;">Ejemplo: +51998745638</small>
+            <div *ngIf="celular_otroContacto.invalid && (celular_otroContacto.dirty || celular_otroContacto.touched)"
+              class="my-1" style="color: rgb(255,0,0); font-weight: bold;">
+              <div *ngIf="celular_otroContacto.errors.pattern">
+                * El formato no es válido.
+              </div>
+              <div *ngIf="celular_otroContacto.errors.minlength">
+                * Se requieren mínimo 12 caracteres.
+              </div>
+              <div *ngIf="celular_otroContacto.errors.maxlength">
+                * Se requieren máximo 20 caracteres.
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+<br><br>
+
+
+<div class="leyenda  form-group ">
+  <p> (*) Campos obligatorios</p>
+</div>
+<div class="row centrar-elemento">
+  <button  (click)="abrirModalInsertar()"
+    class="btn btn_solicitar">SOLICITAR</button>
+</div>
+
+
+
+<!-- CROQUIS DE COMO LLEGAR AL LUGAR  -->
+<ng-template #modalCroquis let-modal>
+  <div class="modal-header">
+    <h5 class="bold-tipografy">Ubicación</h5>
+    <div id="pac-container">
+      <input id="pac-input" class="pac-container form-control" ngx-google-places-autocomplete [options]='options'
+        #placesRef="ngx-places" (onAddressChange)="handleAddressChange($event)" [ngModel]="ubicacionDefault"
+        placeholder="Ingrese una ubicación" />
+    </div>
+    <button type="button" (click)="closeModal()" class="close" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" id="map">
+    <app-alerta-modal *ngIf="mostrarAlertaGoogle" [tipoAlerta]="tipoAlerta">{{mensaje}}</app-alerta-modal>
+    <agm-map width="750" height="450" [latitude]="origin.lat" [longitude]="origin.lng">
+    </agm-map>
+  </div>
+  <div class="modal-footer">
+    <button (click)="obtenerCoordenadas()" type="button" class="btn" style="background-color : #3E11BC; color:white; font-weight:bold;float: right; "
+      data-dismiss="modal">Aceptar</button>
+  </div>
+</ng-template>
+
+
+
+<!-- MODAL PARA ELIMINAR LA FOTO  -->
+<ng-template #eliminar let-modal>
+  <div class="modal-header">
+    <h5 class="bold-tipografy"><label>Confirmación</label></h5>
+    <button type="button" (click)="closeModal()" class="close" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p class="bold-tipografy">¿Estás seguro de eliminar la imagen seleccionada?</p>
+  </div>
+  <div class="modal-footer">
+    <button (click)="closeModal()" type="button" class="btn btn-danger bold" style="color: #fff;  "
+      data-dismiss="modal">Cancelar</button>
+    <button type="button" class="btn btn-success bold" style="color: #fff;" (click)="eliminarImagen()">Aceptar</button>
+  </div>
+</ng-template>
+
+<!-- MODAL PARA INSERTAR DATOS  -->
+<ng-template #insertar let-modal>
+  <div class="modal-header">
+    <h5><label>Confirmación</label></h5>
+    <button type="button" (click)="closeModal()" class="close" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <app-alerta-modal *ngIf="mostrarAlerta" [tipoAlerta]="tipoAlerta">{{mensaje}}</app-alerta-modal>
+    <p>Estás solicitando el servicio {{servicioSolicitado.SER_NOMBRES}} para el día {{clienteForm?.get('fecha').value |
+      date :'shortDate' | date: 'dd/MM/yyyy' }} a la hora
+      {{ convertirFormt24AFormat12() }}</p>
+  </div>
+  <div style="margin-top: 15px;" class="row">
+    <div class="col-xl-12">
+      <div *ngIf="cargaDeDato" class="progress" style="height:.1rem">
+        <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true"
+          [animated]="true"></ngb-progressbar>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button (click)="closeModal()" type="button" class="btn btn-danger bold" style="color: #fff;"
+      [disabled]="cargaDeDato" data-dismiss="modal">Cancelar</button>
+    <button type="button" class="btn btn-success bold" style="color: #fff;"
+      [disabled]="cargaDeDato || (!servicioRemoto && !clickeoMapa) || invalido_dir"
+      (click)="enviarDatos()">Aceptar</button>
+  </div>
+</ng-template>

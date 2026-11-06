@@ -1,0 +1,156 @@
+<nav class="navbar navbar-expand-lg fixed-top" style="background-color: #3E11BC;">    
+    <a class="navbar-brand" href="#">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="/home"><img id="img-logo" src="../../../assets/images/LOGO_01.png" [routerLink]="['/home']" alt="logo" style="cursor: pointer;"></a>  
+    </a>
+    <button *ngIf="IS_LOGUEADO"  class="navbar-toggler" type="button" (click)="toggleSidebar()">
+        <!-- <span class="navbar-toggler-icon"></span> -->        
+        <i class="fa fa-bars text-muted" aria-hidden="true"></i>
+    </button>
+    <div *ngIf="IS_LOGUEADO"   class="collapse navbar-collapse">
+        <ul class="navbar-nav ml-auto">           
+            <li class="nav-item dropdown" ngbDropdown>
+                <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
+                    <!-- <div *ngIf="cantidadNotificaciones > 0" class="position-fixed" style="padding-left: 17px;z-index: 1">
+                        <span *ngIf="cantidadNotificaciones > 0" class="position-fixed" style="top: 20px;font-size: 9.5px;text-align: center;margin-top:20 px; background-color: red ; height: 17px;width: 17px; border-radius: 50%;">
+                            <span  [ngStyle]="{'right':cantidadNotificaciones > 10?'10.4rem':'10.6rem'}" style="margin-top: 10px;">
+                                {{cantidadNotificaciones > 10? '10+':cantidadNotificaciones}}
+                            </span>
+                        </span>
+                    </div> -->
+                    <!-- <i class="fa fa-bell"></i><b class="caret"></b> -->
+                    <i class="fa fa-bell" style="position: relative; ">
+                        <div *ngIf="cantidadNotificaciones > 0" style="position: absolute; z-index: 1;color: white;top: 0;right: -5px;">
+                            <span *ngIf="cantidadNotificaciones > 0" style="background-color: red;border-radius: 50%;display: flex;padding: 5px;">
+                                <span style="font-size: 8px;">
+                                {{cantidadNotificaciones > 10? '10+':cantidadNotificaciones}}
+                                </span>
+                            </span>
+                        </div>
+                    </i>
+                </a>
+
+
+                <div  class="dropdown-menu-right" ngbDropdownMenu>        
+                    <div *ngIf="cantidadNotificaciones > 0;else  noNoti">
+                        <a  class="dropdown-item" *ngFor="let not of listaNotificacionesPequena" style="cursor: pointer;" (click)="redireccionarNotificacion(not)">
+                            <i class="fa fa-envelope-o"></i> {{not.NOT_TITULO}}
+                        </a>
+                        <a  (click)="verMasNotificacionesFuncion();" class="dropdown-item" style="cursor: pointer;">
+                            <a (click)="verMasNotificacionesFuncion();">Ver más</a>
+                        </a>
+                    </div>
+                    <ng-template #noNoti style="text-align: center; align-items: center;">
+                        <span style="text-align: center; align-items: center;padding-left: 1rem;">Sin notificaciones</span>
+                    </ng-template>
+                </div>
+               
+            </li>&nbsp;&nbsp;&nbsp;&nbsp;
+
+            <li class="nav-item dropdown" ngbDropdown>
+                <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
+                    <i class="fa fa-user"></i> {{USE_USUARIO}} <b class="caret"></b>
+                </a>
+            
+
+                <!-- Elemento fuera del menú desplegable -->
+                <div class="push-notifications" style="position: absolute; top: 85%">
+                    <div 
+                        class="d-flex align-items-center" 
+                        style="display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 14px;">
+
+                        <!-- Texto -->
+                        <span style="margin: 0; padding: 0; white-space: nowrap; color: white; font-style: italic;">Activar notificaciones push</span>
+                        
+                        <!-- Toggle -->
+                        <div class="toggle-container justify-content-center">
+                            <div 
+                                class="toggle-switch" 
+                                [class.active]="isActive" 
+                                (click)="toggle()">
+                                <div class="toggle-circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Menú desplegable -->
+                <div class="dropdown-menu-right" style="cursor: pointer;" ngbDropdownMenu>
+                    <a class="dropdown-item" (click)="onLoggedout();ngOnDestroy()">
+                        <i class="fa fa-fw fa-power-off"></i> {{ 'Cerrar sesión' }}
+                    </a>
+                </div>
+            </li>&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+        </ul>
+    </div>
+</nav>
+<ng-template #verMasNotificaciones>
+    <div class="modal-header">
+        <h5 id="exampleModalLongTitle"><label>Notificaciones</label> </h5>
+       
+        <button  type="button" class="close" style="margin-top: -17px; margin-left: -16px; border-top-right-radius: 15px!important" (click)="closeModal();" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div *ngIf="cargar" class="progress" style="height:.1rem">
+        <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+    </div>
+    <div class="modal-body container color-plomo" style="width: 99.5%; height: 500px;overflow-y:scroll ;">
+        <app-alerta-modal *ngIf="mostrarAlerta" [tipoAlerta]="tipoAlerta">
+            {{mensaje}}
+            <em class="fa fa-refresh ml-3" style="width: 1.5rem; cursor: pointer;" (click)="recargarNotificaciones()" *ngIf="validarRecarga"></em>
+        </app-alerta-modal>
+
+
+        
+
+        <div *ngIf="cantidadNotificaciones > 0 ; else noNoti" class="row justify-content-center contenedor-notificaciones">
+            <div *ngFor="let not of listaNotificaciones" class="col-11 notificacion ">
+                <div class="row justify-content-center ">
+                    <div class="col-1 col-lg-2"  style="padding:0px;padding-top: 1.3rem;align-items: center;text-align: center;" >
+                       <button [disabled]="carga" class="btn btn-link" id="buttonStyle"><i ngbTooltip="Marcar como leído"  placement="bottom" style="z-index: 10px;" (click)="leerNotificacion(not.NOT_ID)" class="{{not.ICON == true? 'fa fa-envelope-open-o':'fa fa-envelope-o'}}  centrar"(mouseover)="cambiarIcono(not)" (mouseout)="cambiarIcono(not)"></i></button> 
+                    </div>
+                    <div class="col-11 col-lg-8" style="padding-top: 10px;">
+                        <div class="row justify-content-center" style="padding:0px" >
+                            <a  (click)="closeModal();redireccionarNotificacion(not)"><label style="cursor:pointer">{{not.NOT_TITULO}}</label></a>
+                        </div>
+                        <span class="row justify-content-center" style="padding:0px">
+                        Recibido el: {{not?.NOT_FECHA_CREACION | date: 'dd/MM/yyyy'}} {{not?.NOT_FECHA_CREACION | date: 'h:mm:ss a'}}
+                        </span>
+                    </div>
+                    <div class="offset-1 col-10 offset-lg-0  col-lg-2 verMas" id="styleVermas" style="cursor: pointer;" >
+                        <i class="{{not.IS_COLLAPSED == true? 'fa fa-angle-up':'fa fa-angle-down'}} centrar" (click)="not.IS_COLLAPSED = !not.IS_COLLAPSED"></i>
+                        <span class="centrar" style="align-items: center;text-align: center;cursor: pointer;" (click)="not.IS_COLLAPSED = !not.IS_COLLAPSED" [attr.aria-expanded]="!not.IS_COLLAPSED" aria-controls="collapseDetails"
+                        aria-controls="collapseExample" > 
+                       <strong >
+                        {{
+                        not.IS_COLLAPSED == true? 'Ver menos':'Ver más'
+                        }}
+                        </strong> 
+                    </span>
+                    </div><br>
+                </div><br>
+                <div class="row " style="background: white;" [ngbCollapse]="!not.IS_COLLAPSED">
+                    <div style="padding-left: 2rem;padding-right: 2rem;">
+                        <span style="font-size: 20px;"><label>Hola,</label></span><br>
+                        <span [outerHTML]="not.NOT_DESCRIPCION"></span>
+                        <br><br>
+                        <span>Muchas gracias <br>
+                            Equipo MilOficios
+                        </span><br>
+                    </div><br>
+                </div>
+            </div>
+        </div>
+        <ng-template #noNoti style="text-align: center; align-items: center;">
+            <div class="row justify-content-center">
+                <h4 style="text-align: center;align-items: center;">No tiene ninguna notificación.</h4>
+            </div>
+        </ng-template>
+    </div>
+    <div class="modal-footer">
+    
+    </div>
+</ng-template>

@@ -1,0 +1,232 @@
+.recuadro{
+    margin-top: 2rem;
+    border-radius: 25px;
+    background: #F5F5F5;
+    @media screen and (max-width:768px){
+        border-radius: 25px;
+    }
+}
+.modal-content{
+    border: none;
+    // border-radius: 30%;
+}
+.modal-content1{
+    border: none;
+    // border-radius: 30%;
+}
+.campos{
+    margin-top: 1.5rem ;
+}
+.camposb{
+    margin-top: 1rem ;
+}
+.star {
+    position: relative;
+    display: inline-block;
+    font-size: 2rem;
+    color: #888
+  }
+  .full {
+    color: #FFD700;
+  }
+  .half {
+    position: absolute;
+    display: inline-block;
+    overflow: hidden;
+    color: #FFD700;
+  }
+.centrar{
+    align-items: center;
+    text-align: center;
+}
+textarea{
+    width: 80%;
+    height: 8vh;
+    resize: none;
+}
+.sinMargin{
+    margin: 0;
+}
+button{
+    width: 100%;
+}
+.fontsize{
+    font-size: 16px;
+}
+.modal-content{
+    border: none;
+    background: #F5F5F5;
+    border-radius: 5%;
+}
+.contenido{
+   
+    
+    @media screen and (min-width:992px) and (max-width:1200px) {
+        margin-left: 2rem;
+    }
+    @media screen and (max-width:1366px){
+        background: #f5f5f5;
+    }
+    border-radius: 5%;
+}
+.ajuste{
+    @media screen and (max-width:1366px){
+        background: #f5f5f5;
+    }
+}
+.hrS{
+    @media screen and (min-width:1023px){
+        display: none;
+    }
+    @media screen and (max-width:1023px){
+        background:#255383;
+    }
+}
+.posicion{
+    z-index: 1;
+    align-items: center;
+    @media screen and (min-width:1025px) and (max-width:1200px) {
+        padding-right: 6rem;
+    }
+    @media screen and (min-width:1024px) {
+        padding-right: 10.5rem;
+    }
+    @media screen and (min-width:769px) and (max-width:992px) {
+       
+    }
+    @media screen and (min-width:541px) and (max-width:768px) {
+        padding-right: 3rem;
+    }
+  }
+/* CAMBIOS SS2 */
+
+@media (min-width: 1600px) {
+    .alert-success {
+        font-weight: bold;
+        color: #fbfbff;
+        background-color: #12b50c;
+        position: fixed;
+        text-align: left;
+        font-size: 18px;
+        z-index: 2000;
+    }
+    .alert-danger {
+        margin-left: 50%;
+        font-weight: bold;
+        color: #fbfbff;
+        background-color: rgb(163, 23, 23);
+        position: fixed;
+        text-align: left;
+        font-size: 18px;
+        z-index: 2000;
+    }
+    .alert-warning {
+      margin-left: 50%;
+      font-weight: bold;
+      color: #fbfbff;
+      background-color: #ddce0b;
+      position: fixed;
+      text-align: left;
+      font-size: 18px;
+      z-index: 2000;
+  }
+}
+
+@media (min-width: 1337px) and (max-width: 1599px) {
+.alert-success {
+    font-weight: bold;
+    color: #fbfbff;
+    background-color: #12b50c;
+    position: fixed;
+    text-align: left;
+    font-size: 17px;
+    z-index: 2000;
+}
+.alert-danger {
+    margin-left: 50%;
+    font-weight: bold;
+    color: #fbfbff;
+    background-color: rgb(163, 23, 23);
+    position: fixed;
+    text-align: left;
+    font-size: 17px;
+    z-index: 2000;
+}
+.alert-warning {
+    margin-left: 50%;
+    font-weight: bold;
+    color: #fbfbff;
+    background-color: #ddce0b;
+    position: fixed;
+    text-align: left;
+    font-size: 17px;
+    z-index: 2000;
+}
+}
+
+@media  (min-width: 770px) and (max-width: 1336px) {
+.alert-success {
+    font-weight: bold;
+    color: #fbfbff;
+    background-color: #12b50c;
+    position: fixed;
+    text-align: left;
+    font-size: 15px;
+    z-index: 2000;
+}
+.alert-danger {
+    margin-left: 50%;
+    font-weight: bold;
+    color: #fbfbff;
+    background-color: rgb(163, 23, 23);
+    position: fixed;
+    text-align: left;
+    font-size: 15px;
+    z-index: 2000;
+}
+.alert-warning {
+    margin-left: 50%;
+    font-weight: bold;
+    color: #fbfbff;
+    background-color: #ddce0b;
+    position: fixed;
+    text-align: left;
+    font-size: 15px;
+    z-index: 2000;
+}
+}
+
+@media  (max-width: 769px) {
+.alert-success {
+    font-weight: bold;
+    color: #fbfbff;
+    background-color: #12b50c;
+    position: fixed;
+    text-align: left;
+    font-size: 15px;
+    z-index: 2000;
+    width:100%;
+}
+.alert-danger {
+    margin-left: 50%;
+    font-weight: bold;
+    color: #fbfbff;
+    background-color: rgb(163, 23, 23);
+    position: fixed;
+    text-align: left;
+    font-size: 15px;
+    z-index: 2000;
+    width:100%;
+}
+.alert-warning {
+    margin-left: 50%;
+    font-weight: bold;
+    color: #fbfbff;
+    background-color: #ddce0b;
+    position: fixed;
+    text-align: left;
+    font-size: 15px;
+    z-index: 2000;
+    width:100%;
+}
+}

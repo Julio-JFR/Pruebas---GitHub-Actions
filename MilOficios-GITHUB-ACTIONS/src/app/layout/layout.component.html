@@ -1,0 +1,24 @@
+<app-header></app-header>
+<app-sidebar (collapsedEvent)="receiveCollapsed($event)"></app-sidebar>
+<br><br>
+<div *ngIf="IS_LOGUEO; else noLogueo">
+    <section class="main-container"  [ngClass]="{collapsed: collapedSideBar}">
+        <router-outlet>
+                <div class="cardGeneral">
+                    <div *ngIf="mostrarAlerta">
+                        <ngb-alert #selfClosingAlert class="animate__animated animate__slideInDown"  
+                            *ngIf="mostrarAlerta" [type]="tipoAlerta" 
+                            (closed)="mostrarAlerta = false">{{mensaje}} <a style="color: #3DC2C9;cursor: pointer" 
+                            (click)="redireccionarMisSolicitudesServiciosRealizados();" ><u>aqui</u>.</a> </ngb-alert>
+                    </div>
+                </div>
+            </router-outlet>
+        
+    </section>
+</div>
+<ng-template #noLogueo>
+    <section class="main-container-noLogueo" [ngClass]="{collapsed: collapedSideBar}">
+        <router-outlet></router-outlet>
+    </section>
+</ng-template>
+<!-- ana -->

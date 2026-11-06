@@ -1,0 +1,182 @@
+.conteiner-nav{
+    background-color: #3E11BC;
+    display: flex;
+    justify-content: space-between;
+    // padding-bottom: 1rem;
+}
+
+.conteiner-nav__items{
+    display: flex;
+    align-self: center;
+    color: rgb(255, 255, 255);
+    font-size: 1.2rem;
+    padding: 0;
+    margin-right: 4rem;
+    margin-left: 10px;
+    margin-top: 16px;
+}
+
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    background-color: #ffffff;
+}
+
+.item-hover{
+    color:#fff;
+    margin: 0rem 2rem;
+}
+
+.item-hover:hover{
+    color: #24DEEC;
+    text-decoration: underline #24DEEC;
+}
+
+li{
+    list-style:none;
+}
+
+.btn-ini{
+    background-color: #fff;
+    border-radius: 3rem;
+    font-size: 19px;
+    color:#3E11BC;
+    cursor: pointer;
+    padding: 4px 19px;
+    font-family: "montserrat-bold";
+}
+
+.btn-ini:hover{
+    cursor: pointer;
+    color:#fff;
+    background-color: #24DEEC;
+}
+
+.barra{
+    width: 0;
+    padding: 0;
+    margin: 0;
+}
+
+div .especialistaLi:hover{
+    .barra2{
+        float:left;
+        width: 4px;
+        position: absolute;
+        height: 27px;   
+        background-color: #3E11BC;
+    }
+}
+
+
+div .clienteLi:hover{
+    .barra{
+        float:left;
+        width: 4px;
+        position: absolute;
+        height: 27px;   
+        background-color: #3E11BC;
+    }
+}
+
+.nav-collapsed {
+    display: none;
+}
+
+.select-dropdown{
+    background-color: #24DEEC;
+    color:#fff;
+    cursor: pointer;
+}
+
+
+table {
+    position: absolute;
+    z-index: 100;
+    top: 75px;
+}
+
+td {
+    background-color: white;
+    color: #3E11BC;
+    font-weight: bold;
+    // text-decoration: underline;
+}
+
+td a {
+    
+    color: black;
+    font-weight: bold;
+    // text-decoration: underline;
+}
+
+#img-logo{
+    width: 30%;
+    padding-left: 0px;
+    margin-left: 4rem;
+}
+
+
+@media screen and (min-width: 1360px) {
+    .menu-navbar{
+        margin-left: 42rem;
+        display: flex;
+    }
+    #img-logo{
+        width: 300px;
+        padding: 2rem;
+        padding-left: 0px;
+    }
+    #postulante-op{
+        width: 13rem;
+    }
+    
+}
+@media screen and (max-width: 1360px) {
+    .menu-navbar{
+        margin-left: 20rem;
+        display: flex;
+    }
+    #img-logo{
+        width: 300px;
+        padding: 1rem;
+        padding-left: 0px;
+    }
+    #postulante-op{
+        width: 13rem;
+    }
+    
+}
+@media screen and (max-width: 1024px) {
+    .menu-navbar{
+        margin-left: 1rem;
+        display: flex;
+    }
+    #img-logo{
+        width: 250px;
+        padding: 1rem;
+    }
+    #postulante-op{
+        width: 13rem;
+    }
+    
+}
+@media screen and (max-width: 845px) {
+    .nav-max-screen {
+        display: none;
+    }
+    .nav-collapsed {
+        display: flex;
+    }
+    .conteiner-nav{
+        display: none;
+    }
+}
+
+button.close{
+    border-top-right-radius: 12px;
+    margin-top: -22px;
+    margin-left: -2px;
+}

@@ -1,0 +1,41 @@
+
+name: CI - MilOficios Angular
+
+on:
+  push:
+    branches:
+      - julio-jfr-subir-proyecto-al-repositorio
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Instalar dependencias y compilar
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    defaults:
+      run:
+        working-directory: MilOficios-GITHUB-ACTIONS
+
+    steps:
+      - name: Descargar codigo del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.20.8
+          cache: npm
+          cache-dependency-path: MilOficios-GITHUB-ACTIONS/package-lock.json
+
+      - name: Instalar dependencias
+        run: npm ci --legacy-peer-deps
+
+      - name: Compilar proyecto Angular
+        run: npx ng build --configuration production

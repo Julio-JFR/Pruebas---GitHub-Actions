@@ -1,0 +1,204 @@
+.card {
+    height: 100%;
+}
+
+.card-header {
+    background-color: white;
+    border-bottom: white;
+    margin-left: -1.5rem;
+}
+
+.btn-sm {
+    margin-bottom: 1rem;
+    border-radius: 2rem;
+    height: 3rem;
+    width: 10rem;
+    color: white;
+    background-color: #3e11bc;
+    font-family: "montserrat-bold";
+    margin-top: 5px;
+}
+
+#containerTodo {
+    margin-left: 10px;
+}
+
+#lineaIntermedia {
+    position: absolute;
+    height: 55rem;
+    width: 1px;
+}
+
+.card-design {
+    width: 100%;
+}
+
+.barra {
+    float: left;
+    width: 8px;
+    height: 22px;
+    margin-right: 0.5rem;
+    background-color: #24deec;
+}
+
+label {
+    font-weight: bold;
+}
+
+//BORDES EN GENERAL
+.form-control {
+    border-radius: 2rem;
+    height: 2.5rem;
+}
+
+#wrapper {
+    white-space: nowrap;
+    border-color: white;
+}
+
+@media (max-width: 991px) {
+    #lineaIntermedia {
+        height: 92rem;
+    }
+}
+
+
+@media (max-width: 539px) {
+    #sidebar {
+        display: none;
+    }
+    #lineaIntermedia {
+        display: none;
+    }
+    #containerTodo {
+        width: 106%;
+        margin-left: -6px;
+    }
+}
+
+@media (min-width: 540px) {
+    #sidebar2 {
+        display: none;
+    }
+    #mov {
+        display: none;
+    }
+}
+
+
+.bold {
+    font-weight: bold;
+    color: white;
+}
+
+
+
+
+
+
+.estado-active {
+    background-color: #5dd977;
+    color: #fff;
+    border-radius: 2rem;
+    font-size: 12px;
+    padding: 5px;
+    width: 85px;
+  }
+  
+.estado-aceptado {
+    background-color: #dda80b;
+    color: #fff;
+    border-radius: 2rem;
+    font-size: 12px;
+    padding: 5px 8px;
+}
+
+.estado-desactive {
+    background-color: #dda80b;
+    color: #fff;
+    border-radius: 2rem;
+    font-size: 12px;
+    padding: 5px;
+    width: 85px;
+}
+  
+.estado-cancelled {
+    background-color: rgb(163, 23, 23);
+    color: #fff;
+    border-radius: 2rem;
+    font-size: 12px;
+    padding: 5px 8px;
+}
+
+
+.bonus-info{
+    width: 80%;
+    margin: 20px;
+}
+
+#status-bonus{
+    font-size: 20px;
+}
+
+.create-new:hover{
+    cursor: pointer;
+}
+
+i{
+  font-size: 20px;
+  padding-right: 5px;
+  cursor: pointer;
+}
+
+label{
+    font-weight: bold;
+}
+
+@media screen and (max-width: 1200px){
+    :host ::ng-deep .table{
+        max-width: none;
+        width: 200%;
+    }
+}
+
+@media screen and (max-width: 500px){
+    :host ::ng-deep .table{
+        max-width: none;
+        width: 250%;
+    }
+}
+
+@media screen and (max-width: 484px){
+    :host ::ng-deep .table{
+        max-width: none;
+        width: 350%;
+    }
+}
+
+@media screen and (max-width: 376px){
+    :host ::ng-deep .table{
+        max-width: none;
+        width: 450%;
+    }
+}
+
+.colorNoConcretado {
+    background-color: red;
+    color: #fff;
+    border-radius: 2rem;
+    font-size: 12px;
+    padding: 5px 8px;
+}
+  
+
+::-webkit-scrollbar {
+    height: 5px;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #3e11bc;
+}
+
+:host ::ng-deep .line{
+    background-position: -7px 7px;
+}

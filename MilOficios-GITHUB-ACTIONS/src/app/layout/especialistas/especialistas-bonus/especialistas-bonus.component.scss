@@ -1,0 +1,220 @@
+
+.barra-azul-lateral-title{
+    float:left;
+    width: 8px;
+    height: 32px;  
+    margin-right: .5rem; 
+    background-color: #24DEEC;
+}
+
+.contenedor-barra{
+    width: 100%;
+    padding-left: 1rem;
+}
+
+.raya-separadora-title{
+    background-color: #24DEEC;
+    height: 0.9rem;
+}
+
+.raya-separadora-b{
+    background-color:#24DEEC;
+    height:.5rem;
+}
+.triangulo-equilatero-bottom-left {
+    width: 0;
+    height: 0;
+    border-right: 0.45rem solid transparent;
+    border-top: 0.45rem solid transparent;
+    border-left: 0.45rem solid #24DEEC;
+    border-bottom: 0.45rem solid #24DEEC;
+}
+
+
+#contentAll{
+    border: transparent; 
+    border-left: 1px solid #24DEEC;
+    padding-left: 1rem;
+}
+
+::-webkit-scrollbar {
+    height: 5px;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #3e11bc;
+}
+
+:host ::ng-deep .line{
+    background-position: -7px 7px;
+}
+
+
+.raya-separadora-a-title-raya{
+    background-color: #24DEEC;
+    height: 0.2rem;
+}
+
+.row-contenedor {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.card{
+    height: 100%;
+}
+
+.tamanio {
+    font-size: 20px;
+}
+
+.bk-button {
+    background-color: #3e11bc;
+    border-radius: 2rem;
+    color: #fff;
+}
+
+.estado-active {
+    background-color: #5dd977;
+    color: #fff;
+    border-radius: 2rem;
+    font-size: 12px;
+    padding: 5px;
+    width: 70px;
+    margin-left: 25%;
+  }
+  
+  .estado-desactive {
+    
+    background-color: #dda80b;
+    color: #fff;
+    border-radius: 2rem;
+    font-size: 12px;
+    padding: 5px;
+    width: 70px;
+    margin-left: 25%;
+  }
+  
+  .estado-cancelled {
+    background-color: rgb(163, 23, 23);
+    color: #fff;
+    border-radius: 2rem;
+    font-size: 12px;
+    padding: 5px;
+    width: 70px;
+    margin-left: 25%;
+  }
+
+.spanAccion {
+    font-size: 20px;
+    margin-top: -10px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.spanAccionIcono {
+    padding-top: -10px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.disabledSpan {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.camposb{
+    margin-top: 1rem ;
+}
+
+.centrar{
+    align-items: center;
+    text-align: center;
+}
+
+.bonus-info{
+    width: 80%;
+    margin: 20px;
+}
+
+#status-bonus{
+    font-size: 20px;
+}
+
+.create-new:hover{
+    cursor: pointer;
+}
+
+i{
+  font-size: 20px;
+  padding-right: 5px;
+  cursor: pointer;
+}
+
+label{
+    font-weight: bold;
+}
+.posicion{
+    z-index: 1;
+    align-items: center;
+    @media screen and (min-width:1025px) and (max-width:1200px) {
+        padding-right: 6rem;
+    }
+    @media screen and (min-width:1024px) {
+        padding-right: 10.5rem;
+    }
+    @media screen and (min-width:769px) and (max-width:992px) {
+       
+    }
+    @media screen and (min-width:541px) and (max-width:768px) {
+        padding-right: 3rem;
+    }
+}
+
+@media screen and (max-width: 945px){
+    :host ::ng-deep .table{
+        max-width: none;
+        width: 200%;
+    }
+}
+
+@media screen and (max-width: 540px){
+    #contentAll{
+        border-left: 0;
+        padding-left: 0;
+    }
+}
+
+@media screen and (max-width: 500px){
+    :host ::ng-deep .table{
+        max-width: none;
+        width: 250%;
+    }
+}
+
+@media screen and (max-width: 484px){
+    :host ::ng-deep .table{
+        max-width: none;
+        width: 350%;
+    }
+}
+
+@media screen and (max-width: 376px){
+    :host ::ng-deep .table{
+        max-width: none;
+        width: 450%;
+    }
+}
+
+@media (max-width: 540px) {
+    #sidebar {
+        display: none;
+    }
+}
+
+@media (min-width: 541px) {
+    #sidebar2 {
+        display: none;
+    }
+
+}

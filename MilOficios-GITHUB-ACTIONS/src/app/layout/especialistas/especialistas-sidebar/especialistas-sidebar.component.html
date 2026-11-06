@@ -1,0 +1,142 @@
+<!-- 
+<div style="margin-top: 15px;" class="row">
+    <div class="col-xl-12">
+        <div *ngIf="LOADING" class="progress" style="height:.1rem">
+            <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+        </div>
+    </div>
+</div>
+-->
+
+<div class="card" id="sideCard">
+    <div id="sidebar-wrapper" [ngClass]="{sidebarPushRight: isActive, collapsed: collapsed}">
+    <div class="d-flex flex-row">
+        <div id="barr" class="barra-azul-lateral"></div>
+        <div class="sidebar-heading pl-1"><label>{{TITULO}}</label></div>
+    </div>
+
+    <div class="row" style="width: 100%;margin:0">
+        <div class="col-12 raya-separadora-b"></div>
+      </div>
+
+    <div class="list-group list-group-flush">
+        <div *ngIf="idEspecialista > 0; else noId">
+            <a [routerLink]="'../profile'" [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action " style="margin-top:10px">
+                <i class="fa fa-user-circle"></i><span>Perfil</span>
+            </a>
+
+            <a [routerLink]="'../personal-info'" [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action">
+                <i class="fa fa-address-book"></i><span>{{(TIPO_ESPECIALISTA == 1 )?'Datos de contacto':'Información personal'}}</span>
+            </a>
+
+            <a *ngIf="TIPO_ESPECIALISTA==0" [routerLink]="'../academic-info'" [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action">
+                <i class="fa fa-graduation-cap"></i><span>Información académica</span>
+            </a>
+
+            <a [routerLink]="'../working-info'" [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action">
+                <i class="fa fa-suitcase"></i><span>{{(TIPO_ESPECIALISTA == 1 )?'Clientes destacados':'Información laboral'}}</span>
+            </a>
+
+            <a [routerLink]="'../payment-details'" [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action">
+                <i class="fa fa-credit-card"></i><span>Configuración de cuenta</span>
+            </a>
+
+            <a [routerLink]="'../service'" [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action ">
+                <i class="fa fa-tasks"></i><span>Servicios</span>
+            </a>
+            <a [routerLink]="'../bonus'" [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action">
+                <i class="fa fa-ticket"></i><span>Bonos acumulados</span>
+            </a>
+            <a [routerLink]="'../calificaciones'" [routerLinkActive]="['router-link-active']" id="ultimafila" class="list-group-item list-group-item-action">
+                <i class="fa fa-star"></i><span>Calificaciones</span>
+            </a>
+        </div>
+        <ng-template #noId>
+            <a [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action " >
+                <i class="fa fa-user-circle"></i><span style="opacity: 50%;">Perfil</span>
+            </a>
+            <a [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action " style="opacity: 50%;">
+                <i class="fa fa-address-book"></i><span>Información personal</span>
+            </a>
+            <a [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action " style="opacity: 50%;">
+                <i class="fa fa-graduation-cap"></i><span>Información académica</span>
+            </a>
+            <a [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action " style="opacity: 50%;">
+                <i class="fa fa-suitcase"></i><span>Información laboral</span>
+            </a>
+            <a [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action " style="opacity: 50%;">
+                <i class="fa fa-credit-card"></i><span>Configuración de cuenta</span>
+            </a>
+            <a [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action " style="opacity: 50%;">
+                <i class="fa fa-tasks"></i><span>Servicios</span>
+            </a>
+            <a [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action " style="opacity: 50%;">
+                <i class="fa fa-ticket"></i><span>Bonos acumulados</span>
+            </a>
+            <a routerLink="/app/especialista/calificaciones" [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action ">
+                <i class="fa fa-star"></i><span>Calificaciones</span>
+            </a>
+        </ng-template>
+    </div>
+    </div>
+</div>
+
+
+<div class="row list-group"  id="sidebarResponsive">
+    <div *ngIf="idEspecialista > 0; else noId">
+        <button type="button" id="botones" class="btn btn-secondary">
+            <a [routerLink]="'../profile'"
+                [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action ">
+                <em class="fa fa-user-circle" id="iconossize"></em>
+            </a>
+        </button>
+
+        <button type="button" id="botones" class="btn btn-secondary">
+            <a [routerLink]="'../personal-info'"
+                [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action">
+                <em class="fa fa-address-book" id="iconossize"></em>
+            </a>
+        </button>
+
+        <button type="button" id="botones" class="btn btn-secondary">
+            <a *ngIf="TIPO_ESPECIALISTA==0" [routerLink]="'../academic-info'"
+                [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action">
+                <em class="fa fa-graduation-cap" id="iconossize"></em>
+            </a>
+        </button>
+
+        <button type="button" id="botones" class="btn btn-secondary">
+            <a [routerLink]="'../working-info'"
+                [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action">
+                <em class="fa fa-suitcase" id="iconossize"></em>
+            </a>
+        </button>
+
+        <button type="button" id="botones" class="btn btn-secondary">
+            <a [routerLink]="'../payment-details'"
+                [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action">
+                <em class="fa fa-credit-card" id="iconossize"></em>
+            </a>
+        </button>
+
+        <button type="button" id="botones" class="btn btn-secondary">
+            <a [routerLink]="'../service'"
+                [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action ">
+                <em class="fa fa-tasks" id="iconossize"></em>
+            </a>
+        </button>
+
+        <button type="button" id="botones" class="btn btn-secondary">
+            <a [routerLink]="'../bonus'"
+                [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action">
+                <em class="fa fa-ticket" id="iconossize"></em>
+            </a>
+        </button>
+        <button type="button" id="botones" class="btn btn-secondary">
+            <a [routerLink]="'../calificaciones'"
+                [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action">
+                <em class="fa fa-star" id="iconossize"></em>
+            </a>
+        </button>
+    </div>
+</div>

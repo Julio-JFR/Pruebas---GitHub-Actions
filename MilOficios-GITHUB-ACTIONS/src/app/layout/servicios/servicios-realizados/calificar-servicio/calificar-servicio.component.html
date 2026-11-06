@@ -1,0 +1,228 @@
+<app-alerta-general 
+    *ngIf="mostrarAlerta"
+    [tipoAlerta]="tipoAlerta">
+    {{mensaje}}
+</app-alerta-general>
+<app-page-header  class="notranslate" heading= {{servicioCalificar?.SER_NOMBRES}}></app-page-header>
+<hr>
+<div class="col-xl-12">
+    <div *ngIf="carga" class="progress" style="height:.1rem">
+      <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+    </div>
+</div>
+<div *ngIf="carga==false" class="container-fluid">
+    <br><br>
+    <form [formGroup]="calificacionForm">
+        <div class="row justify-content-center ">
+            <!-- detalle del servicio -->
+            <div class="col-12 col-md-10 col-lg-8 recuadro" style="padding-bottom: 1rem;"><br>
+                <div class="row justify-content-around">
+                    <div class="col-12 col-lg-5 contenido  ajuste"><br>
+                        <div class="row">
+                            <div class="col-12  campos">   
+                                <div class="row ">
+                                    <div class="col-6">
+                                        <em class="fa fa-user" style="width: 1.5rem;"></em>
+                                        <Strong class="fontsize">Nombre del especialista:</Strong>
+                                    </div>
+                                    <div class="col-6">
+                                    <span class="fontsize" style="Word-wrap: break-Word">
+                                        {{servicioCalificar?.USU_NOMBRES}} {{servicioCalificar?.USU_APE_PAT}} {{servicioCalificar?.USU_APE_MAT}}
+                                    </span>
+                                    </div>
+                                    <br>
+                                </div>
+                            </div>
+                        </div><br>
+                        <div class="row">
+                            <div class="col-12 "><br>
+                                <div class="row justify-content-end">
+                                    <div class="col-6">
+                                    <em class="fa fa-comment" style="width: 1.5rem;"></em>
+                                    <Strong class="fontsize">Detalle del servicio: </Strong> <br>
+                                    </div>
+                                    <div class="col-6">
+                                    <span class="fontsize  " style="Word-wrap: break-Word">
+                                        {{servicioCalificar?.SER_DESCRIPCION}} 
+                                    </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><br>
+                        <div class="row">
+                            <div class="col-12  fontsize"><br>
+                                <div class="row justify-content-end">
+                                    <div class="col-6">
+                                        <em class="fa fa-hourglass" style="width: 1.5rem;"></em>
+                                        <Strong >Duración del servicio:</Strong>    
+                                    </div>
+                                    <div class="col-6"> 
+                                        <span> {{duracionServicio}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><br>
+                        <div class="row">
+                            <div class="col-12  campos fontsize">
+                                <div class="row justify-content-end">
+                                    <div class="col-6">        
+                                        <em class="fa fa-money" style="width: 1.5rem;"></em>
+                                        <Strong >Monto pagado: </Strong> <br>
+                                    </div>
+                                    <div class="col-6">
+                                         {{servicioCalificar?.MON_SIMBOLO}}{{servicioCalificar?.SERE_TARIFA}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div><br>
+                        <div class="row">
+                            <div class="col-12  campos fontsize">
+                                <div class="row justify-content-end">
+                                    <div class="col-6">
+                                        <em class="fa fa-clock-o" style="width: 1.5rem;"></em>
+                                        <Strong >Hora de inicio: </Strong>
+                                    </div>
+                                    <div class="col-6">
+                                        <span>{{servicioCalificar?.SERE_FECH_INI_REAL | date: 'h:mm:ss a'}}</span> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div><br>
+                        <div class="row">
+                            <div class="col-12 campos fontsize">
+                                <div class="row justify-content-end">
+                                    <div class="col-6">    
+                                        <em class="fa fa-clock-o" style="width: 1.5rem;"></em>
+                                        <Strong >Hora de fin:  </Strong> 
+                                    </div>
+                                    <div class="col-6">
+                                        <span >{{servicioCalificar?.SERE_FECH_FIN_REAL | date: 'h:mm:ss a'}} </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                            <br><br>
+                    </div>
+                    <!-- calificación :D  -->  
+                    <div class="col-12 col-lg-5 contenido">
+                        <hr class="hrS"><br>
+                        <div class="row align-items-center">
+                            <br>
+                            <ng-template #t let-fill="fill">
+                                <span class="star" [class.full]="fill === 100">
+                                <span class="half" [style.width.%]="fill">&#9733;</span>&#9733;
+                                </span>
+                            </ng-template>
+                                <div class="col-12 centrar camposb ">
+                                    <strong>CALIFICA NUESTRA APP</strong>
+                                </div>
+                                <div class="col-12 centrar camposb">
+                                    <ngb-rating [(rate)]="selectedApp" max="5" [starTemplate]="t" (hover)="hoveredApp   =$event"
+                                    (leave)="hoveredApp=0"></ngb-rating>
+                                </div>
+                                <div class="col-12 centrar camposb">
+                                    <strong>Déjanos un comentario  (*)</strong>
+                                </div>
+                                <div class="col-12 centrar camposb">
+                                    <textarea formControlName="comentarioAplicacion"></textarea>
+                                    <div *ngIf="comentarioAplicacion.invalid && (comentarioAplicacion.dirty || comentarioAplicacion.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                        <div *ngIf="comentarioAplicacion.errors.required">
+                                            * El comentario es requerido.
+                                        </div>
+                                        <div *ngIf="comentarioAplicacion.errors.maxlength">
+                                            * Solo se admiten 60 caracteres
+                                        </div>
+                                    </div><br>
+                                </div><br><hr>
+                                <div class="col-12 centrar camposb">
+                                    <strong>CALIFICA AL ESPECIALISTA</strong>
+                                </div>
+                                <div class="col-12 centrar camposb">
+                                    <ngb-rating [(rate)]="selectedEsp" max="5" [starTemplate]="t" (hover)="hoveredEsp=$event" 
+                                    (leave)="hoveredEsp=0"></ngb-rating>
+                                </div>
+                                <div class="col-12 centrar camposb">
+                                    <strong>Déjanos un comentario (*)</strong>
+                                </div>
+                                <div class="col-12 centrar camposb">
+                                    <textarea formControlName="comentarioEspecialista"></textarea>
+                                    <div *ngIf="comentarioEspecialista.invalid && (comentarioEspecialista.dirty || comentarioEspecialista.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                        <div *ngIf="comentarioEspecialista.errors.required">
+                                            * El comentario es requerido.
+                                        </div>
+                                        <div *ngIf="comentarioEspecialista.errors.maxlength">
+                                            * Solo se admiten 60 caracteres
+                                        </div>
+                                    </div><br>
+                                </div>
+                                <div class="col-12 centrar camposb">
+                                    <p>(*) Campo obligatorio</p>
+                                </div>
+                            </div> <br>           
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br><br>
+        <div class="row justify-content-center campos centrar">
+            <div class="col-12 col-sm-2">
+                <button  [disabled]="calificacionForm.invalid" (click)="validarCalificacion();"  class="btn btn-success">Enviar</button>
+                <!--  -->
+            </div>
+        </div>
+    </form>
+</div>
+<ng-template #confirmacionCancelacion class="modal-content1">
+    <div class="modal-header">
+        <label><h5 class="modal-title" id="exampleModalLongTitle">Confirmar</h5></label>
+        <button  type="button" style="width: auto;" class="close" (click)="closeModal();" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class=" modal-content1 ">
+            <br>
+            <span> ¿Desea enviar la calificación?  </span>
+            
+        </div><br>
+        
+    </div>
+    <div class="modal-footer" >
+        <div class="row justify-content-center" style="width: 100%;">
+            <div class="col-6">
+                <button  type="button" (click)="closeModal()" style="color: rgb(255, 255, 255); width: auto;" class="btn btn-danger bold">Cancelar</button>
+            </div>
+            <div class="col-6">
+                <button  type="button" (click)=" confirmarCalificacion()" style=" width: auto;" class="btn btn-success bold">Confirmar</button>
+            </div>
+            
+        </div>
+        
+    </div>
+</ng-template>
+<ng-template #confirmacionCancelacion2 class="modal-content1">
+    <div class="modal-header">
+        <label><h5 class="modal-title" id="exampleModalLongTitle">Confirmar</h5></label>
+        <button  type="button" style="width: auto;" class="close" (click)="closeModal();" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class=" modal-content1 ">
+            <br>
+            <span> {{this.mensaje}}  </span>
+            
+        </div><br>
+        
+    </div>
+    <div class="modal-footer" >
+        <div class="row justify-content-center" style="width: 100%;">
+            
+            <div class="col-6">
+                <button  type="button" (click)=" goToMisSolicitudes()" style=" width: auto;" class="btn btn-success">Aceptar</button>
+            </div>
+            
+        </div>
+        
+    </div>
+</ng-template>

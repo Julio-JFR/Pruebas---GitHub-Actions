@@ -1,0 +1,213 @@
+<app-alerta-general 
+    *ngIf="mostrarAlerta"
+    [tipoAlerta]="tipoAlerta">
+    {{mensaje}}
+</app-alerta-general>
+
+<div style="margin-top: 15px;" class="row">
+    <div class="col-xl-12">
+        <div *ngIf="cargandoDatos" class="progress" style="height:.1rem">
+            <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true"
+                [animated]="true"></ngb-progressbar>
+        </div>
+    </div>
+</div>
+<br>
+
+<div class="d-flex flex-column divGeneral">
+    <div class="d-flex">
+        <app-especialistas-sidebar id="sidebar"></app-especialistas-sidebar>
+        <div class="container" style="margin-top: -1rem;">
+            <div class="card" id="wrapper">
+                <div id="lineaIntermedia" class="barra-azul-lateral"></div>
+                <div class="container" id="containerTodo">
+                    <div class="card-design">
+                        <div class="card border-0">
+                            <h5 class="card-header" style="background: white;">
+                                <label>Configuración de cuenta</label>
+                            </h5>
+                            <triangular-bar></triangular-bar>
+                            
+                            <div class="payment-info mt-4" >
+                               <div class="card w-100">
+                                    <h5 class="mx-3 mt-3"><label>Datos Bancarios</label>
+                                        <em class="fa fa-trash-o float-right" *ngIf="DETALLES_DE_PAGO != null"
+                                            aria-hidden="true" ngbTooltip="Eliminar" style="margin-left: 12px"
+                                            (click)="mostrarAlertaModal = false; mensajesModal = []; confirmarEliminar()"></em>
+                                        <em class="fa fa-trash-o float-right" *ngIf="DETALLES_DE_PAGO == null"
+                                            aria-hidden="true" ngbTooltip="Eliminar"
+                                            style="margin-left: 12px; opacity: 50%; cursor: default"></em>
+                                        <em class="fa fa-pencil-square-o float-right" aria-hidden="true" ngbTooltip="Editar"
+                                            (click)="ACTUALIZAR_DATOS_PAGO = !ACTUALIZAR_DATOS_PAGO; habilitarDeshabilitarEdicion()"></em>
+                                    </h5>
+                                    <div class="card-body container">
+                                        <h3 class="text-wrap">Dinero Acumulado: {{simboloMoneda}}{{DINERO_ACUMULADO}}</h3>
+                                        <form [formGroup]="datosPagoForm">
+                                            <div class="row my-3">
+                                                <div class="col">
+                                                    <label class="w-100">
+                                                        <label>Banco *</label>
+                                                        <div
+                                                            *ngIf="DETALLES_DE_PAGO?.CUE_BAN_NOMBRE != null || ACTUALIZAR_DATOS_PAGO; else NO_BAN_NOMBRE">
+                                                            <input type="text" id="cuaBanNombreInput" name="cuaBanNombreInput"
+                                                                class="form-control form-control-sm"
+                                                                formControlName="cue_ban_nombre">
+                                                            <div *ngIf="cue_ban_nombre.invalid && (cue_ban_nombre.dirty || cue_ban_nombre.touched)"
+                                                                class="my-1" style="color: rgb(197, 68, 68);">
+                                                                <div *ngIf="cue_ban_nombre.errors.required">
+                                                                    * El nombre del banco es requerido
+                                                                </div>
+                                                                <div *ngIf="cue_ban_nombre.errors.maxlength">
+                                                                    * Se requieren máximo 50 caracteres
+                                                                </div>
+                                                                <div *ngIf="cue_ban_nombre.errors.pattern">
+                                                                    * Solo se permiten caracteres alfabéticos
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <ng-template #NO_BAN_NOMBRE>
+                                                            <label *ngIf="!cargandoDatos">No registrado</label>
+                                                        </ng-template>
+                                                    </label>
+                                                </div>
+                                                <div class="col">
+                                                    <label class="w-100">
+                                                        <label>Titular de la cuenta *</label>
+                                                        <div
+                                                            *ngIf="DETALLES_DE_PAGO?.CUE_BAN_TITULAR != null || ACTUALIZAR_DATOS_PAGO; else NO_BAN_TITULAR">
+                                                            <input type="text" id="cuaBanTitularInput" name="cuaBanTitularInput"
+                                                                class="form-control form-control-sm"
+                                                                formControlName="cue_ban_titular">
+                                                            <div *ngIf="cue_ban_titular.invalid && (cue_ban_titular.dirty || cue_ban_titular.touched)"
+                                                                class="my-1" style="color: rgb(197, 68, 68);">
+                                                                <div *ngIf="cue_ban_titular.errors.required">
+                                                                    * El titular es requerido
+                                                                </div>
+                                                                <div *ngIf="cue_ban_titular.errors.maxlength">
+                                                                    * Se requieren máximo 35 caracteres
+                                                                </div>
+                                                                <div *ngIf="cue_ban_titular.errors.pattern">
+                                                                    * Solo se permiten caracteres alfabéticos
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <ng-template #NO_BAN_TITULAR>
+                                                            <label *ngIf="!cargandoDatos">No registrado</label>
+                                                        </ng-template>
+
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="row my-3">
+                                                <div class="col">
+                                                    <label class="w-100">
+                                                        <label>CCI *</label>
+                                                        <div
+                                                            *ngIf="DETALLES_DE_PAGO?.CUE_BAN_CCI != null || ACTUALIZAR_DATOS_PAGO; else NO_BAN_CCI">
+                                                            <input type="text" id="cuaBanCciInput" name="cuaBanCciInput"
+                                                                class="form-control form-control-sm"
+                                                                formControlName="cue_ban_cci">
+                                                            <div *ngIf="cue_ban_cci.invalid && (cue_ban_cci.dirty || cue_ban_cci.touched)"
+                                                                class="my-1" style="color: rgb(197, 68, 68);">
+                                                                <div *ngIf="cue_ban_cci.errors.required">
+                                                                    * El CCI es requerido
+                                                                </div>
+                                                                <div *ngIf="cue_ban_cci.errors.maxlength">
+                                                                    * Se requieren máximo 20 caracteres
+                                                                </div>
+                                                                <div *ngIf="cue_ban_cci.errors.minlength">
+                                                                    * Se requieren mínimo 20 caracteres
+                                                                </div>
+                                                                <div *ngIf="cue_ban_cci.errors.pattern">
+                                                                    * Solo se permiten caracteres numéricos
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <ng-template #NO_BAN_CCI>
+                                                            <label *ngIf="!cargandoDatos">No registrado</label>
+                                                        </ng-template>
+
+                                                    </label>
+                                                </div>
+                                                <div class="col">
+                                                    <label class="w-100">
+                                                        <label>Número de Cuenta *</label>
+                                                        <div
+                                                            *ngIf="DETALLES_DE_PAGO?.CUE_BAN_NUMERO != null || ACTUALIZAR_DATOS_PAGO; else NO_BAN_NUMERO">
+                                                            <input type="text" id="cuaBanNumeroInput" name="cuaBanNumeroInput"
+                                                                class="form-control form-control-sm"
+                                                                formControlName="cue_ban_numero">
+                                                            <div *ngIf="cue_ban_numero.invalid && (cue_ban_numero.dirty || cue_ban_numero.touched)"
+                                                                class="my-1" style="color: rgb(197, 68, 68);">
+                                                                <div *ngIf="cue_ban_numero.errors.required">
+                                                                    * El número de cuenta es requerido
+                                                                </div>
+                                                                <div *ngIf="cue_ban_numero.errors.maxlength">
+                                                                    * Se requieren máximo 20 caracteres
+                                                                </div>
+                                                                <div *ngIf="cue_ban_numero.errors.minlength">
+                                                                    * Se requieren mínimo 9 caracteres
+                                                                </div>
+                                                                <div *ngIf="cue_ban_numero.errors.pattern">
+                                                                    * Solo se permiten caracteres numéricos
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <ng-template #NO_BAN_NUMERO>
+                                                            <label *ngIf="!cargandoDatos">No registrado</label>
+                                                        </ng-template>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="ACTUALIZAR_DATOS_PAGO">
+                                                <button class="btn btn-sm btn-success float-right bold"
+                                                    
+                                                    (click)="mostrarAlerta = false; mensajes = []; guardarCuentaBancaria()">Guardar</button>
+                                            </div>
+                                        </form>
+                                        <div>
+                                            <strong> (*) Campo obligatorio</strong>
+                                        </div>
+                                    </div>
+                               </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <app-especialistas-sidebar id="sidebar2"></app-especialistas-sidebar>
+</div>
+
+
+
+<!--MODAL PARA CONFIRMAR ELMINAR CUENTA BANCARIA-->
+<ng-template #modalEliminarCuentaBancaria let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Eliminar Cuenta Bancaria</h4>
+        <span type="button" class="close" (click)="modal.dismiss()">&times;</span>
+    </div>
+    <div class="modal-body">
+        <app-alerta-modal *ngIf="mostrarAlertaModal" [tipoAlerta]="tipoAlertaModal">{{mensaje}}</app-alerta-modal>
+
+        <div class="container">
+            <h6>¿Seguro que desea eliminar la cuenta bancaria?</h6>
+        </div>
+    </div>
+    <div style="margin-top: 15px;" class="row">
+        <div class="col-xl-12">
+            <div *ngIf="cargandoEliminar" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true"
+                    [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger bold " (click)="modal.dismiss()">Cancelar</button>
+        <button type="button" class="btn btn-success bold"
+            (click)="mostrarAlertaModal = false; mensajesModal = []; eliminarCuentaBancaria()"
+            [disabled]="cargandoEliminar">Eliminar</button>
+    </div>
+</ng-template>

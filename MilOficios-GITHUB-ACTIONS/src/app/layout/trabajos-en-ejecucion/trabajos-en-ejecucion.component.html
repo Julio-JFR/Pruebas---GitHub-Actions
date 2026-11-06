@@ -1,0 +1,107 @@
+<app-alerta-general 
+    *ngIf="alertaMensaje"
+    [tipoAlerta]="'warning'">
+    {{'Tiene un trabajo de ejecución en curso'}}
+</app-alerta-general>
+
+<app-page-header [heading]="'Trabajo en ejecución'"></app-page-header>
+<div style="margin-top: 15px;" class="row" *ngIf="isLoading" >
+    <div class="col-xl-12">
+        <div class="progress" style="height:.1rem">
+            <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+        </div>
+    </div>
+</div>
+
+<triangular-bar></triangular-bar>
+
+<br>
+<div *ngIf="!esInicializadoTrabajoConfirmado || this.TRABAJOENEJECUCION === null ;else iniciar ">
+    <h3  class="text-center container">No existe trabajos en ejecución.</h3>
+</div>
+<ng-template #iniciar >
+    <div class="container"  *ngIf="Object.keys(this.TRABAJOENEJECUCION).length > 0 ; else no_data">
+        <div class="row">
+            <div  class="card" (click)="obtenerURL(TRABAJOENEJECUCION.SERE_ID, TRABAJOENEJECUCION.USU_ID)" [routerLink]="['/realizarServicio/'+TRABAJOENEJECUCION.SERE_ID+'/'+ TRABAJOENEJECUCION.USU_ID] ">
+                <div class="card-body">
+                    <div class="row-12">
+                        <div class="barra-azul-lateral"></div>
+                        <h4 *ngIf="TRABAJOENEJECUCION.SERE_ESTADO === 1 && TRABAJOENEJECUCION.HORAE <= 23; else noLink" class="card-title"><a style="text-decoration: underline; color: #24deec; cursor: pointer;" (click)="obtenerURL(TRABAJOENEJECUCION.SERE_ID, TRABAJOENEJECUCION.USU_ID)" [routerLink]="['/realizarServicio/'+TRABAJOENEJECUCION.SERE_ID+'/'+ TRABAJOENEJECUCION.USU_ID] ">{{TRABAJOENEJECUCION.SER_NOMBRES}}</a></h4>
+                        <ng-template #noLink >
+                            <h4  class="card-title"><a>{{TRABAJOENEJECUCION.SER_NOMBRES}}</a></h4>
+                        </ng-template>
+                        <h4  class="notranslate" style="float: right;">
+                            <strong style="font-size: 32px;">{{TRABAJOENEJECUCION.MON_SIMBOLO}}{{TRABAJOENEJECUCION.SERE_TARIFA}}</strong></h4>
+                    </div>
+                    <div class="row-12">
+                        <h6 class=" text-muted">{{TRABAJOENEJECUCION.CAT_NOMBRE}}</h6>
+                    </div>
+                    <br>
+                    <div class="row-12">
+                        <div class="col">
+                            <h6 class="notranslate" >
+                                <span>
+                                    <em class="fa fa-calendar" 
+                                        style="width: 1.1rem;margin-left:0.2rem;"
+                                    ></em>
+                                    <strong>Fecha : </strong>{{TRABAJOENEJECUCION.FECHA}}
+                                </span>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="row-12">
+                        <div class="col">
+                            <h6 class="notranslate ">
+                                <span >
+                                    <em class="fa fa-clock-o" 
+                                        style="width: 1.1rem;margin-left:0.2rem;"></em>
+                                    <strong>Hora : </strong>  {{TRABAJOENEJECUCION.HORA}}
+                                </span>
+                            </h6>
+                        </div>
+                    </div>
+                    <div *ngIf="TRABAJOENEJECUCION.IS_COLLAPSE">
+                        <br>
+                        <hr style="border-color: #24deec;">
+                        <br>
+                        <div class="row-12">
+                            <div class="col"> 
+                                <h6 class="card-text">
+                                    <em class="fa fa-user" style="width: 1.5rem;"></em>
+                                    <strong>Cliente:</strong> {{TRABAJOENEJECUCION.USU_NOMBREAPELLIDO}}
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="row-12">
+                            <div class="col"> 
+                                <h6 class="card-text">
+                                    <em class="fa fa-check" style="width: 1.5rem;"></em>
+                                    <strong>Descripción:</strong> {{TRABAJOENEJECUCION.SOL_DESCRIPCION}}
+                                </h6>
+                            </div>
+                        </div>
+                    </div><br>
+                    <div class="row" style="margin-left: 3px">
+                        <span style="cursor: pointer;text-decoration: underline;" 
+                            class="view-details"
+                            *ngIf="TRABAJOENEJECUCION.IS_COLLAPSE; else Colapsed" 
+                            (click)="TRABAJOENEJECUCION.IS_COLLAPSE = !TRABAJOENEJECUCION.IS_COLLAPSE" 
+                            [attr.aria-expanded]="!TRABAJOENEJECUCION.IS_COLLAPSE" aria-controls="collapseDetails">Menos detalles</span>
+                        <ng-template #Colapsed>
+                            <span  style="cursor: pointer;text-decoration: underline;"  class="view-details" 
+                                (click)="TRABAJOENEJECUCION.IS_COLLAPSE = !TRABAJOENEJECUCION.IS_COLLAPSE" 
+                                [attr.aria-expanded]="!TRABAJOENEJECUCION.IS_COLLAPSE" aria-controls="collapseDetails">Más detalles</span>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <ng-template #no_data>
+        <h3  class="text-center container">No se encontró un trabajo en ejecución activo.</h3>
+    </ng-template>
+</ng-template>
+
+
+
