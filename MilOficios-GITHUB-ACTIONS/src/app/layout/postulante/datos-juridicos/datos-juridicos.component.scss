@@ -1,0 +1,114 @@
+#cardstyle{
+    border: transparent;
+    border-left: 1px solid #24deec;
+}
+
+.card-design{
+    width: 100%;
+}
+
+
+//RAYA SEPARADORA
+
+.raya-separadora-a {
+    background-color: #24deec;
+    height: 1rem;
+    margin-left: 18px;
+}
+
+.raya-separadora-b {
+    background-color: #24deec;
+    margin-top: -1px;
+    max-width: 96%;
+    height: 0.4rem;
+    margin-left: 18px;
+}
+
+.col-6-col-lg-6-raya-separadora-a {
+    flex: 0 0 55%;
+    max-width: 55%;
+}
+
+.triangulo-equilatero-bottom-rigth {
+    width: 0;
+    height: 0;
+    border-right: 8px solid transparent;
+    border-left: 8px solid #24deec;
+    border-bottom: 16px solid #24deec;
+}
+
+#sizeinput{
+    height: 2.5rem;
+}
+
+
+#actualizarButton{
+    background: #3e11bc;
+    border: transparent;
+    height: 2.3rem;
+    border-radius: 2rem;
+    margin-top: 4px;
+    padding-left: 2px;
+    padding-right: 2px;
+    width: 9rem;
+}
+
+#actualizarButton:hover {
+    background: #24deec;
+    color: #3e11bc;
+}
+
+.custom-select {
+    border-radius: 2rem;
+}
+
+@media (max-width: 540px) {
+    #sidebar {
+        display: none;
+    }
+    #cardstyle{
+        border-left: 0 !important;
+    }
+}
+
+@media (min-width: 541px) {
+    #sidebar2 {
+        display: none;
+    }
+}
+
+@media(max-width:991px){
+    #actualizarData{
+        height: 2.5rem;
+    }
+    #sizeinput{
+        height: 2.5rem;
+    }
+}
+
+#postularBoton{
+    background: #3e11bc;
+    border: transparent;
+    height: 2.5rem;
+    border-radius: 2rem;
+    margin-top: 4px;
+    padding-left: 2px;
+    padding-right: 2px;
+    width: 9rem;
+}
+
+#postularBoton:hover {
+    background: #24deec;
+    color: #3e11bc;
+}
+
+
+@media (max-width: 575px) {
+    #postularBoton{
+        margin-bottom: 10px;
+    }
+    .card-header{
+        padding-bottom: 0%;
+        font-size: larger;
+    }
+}

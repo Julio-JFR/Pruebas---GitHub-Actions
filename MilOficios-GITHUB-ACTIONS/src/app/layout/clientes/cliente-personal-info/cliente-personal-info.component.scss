@@ -1,0 +1,145 @@
+.card {
+    height: 100%;
+}
+
+.card-header {
+    background-color: white;
+    border-bottom: white;
+    margin-left: -1.5rem;
+}
+
+.btn-sm {
+    margin-bottom: 1rem;
+    border-radius: 2rem;
+    height: 3rem;
+    width: 10rem;
+    color: white;
+    background-color: #3e11bc;
+    font-family: "montserrat-bold";
+    margin-top: 5px;
+}
+
+.btnActualizar:hover {
+    background: #24deec;
+    color: #3e11bc;
+}
+
+#actualizarDatos {
+    margin-bottom: 1rem;
+    border-radius: 2rem;
+    height: 3rem;
+    width: 10rem;
+    color: white;
+    background-color: #3e11bc;
+    font-family: "montserrat-bold";
+    margin-top: 5px;
+}
+
+#actualizarDatos:hover {
+    background: #24deec;
+    color: #3e11bc;
+}
+
+#containerTodo {
+    margin-left: 10px;
+}
+
+select {
+    background-image: url("../../../../assets/images/select.png");
+    background-size: 25px 25px;
+}
+// aqui
+#lineaIntermedia {
+    position: absolute;
+    height: 55rem;
+    width: 1px;
+    margin-top: 1rem;
+}
+
+.card-design {
+    width: 100%;
+}
+
+.barra {
+    float: left;
+    width: 8px;
+    height: 22px;
+    margin-right: 0.5rem;
+    background-color: #24deec;
+}
+
+label {
+    font-weight: bold;
+}
+
+//BORDES EN GENERAL
+.form-control {
+    border-radius: 2rem;
+    height: 2.5rem;
+}
+
+#wrapper {
+    white-space: nowrap;
+    border-color: white;
+}
+
+span:hover {
+    cursor: pointer;
+}
+
+.filtroSelect {
+    width: 100%;
+    height: 35px;
+}
+
+.update-select {
+    margin-left: 100px;
+}
+
+small {
+    opacity: 55%;
+    font-style: italic;
+}
+
+@media (max-width: 991px) {
+    #actualizarDatos {
+        height: 2.5rem;
+    }
+    #lineaIntermedia {
+        height: 92rem;
+    }
+}
+
+@media (max-width: 840px) {
+    #actualizarDatos {
+        margin-right: -8px;
+    }
+}
+
+@media (max-width: 539px) {
+    #sidebar {
+        display: none;
+    }
+    #lineaIntermedia {
+        display: none;
+    }
+    #containerTodo {
+        width: 106%;
+        margin-left: -6px;
+    }
+}
+
+@media (min-width: 540px) {
+    #sidebar2 {
+        display: none;
+    }
+    #mov {
+        display: none;
+    }
+}
+
+
+.bold {
+    font-weight: bold;
+    color: white;
+}

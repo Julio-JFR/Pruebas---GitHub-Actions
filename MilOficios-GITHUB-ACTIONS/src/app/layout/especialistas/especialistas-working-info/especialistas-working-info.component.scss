@@ -1,0 +1,127 @@
+span, em{
+    cursor: pointer;
+}
+
+label{
+    font-weight: bold;
+}
+
+small{
+    font-style: italic;
+}
+
+#sin_estilo{
+    opacity: 60%;
+    font-style: italic;
+    font-style: normal;
+}
+
+.title-services{
+    margin: 20px;
+}
+
+.card{
+    border: transparent;
+    border-bottom: 1px solid #3E11BC ;
+}
+
+//CARD STYLE
+
+#cardstyle{
+    border: transparent;
+    border-left: 1px solid #24deec;
+}
+
+#sizeinput{
+    height: 3rem;
+}
+
+
+//BUTTON STYLE 
+
+#actualizarData{
+    border: transparent;
+    margin-bottom: -1rem;
+    border-radius: 2rem;
+    height: 3rem;
+    width: 10rem;
+    color: white;
+    background-color: #3E11BC;
+    margin-left: 84%;
+    font-family: 'montserrat-bold';
+}
+
+#actualizarData:hover{
+    background: #24DEEC;
+    color: #3E11BC;
+}
+
+#biginput{
+    height: 8rem;
+}
+
+.barra{
+    float:left;
+    width: 8px;
+    height: 22px;
+    margin-right: .5rem;
+    background-color: #24DEEC;
+}
+
+@media(max-width: 991px){
+    #actualizarData{
+        height: 2.5rem;
+    }
+    #sizeinput{
+        height: 2.5rem;
+    }
+    #biginput{
+        height: 7rem;
+    }
+}
+
+@media (max-width: 540px) {
+    #sidebar {
+        display: none;
+    }
+    #cardstyle{
+        border-left: 0;
+    }
+}
+
+@media (min-width: 541px) {
+    #sidebar2 {
+        display: none;
+    }
+}
+
+
+.contenedor-barra{
+    width: 100%;
+    padding-left: 10px;
+  }
+  
+  .raya-separadora-title{
+    background-color: #24DEEC;height: 0.9rem;
+  }
+  
+  .raya-separadora-b{
+    background-color:#24DEEC;height:.5rem;
+  }
+  
+  .triangulo-equilatero-bottom-left {
+    width: 0;
+    height: 0;
+    border-right: 0.45rem solid transparent;
+    border-top: 0.45rem solid transparent;
+    border-left: 0.45rem solid #24DEEC;
+    border-bottom: 0.45rem solid #24DEEC;
+  }
+  
+  .triangulo-equilatero-bottom-rigth {
+    width: 0;
+    height: 0;
+    border-right: 8px solid transparent;
+    border-left: 8px solid #24deec;
+    border-bottom: 16px solid #24deec;
+  }

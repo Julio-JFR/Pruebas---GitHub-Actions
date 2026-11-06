@@ -1,0 +1,172 @@
+#notfound{
+  text-align: center;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#notfound a {
+  font-family: 'Helvetica', sans-serif;
+  text-decoration: none;
+  text-transform: uppercase;
+  background: #F8B717;
+  display: inline-block;
+  border-radius: 40px;
+  color: #fff;
+  font-weight: 700;
+}
+
+#notfound h1, h2{
+  color: #fff;
+  font-weight: 700;
+  font-family: 'Helvetica', sans-serif;
+}
+
+#notfound p{
+  color: #fff;
+}
+
+/*------------------------- MEDIA QUERIES ---------------------------*/
+
+@media(min-width:0px) and (max-width:553px)
+{
+  img{
+      display: none;
+  }
+
+  #notfound a {
+    font-size: 12px;
+    padding: 10px 20px;
+  }
+
+  #notfound  h1{
+    font-size: 50px;
+  }
+    
+  #notfound  h2{
+    font-size: 25px;
+  }
+
+  #notfound  p{
+    font-size: 12px;
+  }
+
+}
+
+@media(min-width:554px) and (max-width:767px)
+{
+  img{    
+    display: none;
+  }
+
+  #notfound a {
+    font-size: 12px;
+    padding: 10px 20px;
+  }
+
+  #notfound  h1{
+    font-size: 50px;
+  }
+    
+  #notfound  h2{
+    font-size: 25px;
+  }
+
+  #notfound  p{
+    font-size: 12px;
+  }
+
+}
+
+@media(min-width:768px) and (max-width:991px)
+{
+  #pic img{
+    position: absolute; 
+    top: 50%; 
+    left: 50%;
+    width: 300px; 
+    height: 300px; 
+    margin-top: -165px; 
+    margin-left: -150px;
+  }
+
+  #notfound a {
+    font-size: 17px;
+    padding: 15px 30px;
+  }
+
+  #notfound  h1{
+    font-size: 100px;
+  }
+    
+  #notfound  h2{
+    font-size: 50px;
+  }
+
+  #notfound  p{
+    font-size: 16px;
+  }
+}
+
+@media(min-width:992px) and (max-width:1199px)
+{
+  #pic img{
+    position: absolute; 
+    top: 50%; 
+    left: 50%;
+    width: 325px; 
+    height: 325px; 
+    margin-top: -175px; 
+    margin-left: -125px;
+  }
+
+  #notfound a {
+    font-size: 17px;
+    padding: 15px 30px;
+  }
+
+  #notfound  h1{
+    font-size: 100px;
+  }
+    
+  #notfound  h2{
+    font-size: 50px;
+  }
+
+  #notfound  p{
+    font-size: 16px;
+  }
+}
+
+@media(min-width:1200px)
+{
+  #pic img{
+    position: absolute; 
+    top: 50%; 
+    left: 50%;
+    width: 375px; 
+    height: 375px; 
+    margin-top: -200px; 
+    margin-left: -125px;
+  }
+
+  #notfound a {
+    font-size: 17px;
+    padding: 15px 30px;
+  }
+
+  #notfound  h1{
+    font-size: 100px;
+  }
+    
+  #notfound  h2{
+    font-size: 50px;
+  }
+
+  #notfound  p{
+    font-size: 16px;
+  }
+}

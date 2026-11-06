@@ -1,0 +1,249 @@
+<app-alerta-general 
+    *ngIf="mostrarAlerta"
+    [tipoAlerta]="tipoAlerta">
+    {{mensaje}}
+</app-alerta-general>
+
+<div style="margin-left: 0.7rem">
+    <app-page-header  [heading]="'Realizar Servicio'"></app-page-header>
+</div>
+
+<div style="margin-top: 15px;" class="row">
+    <div class="col-xl-12">
+        <div *ngIf="isLoadingAbstract" class="progress" style="height:.1rem">
+            <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+        </div>
+    </div>
+</div>
+
+<div class="row contenedor-barra">
+    <div class="col-6 col-md-3 raya-separadora-a" >
+    </div>
+    <div class="triangulo-equilatero-bottom-rigth"></div>
+    <div class="col-12 col-md-12 raya-separadora-b" >
+    </div>
+</div>
+
+<br>
+
+
+<div class="container " >
+    <div [ngClass]="{'row':!mostrarResumen}">
+        <div *ngIf="mostrarResumen; else cronometro" style="margin-left: auto; margin-right: auto;"  >
+            <div >
+                <h2 class="text-center"><label >Resumen </label></h2>
+                <hr style="border-color: #3e11bc;border-width: 2px;"><br>
+                <div class="d-flex flex-row ">
+                    <div class="ml-4 d-flex flex-column col-5">
+                        <div class="d-flex flex-row mt-1">
+                            <em id="iconstyle" class="fa fa-user"></em>
+                            <div class="col pl-2 mt-1"><label>Nombre del servicio:&nbsp;&nbsp;</label><strong>{{SERVICIOAREALIZAR[0]['SER_NOMBRES']}}</strong></div>
+                        </div>
+        
+                        <div class="d-flex flex-row mt-2">
+                            <em id="iconstyle" class="fa fa-calendar-o"></em>
+                            <div class="col pl-2 mt-1"><label>Fecha:&nbsp;&nbsp;</label><strong>{{SERVICIOAREALIZAR[0]['FECHA']}}</strong></div>
+                        </div>
+        
+                        <div class="d-flex flex-row mt-2">
+                            <em id="iconstyle" class="fa fa-money"></em>
+                            <div class="col pl-2 mt-1"><label>Monto:&nbsp;&nbsp;</label><strong>{{SERVICIOAREALIZAR[0]['MON_SIMBOLO']  }}{{ SERVICIOAREALIZAR[0]['SERE_TARIFA'] - (SERVICIOAREALIZAR[0]['SERE_TARIFA'] *(claveComisiones/100))  | number:'.2-2' }}</strong></div>
+                        </div>
+        
+                        <div class="d-flex flex-row mt-2">
+                            <em id="iconstyle" class="fa fa-user"></em>
+                            <div class="col pl-2 mt-1"><label>Nombres y apellidos del cliente:&nbsp;&nbsp;</label><strong>{{SERVICIOAREALIZAR[0]['USU_NOMBREAPELLIDO']}}</strong></div>
+                        </div>
+        
+                        <div class="d-flex flex-column mt-2">
+                            <div class="d-flex flex-row">
+                                <em id="iconstyle" class="fa fa-clock-o"></em>
+                                <div class="col pl-2 mt-1"><label>Duración:</label></div>
+                            </div>
+                            <div class="circuloResumen">
+                                <h6 class="cronometroResumen notranslate pt-2">{{horaT}}:{{minutoT}}:{{segundoT}}</h6>
+
+                            </div>
+                        </div>
+                    </div>
+    
+                    <form [formGroup]="resumenForm" class="col-6" >
+                        <div class="form-group">
+                            <p class="mb-0"><label>  Comentario (*) </label></p>
+                            <textarea formControlName="comentario" class="form-control" id="exampleFormControlTextarea1" rows="4"></textarea>
+                            <small>{{ comentario.value?.length }}/60</small>
+                            <div *ngIf="comentario.invalid && (comentario.dirty || comentario.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                <div *ngIf="comentario.errors.required">
+                                  * El comentario es requerido.
+                                </div>
+                                <div *ngIf="comentario.errors.pattern">
+                                    * Solo se permiten caracteres alfanúmericos.
+                                </div>
+                                <div *ngIf="comentario.errors.maxlength">
+                                  * Se requieren máximo 60 caracteres.
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="d-flex flex-column">
+                            <div class="d-flex flex-row mt-2">
+                                <em id="iconstyle" class="fa fa-check"></em>
+                                <div class="col pl-2 mt-1"><label>Califica cómo te fue con el cliente (*):</label></div>
+                            </div>
+                            <div  class="rating" style="display: inline-block;"  >
+                                <input formControlName="puntuacion"   id="star5" name="puntuacion" type="radio" value="5" class="radio-btn hide" (change)="obtenerCalificacion(5)" />
+                                <label  style="font-size: 2rem;"  for="star5" title="5 estrellas">&#9733;</label>
+                                <input formControlName="puntuacion"   id="star4" name="puntuacion" type="radio" value="4" class="radio-btn hide" (change)="obtenerCalificacion(4)"  />
+                                <label style="font-size: 2rem;"  for="star4" title="4 estrellas">&#9733;</label>
+                                <input formControlName="puntuacion"   id="star3" name="puntuacion" type="radio" value="3" class="radio-btn hide" (change)="obtenerCalificacion(3)"  />
+                                <label style="font-size: 2rem;"  for="star3" title="3 estrellas">&#9733;</label>
+                                <input  formControlName="puntuacion"  id="star2" name="puntuacion" type="radio" value="2" class="radio-btn hide" (change)="obtenerCalificacion(2)"  />
+                                <label style="font-size: 2rem;"   for="star2" title="2 estrellas">&#9733;</label>
+                                <input  formControlName="puntuacion"   id="star1" name="puntuacion" type="radio" value="1" class="radio-btn hide" (change)="obtenerCalificacion(1)"  />
+                                <label style="font-size: 2rem;"  for="star1" title="1 estrella" >&#9733;</label>
+                                <div *ngIf="puntuacion.invalid && (puntuacion.dirty || puntuacion.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                    <div *ngIf="puntuacion.errors.required">
+                                      * La puntuación es requerida.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <p>(*) Campo obligatorio</p>
+                        </div>    
+                    </form>
+                </div>
+
+                
+                <div style="text-align: center;" class="col-11 mt-5" >
+                    <button (click)="aceptarFichaDeResumen()"  [disabled]="resumenForm.invalid"  class="btn btn-success botonAceptar text-uppercase" >Aceptar</button>
+                </div>
+                <div *ngIf="formularioInvalido" style="color:rgb(197, 68, 68);">
+                    * Debe completar los campos requeridos.
+                </div>
+            </div>
+        </div>
+        <ng-template #cronometro>
+            <div  class="col" >
+                <div class="card">
+                    <div class="d-flex flex-row p-3 cardCronometro">
+                        <div class="col-md-6 col-12 d-flex flex-column">
+                            <div class="d-flex flex-row ">
+                                <div class="barra-azul-lateral mr-1 ml-0"></div>
+                                <h5><label style="padding-top:0.7rem">{{SERVICIOAREALIZAR[0]['SER_NOMBRES'] }}</label></h5>
+                            </div>
+                            <label style="color: #24deec;" class="mt-2">Detalles del servicio</label>
+                            <p class="mb-0"><label>Descripción: </label>&nbsp;&nbsp;<strong>{{SERVICIOAREALIZAR[0]['SOL_DESCRIPCION']}}</strong> </p>
+
+                            <div class="d-flex flex-row mt-1">
+                                <em id="iconstyle" class="fa fa-calendar"></em>
+                                <div class="col pl-2 mt-1"><label>Fecha:&nbsp;&nbsp;</label><strong>{{SERVICIOAREALIZAR[0]['FECHA']}}</strong></div>
+                            </div>
+
+                            <div class="d-flex flex-row mt-2">
+                                <em id="iconstyle" class="fa fa-clock-o"></em>
+                                <div class="col pl-2 mt-1"><label>Hora:&nbsp;&nbsp;</label><strong>{{SERVICIOAREALIZAR[0]['HORA']}}</strong></div>
+                            </div>
+
+                            <div class="d-flex flex-row mt-2">
+                                <em id="iconstyle" class="fa fa-map-marker"></em>
+                                <div class="col pl-2 mt-1"><label>Dirección:&nbsp;&nbsp;</label><strong>{{SERVICIOAREALIZAR[0]['UBI_DIRECCION']}}</strong></div>
+                            </div>
+
+                            <div *ngIf="SERVICIOAREALIZAR[0].IS_COLLAPSE" >
+                                <br>
+                                <hr>
+                                <br>
+                                <div class="d-flex flex-row mt-2">
+                                    <em id="iconstyle" class="fa fa-tags"></em>
+                                    <div class="col pl-2 mt-1"><label>Monto:&nbsp;&nbsp;</label><strong>{{ SERVICIOAREALIZAR[0]['MON_SIMBOLO']  }}{{ SERVICIOAREALIZAR[0]['SERE_TARIFA']  }}</strong></div>
+                                </div>
+                                <div class="d-flex flex-row mt-2">
+                                    <em id="iconstyle" class="fa fa-user"></em>
+                                    <div class="col pl-2 mt-1" ><a type="button" (click)="abrirModalCliente()" ><label style="cursor: pointer;">Datos del cliente</label></a></div>
+                                </div>
+                                
+                            </div>
+                            <br>
+                            <div class="row" style="margin-left: 3px">
+                                <span style="cursor: pointer;" class="view-details" *ngIf="SERVICIOAREALIZAR[0].IS_COLLAPSE; else Colapsed" (click)="SERVICIOAREALIZAR[0].IS_COLLAPSE = !SERVICIOAREALIZAR[0].IS_COLLAPSE" [attr.aria-expanded]="!SERVICIOAREALIZAR[0].IS_COLLAPSE" aria-controls="collapseDetails"><strong> Menos detalles</strong></span>
+                                <ng-template #Colapsed>
+                                    <span  style="cursor: pointer; "  class="view-details" (click)="SERVICIOAREALIZAR[0].IS_COLLAPSE = !SERVICIOAREALIZAR[0].IS_COLLAPSE" [attr.aria-expanded]="!SERVICIOAREALIZAR[0].IS_COLLAPSE" aria-controls="collapseDetails"><strong> Más detalles</strong></span>
+                                </ng-template>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="col-md-6 col-12 borderSegundo d-flex justify-content-center">
+                            <div class="d-flex flex-column">
+                                <div style=" transform: scaleX(-1);" class="text-center mb-2">
+                                    <em class="fa fa-clock-o" id="tiempoCronometro"></em>
+                                </div>
+                                <h5 class="text-center text-uppercase"><label>Cronómetro</label></h5>
+                                <div class="circulo">
+                                    <h6 class="cronometro notranslate " *ngIf="this.horaT >= 0 && this.minutoT >= 0 && this.segundoT >= 0" >{{horaT??'00'}}:{{minutoT??'00'}}:{{segundoT??'00'}}</h6>
+                                </div>
+                                <div class="d-flex justify-content-center mt-5" >
+                                    <button  [disabled]="invalid"  (click)="iniciarCronometro()"  type="button" class="btn btn-success" id="btnEmpezar" >Empezar</button>
+                                    <button [disabled]="temporizarCronometro" (click)="abrirModalTerminarServicio()"  type="button" class="btn btn-danger" id="btnTerminar">Terminar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+            </div>
+        </ng-template>
+    </div>
+</div>
+
+<!-- DETALLES DEL CLIENTE  -->
+<ng-template #modalCliente let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLongTitle"> <strong>Datos del cliente</strong> </h5>
+      <button type="button" (click)="closeModal()" class="close" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body" >
+        <div class="row">
+            <div class="col">
+                <img [src]="DOMINIO + SERVICIOAREALIZAR[0]['USU_FOTO']" appImgRota [url]="'../../../assets/images/profile.png'" alt="foto de usuario">
+            </div>
+            <div class="col">
+                <p> <strong> Nombre y Apellido: </strong>{{ SERVICIOAREALIZAR[0]['USU_NOMBREAPELLIDO'] }} </p>
+                <p> <strong> Numero de celular: </strong>{{ SERVICIOAREALIZAR[0]['USU_CELULAR'] }}</p>
+                <p> <strong> Email: </strong>{{ SERVICIOAREALIZAR[0]['USU_EMAIL'] }} </p>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+      <button (click)="closeModal()" type="button" class="btn btn-danger bold" style="color: #ffffff;"  data-dismiss="modal" >Cerrar</button>
+    </div>
+</ng-template>
+
+
+<!-- CONFIRMACION PARA FINALIZAR EL SERVICIO  -->
+<ng-template #modalFinalizar let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLongTitle"> <strong>Confirmación de finalizar el servicio</strong> </h5>
+      <button type="button" (click)="closeModal()" class="close" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body" >
+        <p>¿Estás seguro de finalizar el servicio realizado?, recuerda que luego ya no podrá visualizar el trabajo confirmado. </p>
+    </div>
+    <!-- POGRESS BAR  -->
+    <div style="margin-top: 15px;" class="row">
+        <div class="col-xl-12">
+            <div *ngIf="cargaDato" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button [disabled] ="disabledFinalizarCronometro" (click)="closeModal()" type="button" class="btn btn-danger bold" style="color: #ffffff;"  data-dismiss="modal" >Cancelar</button>
+      <button [disabled] ="disabledFinalizarCronometro"  (click)="terminarCronometro()" type="button" class="btn btn-success bold" style="color: #ffffff;"  data-dismiss="modal" >Aceptar</button>
+    </div>
+</ng-template>

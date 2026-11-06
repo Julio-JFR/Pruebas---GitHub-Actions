@@ -1,0 +1,189 @@
+<div class="background" style="height: 100%;" [@routerTransition]>
+  <header>
+    <app-navbar></app-navbar>
+  </header>
+
+  <main style="height: 100vh;">
+    <form role="form" style="height: 100vh;">
+      <div class="container-fluid">
+        <div class="row align-items-center justify-content-around contenedor-row" style="height: 100vh;">
+          <div *ngIf="cargando" class="fixed-top progress" style="position: absolute; height:.1rem">
+            <ngb-progressbar class="indeterminate" type="primary" height="500%" [value]="100" [striped]="true"
+              [animated]="true"></ngb-progressbar>
+          </div>
+
+          <div class="col-12 m-0 p-0 d-flex flex-row gap-x-3">
+            <div class="col-7 m-0 p-0 imagenFondo2">
+              <img class="img-fluid imagenFondo" src="../../../assets/images/especialista.jpeg"  style="min-height: auto;height: 100vh;width: inherit;" alt="Login-especialista">
+            </div>
+
+            <div class="col-lg-5 col-md-8 col-sm-9 col-12 py-3 d-flex align-items-center" style="margin: auto;">
+              <div class="form-login2 p-0">
+                <div class="col-12 contenedor-titulo">
+                  <h1 class="title-lg titulo text-center"> Inicio Sesión - v12  Postulantes</h1>
+                </div>
+  
+                <form [formGroup]="loginForm" *ngIf="loginForm" class="form-content col-12 pt-4 pb-3 d-flex flex-column align-items-center">
+                  <div class="form-group row justify-content-center ">
+                    <div class="">
+                      <input formControlName="USU_USUARIO" type="text" style="box-shadow: none;outline: none;width: 14rem;"
+                        placeholder="{{ 'Email o nombre de usuario' | translate }}"><br>
+                      <span *ngIf="loginForm.controls.USU_USUARIO.invalid"
+                        class="text-muted row">Por favor, ingrese su email o nombre de usuario.</span>
+                    </div>
+                  </div>
+  
+                  <div class="containerPass m-0 p-0">
+                    <input 
+                      formControlName="USU_CONTRASENIA" style="box-shadow: none;outline: none;width: 14rem;" 
+                      type={{PASSWORD_TYPE}} placeholder="{{ 'Password' | translate }}">
+                    <span (click)="cambiarVistaPassword()" class="overlay">
+                      <em class={{PASSWORD_ICON}} style="top: 0;left: 0;"></em>
+                    </span>
+                  </div>
+                  
+                  <span class="forgot-password" (click)="forgotPassword()">{{ '¿Olvidó su contraseña?' | translate}}</span>
+
+                  <form [formGroup]="aFormGroup" class="captcha-form  justify-content-center row">
+                    <div style="justify-content: center;display: flex;">
+                      <div class="spinner-border" role="status" *ngIf="cargandoCaptchan">
+                      </div>
+                      <ngx-recaptcha2 #captchaElem [siteKey]="siteKey" (success)="handleSuccess($event)"
+                        (expire)="disableButton = true" [size]="size" [hl]="lang" [theme]="theme" [type]="type" 
+                        (load)="handleLoad()"
+                        formControlName="recaptcha"></ngx-recaptcha2>
+                      </div>
+                  </form>
+                  <button *ngIf="captchaElem.success" type="submit" class="btn btn-success login-button"
+                      (click)="submit()"><strong>INICIAR SESIÓN</strong></button>
+                  <br>
+                  <span style="color: #3E11BC;text-decoration: none;">¿No tienes una cuenta? <strong><a class="registrate"
+                        style="color:#3E11BC ;" (click)="abrirModalRegistro()">Regístrate</a></strong></span>
+                  <!-- <span style="color: #3E11BC;text-decoration: none;"><strong><a class="registrate"
+                          style="color:#3E11BC ;" [routerLink]="['/postulante','login']"> Soy Postulante</a></strong></span> -->
+                  <ngb-alert class="mb-0" *ngIf="error" [type]="tipoColorAlertaLogin" (closed)="error = false" class="mt-3">
+                    {{mensajeError}}</ngb-alert>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </main>
+
+</div>
+
+<!--MODAL QUE SE EJECUTA AL HACER CLIC EN ¿Olvidó su contraseña?-->
+<ng-template #modalForgotPassword let-modal>
+  
+  <div class="modal-header">
+    <h4 class="modal-title">Recuperación de Cuenta</h4>
+    <!-- <span type="button" class="close" (click)="modal.dismiss();bandera=false;mensaje_reenviar='';mensajeBotonModal='Enviar';emailForm.controls.usu_email.enable(); IngresoCodigoRecuperacion=false">&times;</span> -->
+  </div>
+  <div class="modal-body">
+    <div class="container">
+      <div *ngIf="mostrarAlertaModal">
+        <ngb-alert [type]="tipoAlertaModal" (closed)="mostrarAlertaModal = false; mensajeModal = ''">{{mensajeModal}}
+        </ngb-alert>
+      </div>
+      <h6><strong>Ingrese su correo electrónico para recuperar su cuenta</strong></h6>
+      <p>Se le enviará un mensaje con su nueva contraseña</p>
+      <br>
+      <form [formGroup]="emailForm">
+        <input formControlName="usu_email" type="email" id="emailInput" name="emailInput"
+          class="form-control form-control-sm" placeholder="{{ 'Email' | translate }}">
+        <div *ngIf="usu_email.invalid && (usu_email.dirty || usu_email.touched)" class="my-1 text-center"
+          style="color: rgb(197, 68, 68);">
+          <div *ngIf="usu_email.errors.required">
+            * El correo electrónico es requerido
+          </div>
+          <div *ngIf="usu_email.errors.pattern">
+            * El formato del correo no es válido
+          </div>
+          <div *ngIf="usu_email.errors.maxlength">
+            * Se requieren máximo 60 caracteres
+          </div>
+        </div>
+
+        <div *ngIf="IngresoCodigoRecuperacion">
+          <br>
+          <input formControlName="usu_codigoRecuperacionCuenta" type="text" id="codigoVerificacion"
+            name="codigoVerificacion" class="form-control form-control-sm" placeholder="Código de recuperación">
+          <div
+            *ngIf="usu_codigoRecuperacionCuenta.invalid && (usu_codigoRecuperacionCuenta.dirty || usu_codigoRecuperacionCuenta.touched)"
+            class="my-1 text-center" style="color: rgb(197, 68, 68);">
+            <div *ngIf="usu_codigoRecuperacionCuenta.errors.pattern">
+              * El formato no es válido
+            </div>
+            <div *ngIf="usu_codigoRecuperacionCuenta.errors.minlength">
+              * Se requieren mínimo 5 caracteres
+            </div>
+            <div *ngIf="usu_codigoRecuperacionCuenta.errors.maxlength">
+              * Se requieren máximo 5 caracteres
+            </div>
+          </div>
+        </div>
+
+      </form>
+      <br>
+      <p style="padding: 0 15px;margin-bottom: -10px;">{{mensaje_reenviar}}</p>
+    </div>
+
+  </div>
+
+  <div style="margin-top: 15px;" class="row">
+    <div class="col-xl-12">
+      <div *ngIf="cargandoModal" class="progress" style="height:.1rem">
+        <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true"
+          [animated]="true"></ngb-progressbar>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer ">
+    <button type="button" class="btn btn-danger bold"
+      (click)="mensajeBotonModal = 'Enviar';modal.dismiss();emailForm.controls.usu_email.enable();bandera=false;mensaje_reenviar='';IngresoCodigoRecuperacion=false"
+      [disabled]="cargandoModal">Cancelar</button>
+    <button type="submit" class="btn btn-success bold" (click)="recuperarCuentaUsuario();IngresoCodigoRecuperacion=false"
+      [disabled]="emailForm.invalid || cargandoModal">{{mensajeBotonModal}}</button>
+    <button *ngIf="IngresoCodigoRecuperacion" type="submit" class="btn btn-success"
+      (click)="verificiarCodigoRecuperacion();" [disabled]="cargandoModal">Verificar</button>
+
+  </div>
+</ng-template>
+
+<!-- MODAL PARA REGISTRO DEL ESPECIALISTA -->
+<ng-template #tEspecialista let-modal>
+  <div class="modal-header" style="text-align: center;align-items: center;">
+      <h5 class="modal-title col-11 text-center"  id="exampleModalLongTitle">Selecciona</h5>
+      <button  type="button" class="close" (click)="closeModal()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  <div style="margin-top: 15px;" class="row">
+      <div class="col-xl-12">
+          <div *ngIf="carga" class="progress" style="height:.1rem">
+              <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+          </div>
+      </div>
+  </div>
+  <div class="modal-body">
+    <div class="row justify-content-center">
+      <div style="text-align: center;padding-left: 0px;" class="col-12 col-sm-6">
+        <div class="col-12"><label>Soy una persona</label></div>
+        <div  class="col-12" style="cursor: pointer"(click)="redireccionarRegistroEspecialistaPersona();">
+          <img  style="height: 15rem;width: 7rem;"src="../../../assets/images/PERSONA-NATURAL.png" alt="">
+        </div>
+      </div>
+      <div style="text-align: center;padding-left: 0px" class="col-12 col-sm-6">
+        <div class="col-12"><label>Soy una empresa</label></div>
+        <div class="col-12"style="cursor: pointer"(click)="redireccionarRegistroEspecialistaEmpresa();">
+          <img  style="height: 15rem;width: 7rem;"src="../../../assets/images/PERSONA-JURIDICA.png" alt="">
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  <div class="modal-footer">
+     </div>
+</ng-template>

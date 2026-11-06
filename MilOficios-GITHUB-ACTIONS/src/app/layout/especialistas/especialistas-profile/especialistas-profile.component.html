@@ -1,0 +1,401 @@
+
+
+<div style="margin-top: 15px;" class="row">    
+  <div class="col-xl-12">
+    <div *ngIf="cargandoDatos" class="progress" style="height:.1rem">
+      <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+    </div>
+  </div>
+</div>
+<app-alerta-general 
+  *ngIf="mostrarAlerta"
+  [tipoAlerta]="tipoAlerta">
+  {{mensaje}}
+</app-alerta-general>
+<div class="d-flex" id="wrapper">
+  <app-especialistas-sidebar></app-especialistas-sidebar>
+  
+  <div class="container" >
+      <div class="card ml-4 mr-5">
+          <div class="row" style="margin-left: 0.8rem;">
+              <app-page-header [heading]="'Mi Cuenta'"></app-page-header>
+          </div>
+         
+          <div  style="overflow: hidden;">
+              <triangular-bar [isProfile]="true"></triangular-bar>
+          </div>
+
+          <div class="row container">
+              <div>
+                  <img *ngIf="ESPECIALISTA.USU_SEXO==='M' && (ESPECIALISTA.USU_FOTO!=null || ESPECIALISTA.USU_FOTO!='') && !cargandoFoto" class="table-bordered" [src]="DOMINIO + URL_NUEVA_FOTO" appImgRota [url]="'../../../../assets/images/AVATAR-PREDETERMINADO-HOMBRE.png'" alt="Especialista-img"> <!--{{ESPECIALISTA.USU_FOTO}}-->
+                  <img *ngIf="(ESPECIALISTA.USU_FOTO!=null || ESPECIALISTA.USU_FOTO!='') && !cargandoFoto && ESPECIALISTA.USU_SEXO==='F'" class="table-bordered" [src]="DOMINIO + URL_NUEVA_FOTO" appImgRota [url]="'../../../../assets/images/AVATAR-PREDETERMINADO-MUJER.png'" alt="Especialista-img"> <!--{{ESPECIALISTA.USU_FOTO}}-->
+                  <img *ngIf="cargandoFoto" src="../../../../assets/images/cargando-cuadrado.gif" alt="loading-gif" class="table-bordered">
+                  <img *ngIf="ESPECIALISTA.USU_FOTO=='' && !cargandoFoto" alt="No-img" class="table-bordered" src="../../../../assets/images/AVATAR-PREDETERMINADO-HOMBRE.png">
+                  <span><em  ngbTooltip="Actualizar foto"  class="fa fa-camera" (click)="mostrarAlertaModal = false; actualizarFoto()" ></em></span>
+              </div>
+  
+            
+              <div id="label-foto">
+                  <form >
+                      <ng-template #t let-fill="fill">
+                          <span class="star" [class.full]="fill === 100">
+                            <span class="half" [style.width.%]="fill">&#9733;</span>&#9733;
+                          </span>
+                      </ng-template>
+                      
+                      <label >Calificación: </label>
+                      <ngb-rating style="cursor: auto;"  [(rate)]="ESPECIALISTA.USU_CALIFICACION" [starTemplate]="t" [readonly]="true" [max]="5"></ngb-rating>
+                  
+                  </form>
+              </div>
+          </div>
+          
+          <div class="card-design my-4">
+            <div class="card border-top-0 border-left-0 border-right-0" style="border-bottom: 1px solid #24DEEC;">
+                <label class="h2 bold-tipografy">Datos del Usuario</label>
+                <div class="row contenedor-barra-subtitulo" style="width: 100%;">
+                    <div class="col-12 raya-separadora-a" >
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form  [formGroup]="especialistaForm" >
+
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <div class="barra-azul-lateral"></div>
+                                <label  for="usernameInput">Nombre de Usuario *</label>
+                                <input formControlName="usu_alias" type="text" 
+                                    class="form-control form-control-sm" id="usernameInput" 
+                                    name="usernameInput">
+                                <div *ngIf="usu_alias.invalid && (usu_alias.dirty || usu_alias.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                    <div *ngIf="usu_alias.errors.required">
+                                        * El campo es requerido
+                                    </div>
+                                    <div *ngIf="usu_alias.errors.pattern">
+                                        * Solo se permite caracteres alfanúmericos.
+                                    </div>
+                                    <div *ngIf="usu_alias.errors.maxlength">
+                                        * Se requieren máximo 50 caracteres 
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 col-md-6 space">
+                                <div class="barra-azul-lateral"></div>
+                                <label for="emailInput">Correo Electrónico *</label>
+                                <input formControlName="usu_email" type="text" 
+                                    class="form-control form-control-sm" id="usernameInput" 
+                                    name="usernameInput">
+                                <div *ngIf="usu_email.invalid && (usu_email.dirty || usu_email.touched)" 
+                                    class="my-1" style="color: rgb(197, 68, 68);">
+                                    <div *ngIf="usu_email.errors.required">
+                                        * El campo es requerido
+                                    </div>
+                                    <div *ngIf="usu_email.errors.pattern">
+                                        * El formato del correo no es válido
+                                    </div>
+                                    <div *ngIf="usu_email.errors.maxlength">
+                                        * Se requieren máximo 60 caracteres 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-12 col-lg-6 my-3">
+                              <button 
+                                class="btn btn-sm btn-success float-right" 
+                                id="actualizarButton" 
+                                (click)="mostrarAlerta = false;
+                                updateUsuarioEspecialista()"
+                                [disabled]="cargandoDatos">ACTUALIZAR</button>
+                            </div>
+                            <div class="col-12 col-lg-6 my-3">
+                              <button 
+                                class="btn btn-sm btn-success float-right" 
+                                id="cambiarPassword" 
+                                (click)="actualizarContrasena()" 
+                                [disabled]="cargandoDatos">CAMBIAR CONTRASEÑA</button>
+                            </div>
+                          </div>
+                        <br>
+                        <div class="row">
+                            <p> (*) Campo obligatorio</p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- servicios especialista -->
+              
+            <div class="card border-0">
+              <h5 class="card-header ml-2" style="background: transparent;"><label>Especialidades</label></h5>
+              <div class="card-body">
+                <form [formGroup]="especialidadForm">
+                  <div class="row">
+                    <div class="col">
+                      <div class="barra-azul-lateral"></div>
+                      <label for="listaCategorias">Categoría *</label>
+                      <div id="listaCategorias">
+                        <select name="categoriasSelect" id="categoriasSelect" class="form-control form-control-sm custom-select" (change)="ID_CATEGORIA=id_categoria.value; getServicios()" formControlName="id_categoria">
+                          <option [ngValue]=null> Seleccionar </option>
+                          <option [ngValue]="CATEGORIA.CAT_ID" *ngFor="let CATEGORIA of CATEGORIAS">{{CATEGORIA.CAT_NOMBRE}}</option>
+                        </select>
+                        <div *ngIf="id_categoria.invalid && (id_categoria.dirty || id_categoria.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                          <div *ngIf="id_categoria.errors.required">
+                            * La categoría es requerida
+                          </div>
+                        </div>
+                      </div>                  
+                    </div>
+                    <div class="col-12 col-sm-4" id="opMargen">
+                      <div class="barra-azul-lateral"></div>
+                      <label for="listaServicios">Servicio *</label>
+                      <div id="listaServicios">
+                        <select name="serviciosSelect" id="serviciosSelect" class="form-control form-control-sm custom-select" formControlName="id_servicio">
+                          <option [ngValue]=null>Seleccionar</option>
+                          <option [ngValue]="SERVICIO.SER_ID" *ngFor="let SERVICIO of SERVICIOS">{{SERVICIO.SER_NOMBRES}}</option>
+                        </select>
+                        <div *ngIf="id_servicio.invalid && (id_servicio.dirty || id_servicio.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                          <div *ngIf="id_servicio.errors.required">
+                            * El servicio es requerido
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-sm-4" id="opMargen">
+                      <div class="barra-azul-lateral"></div>
+                      <label for="listaNiveles">Nivel *</label>
+                      <div id="listaNiveles">
+                        <select name="nivelesSelect" id="nivelesSelect" class="form-control form-control-sm custom-select" formControlName="id_nivel">
+                          <option [ngValue]=null> Seleccionar </option>
+                          <option [ngValue]="NIVEL.NIV_ID" *ngFor="let NIVEL of NIVELES">{{NIVEL.NIV_TIPO}}</option>
+                        </select>
+                        <div *ngIf="id_nivel.invalid && (id_nivel.dirty || id_nivel.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                          <div *ngIf="id_nivel.errors.required">
+                            * El nivel es requerido
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row my-3">
+                    <div class="col-12 col-sm-4">
+                      <button 
+                        class="btn btn-sm btn-success float-right" 
+                        id="guardarEspecial" 
+                        (click)="mostrarAlerta = false; mensaje=''; saveServicioEspecialista()" 
+                        [disabled]="cargandoGuardar || especialidadForm.invalid">GUARDAR</button>
+                    </div>
+                  </div>
+                  <div style="margin-top: 15px;" class="row">    
+                    <div class="col-xl-12">
+                      <div *ngIf="cargandoGuardar" class="progress" style="height:.1rem">
+                        <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+                      </div>
+                    </div>   
+                  </div>
+                  <div class="table-responsive-sm table-responsive-md table-responsive-lg table-responsive-xl table-responsive" style="margin-top: 1rem;">
+                    <table class="table table-hover">
+                      <thead class="back-table-color">
+                        <tr style="text-align: center;">
+                          <th scope="col" class="text-center table-border-left" sortable="CAT_NOMBRE" style="min-width: 8rem;" (sort)="sort($event)">Categoría</th>
+                          <th scope="col" class="text-center" sortable="SER_NOMBRES" (sort)="sort($event)" style="min-width: 8rem;">Servicio</th>
+                          <th scope="col" class="text-center " sortable="NIV_TIPO" (sort)="sort($event)">Nivel</th>
+                          <th scope="col" class="text-center table-border-rigth" >Acción</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let SERVICIO of SERVICIOS_ESPECIALISTA | slice:(currentPage-1)*itemsPerPage:currentPage*itemsPerPage">
+                          <td style="text-align: center;">{{SERVICIO.CAT_NOMBRE}}</td>
+                          <td style="text-align: center;">{{SERVICIO.SER_NOMBRES}}</td>
+                          <td style="text-align: center;">{{SERVICIO.NIV_TIPO}}</td>
+                          <td style="text-align: center;"> 
+                            <span class="icono" (click)="eliminarEsp(SERVICIO)">
+                              <i ngbTooltip="Eliminar" class=" fa fa-trash-o" aria-hidden="true" style="color: red; font-size: 17px;"
+                              ></i>
+                            </span>
+                          </td>
+                        </tr>
+                        <tr *ngIf="SERVICIOS_ESPECIALISTA?.length > 0"><td  colspan="11" ><span style="float:right; color: #3e11bc;" ><strong>Total: {{SERVICIOS_ESPECIALISTA?.length}} {{SERVICIOS_ESPECIALISTA?.length ==1 ? 'elemento' :'elementos'}}</strong></span></td></tr> 
+                      </tbody>
+                    </table>
+                  </div>
+                </form>
+                <div class="col-12 my-4">
+                  <p> (*) Campo obligatorio</p>
+                </div>
+                
+                <div *ngIf="SERVICIOS_ESPECIALISTA?.length > 0" style="margin-top: 15px; margin-bottom: 20px;" class="row box-footer clearfix">     
+                  <div class="col-xl-9 col-lg-9 col-md-8 col-sm-7 col-8">
+                    <ngb-pagination *ngIf="SERVICIOS_ESPECIALISTA?.length > itemsPerPage" class="d-flex justify-content-start" [maxSize]="5" [pageSize]="itemsPerPage"  [collectionSize]="SERVICIOS_ESPECIALISTA.length" [(page)]="currentPage"></ngb-pagination>
+                  </div>
+                  <div class="col-xl-3 col-lg-3 col-md-4 col-sm-5 col-8">
+                    <select class="pull-right" [(ngModel)]="itemsPerPage" (ngModelChange)="cambioElementos()" class="form-control form-control-sm custom-select">
+                      <option value="5">5 elementos</option>
+                      <option value="10">10 elementos</option>
+                      <option value="15">15 elementos</option>
+                      <option value="20">20 elementos</option>                    
+                    </select>  
+                  </div>    
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+<div>
+  <app-especialistas-sidebar id="sidebar2"></app-especialistas-sidebar> 
+</div>
+
+<ng-template #modalUpdatePhoto let-modal>
+  <div class="modal-header">
+      <h4 class="modal-title">Actualizar imagen de perfil</h4>
+      <span type="button" class="close"(click)="cerrarModal();previewImage=ESPECIALISTA.USU_FOTO">&times;</span>
+    </div>
+    <div class="modal-body">
+      <app-alerta-modal *ngIf="mostrarAlertaModal" [tipoAlerta]="tipoAlertaModal">{{mensajeErrorFoto}}</app-alerta-modal>
+      <div class="container">
+        <form>
+          <div class="row">
+            <image-cropper
+              [imageChangedEvent]="imageChangedEvent"
+              [maintainAspectRatio]="true"
+              [aspectRatio]="4 / 4"
+              (imageCropped)="imageCropped($event)"
+              [resizeToWidth]="192"
+              [resizeToHeight]="192"
+            ></image-cropper>
+            <div class="border rounded-lg py-2 col12">
+              <label for="file-upload" class="border rounded-lg inputFile">
+                  <i class="fa fa-cloud-upload"></i>Elegir archivo
+              </label>
+              <input id="file-upload" type="file" 
+                  #fileInput
+                  accept="image/png, .jpeg, .jpg" 
+                  value=ESPECIALISTA.USU_FOTO
+                  (change)="subirFoto($event)" name="file" type="file"/>
+              <label class="ml-2 text-gray-300" *ngIf="!croppedImage">Ningún archivo seleccionado</label>
+          </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div style="margin-top: 15px;" class="row">    
+      <div class="col-xl-12">
+        <div *ngIf="cargandoActualizarFoto" class="progress" style="height:.1rem">
+          <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+        </div>
+      </div>   
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger fw-bold" 
+        (click)="cerrarModal()"
+        [disabled]="cargandoActualizarFoto">
+        Cancelar
+      </button>
+      <button type="button" class="btn btn-success fw-bold" (click)="mostrarAlertaModal = false; mensajesModal = []; mostrarAlerta = false; mensaje=''; saveFoto()" 
+        [disabled]="fotoBase64textString == null || cargandoActualizarFoto">
+        Aceptar
+      </button>
+    </div>
+</ng-template>
+
+
+<ng-template #modalUpdatePassword let-modal>
+  <div class="modal-header">
+      <h4 class="modal-title">Actualizar Contraseña</h4>
+      <span type="button" class="close" (click)="modal.dismiss()">&times;</span>
+    </div>
+    <div class="modal-body">
+      <app-alerta-modal *ngIf="mostrarAlertaModal" [tipoAlerta]="tipoAlertaModal">{{mensaje}}</app-alerta-modal>
+
+      <div class="container">
+        <form [formGroup]="contrasenaForm">
+            <div class="col password-form">
+              <label for="passwordInputCurrent">Contraseña Actual *</label>
+              <div class="input-group">
+                <input type={{PASSWORD_CURRENT_TYPE}} id="passwordInputCurrent" name="passwordInputCurrent"
+                  class="form-control border-right-0"  name="Contrasena" formControlName="contrasena_actual">
+                  <span style="padding-left: 8px; padding-top: 8px;" class="pos-icon center" id="iconCurrent" (click)="cambiarVistaContrasena('passwordInputCurrent', 'iconCurrent')"><em class={{PASSWORD_CURRENT_ICON}}></em></span>
+              </div>
+              <div *ngIf="contrasena_actual.invalid && (contrasena_actual.dirty || contrasena_actual.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                <div *ngIf="contrasena_actual.errors.required">
+                  * La contraseña actual es requerida.
+                </div>
+                <div *ngIf="contrasena_actual.errors.minlength">
+                  * Se requieren mínimo 8 caracteres. 
+                </div>
+                <div *ngIf="contrasena_actual.errors.maxlength">
+                  * Se requieren máximo 20 caracteres. 
+                </div>
+              </div>
+            </div>
+            <div class="col password-form my-3">
+              <label for="passwordInputNew">Nueva Contraseña *</label>
+              <div class="input-group">
+                <input type={{PASSWORD_NEW_TYPE}} id="passwordInputNew" name="passwordInputNew"
+                  class="form-control border-right-0" name="Contrasena" formControlName="contrasena_nueva">
+                <span style="padding-left: 8px; padding-top: 8px;" class="pos-icon center" id="iconNew" (click)="cambiarVistaContrasena('passwordInputNew', 'iconNew')"><em class={{PASSWORD_NEW_ICON}}></em></span>
+              </div>
+              <div *ngIf="contrasena_nueva.invalid && (contrasena_nueva.dirty || contrasena_nueva.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                <div *ngIf="contrasena_nueva.errors.required">
+                  * La contraseña nueva es requerida.
+                </div>
+                <div *ngIf="contrasena_nueva.errors.minlength">
+                  * Se requieren mínimo 8 caracteres.
+                </div>
+                <div *ngIf="contrasena_nueva.errors.maxlength">
+                  * Se requieren máximo 20 caracteres.
+                </div>
+                <div *ngIf="contrasena_nueva.errors.passwordValidation">
+                  *{{contrasena_nueva.errors.passwordValidation.mensaje}}
+                </div>
+              </div>
+            </div>
+        </form>
+        <div class="col-12 my-4">
+          <p> (*) Campo obligatorio</p>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top: 15px;" class="row">    
+      <div class="col-xl-12">
+        <div *ngIf="cargandoActualizarContrasena" class="progress" style="height:.1rem">
+          <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+        </div>
+      </div>   
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger bold" (click)="cerrarModal()">Cancelar</button>
+      <button type="button" class="btn btn-success bold" (click)="mostrarAlertaModal = false; mensajesModal = []; mostrarAlerta = false; mensaje=''; saveContrasena()" [disabled]="contrasenaForm.invalid">Aceptar</button>
+    </div>
+</ng-template>
+
+
+<ng-template #modalEliminarEsp let-modal>
+  <div class="modal-header">
+      <h4 class="modal-title">Eliminar especialidad</h4>
+      <span type="button" class="close" (click)="cerrarModal()">&times;</span>
+    </div>
+    <div class="modal-body">
+      <app-alerta-modal *ngIf="mostrarAlertaModal" [tipoAlerta]="tipoAlertaModal">{{mensaje}}</app-alerta-modal>
+      <div class="container">
+        <span>¿Está seguro de eliminar esta especialidad?</span>
+      </div>
+    </div>
+    <div style="margin-top: 15px;" class="row">    
+      <div class="col-xl-12">
+        <div *ngIf="cargandoActualizarContrasena" class="progress" style="height:.1rem">
+          <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+        </div>
+      </div>   
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger bold"  (click)="cerrarModal()">Cancelar</button>
+      <button type="button" class="btn btn-success bold" (click)="eliminarEspecialidad()">Aceptar</button>
+    </div>
+</ng-template>

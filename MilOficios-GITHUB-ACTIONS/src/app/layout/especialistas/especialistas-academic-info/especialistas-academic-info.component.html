@@ -1,0 +1,241 @@
+<app-alerta-general 
+    *ngIf="mostrarAlerta"
+    [tipoAlerta]="tipoAlerta">
+    {{mensajes}}
+</app-alerta-general>
+
+<div class="row" *ngIf="cargandoDatos" >    
+    <div class="col-xl-12">
+      <div class="progress" style="height:.1rem">
+        <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+      </div>
+    </div>   
+</div>
+<br>
+<div class="d-flex" id="wrapper">
+    <app-especialistas-sidebar id="sidebar"></app-especialistas-sidebar>
+    <div class="container margin"  >
+      <div id="contentAll">
+        <div class=" card-design " >
+            <div class=" border-top-0 border-left-0 border-right-0">
+                <h5 class=" my-3 bold-tipografy">Estudios </h5>
+
+                <triangular-bar></triangular-bar>
+
+                <div class="card-body">
+                    <form [formGroup]="estudiosForm">
+                        <div class="row">
+                            <div class="col-sm-12 col-lg-6 my-3">
+                              <div class="barra-azul-lateral"></div>
+                              <label for="tipoEstudioInput">Tipo de Estudio *</label>
+                              <input type="text" id="tipoEstudioInput" name="tipoEstudioInput" class="form-control" formControlName="est_tipo">
+                              <div *ngIf="est_tipo.invalid && (est_tipo.dirty || est_tipo.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                  <div *ngIf="est_tipo.errors.required">
+                                    * El tipo de estudio es requerido
+                                  </div>
+                                  <div *ngIf="est_tipo.errors.pattern">
+                                    * Solo se permiten caracteres alfabéticos
+                                  </div>
+                                  <div *ngIf="est_tipo.errors.maxlength">
+                                    * Se requieren maximo 20 caracteres 
+                                  </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-lg-6 my-3">
+                                <div class="barra-azul-lateral"></div>
+                                <label for="lugarEstudioInput">Lugar de Estudio *</label>
+                                <input type="text" id="lugarEstudioInput" name="lugarEstudioInput" class="form-control" formControlName="est_institucion">
+                                <div *ngIf="est_institucion.invalid && (est_institucion.dirty || est_institucion.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                    <div *ngIf="est_institucion.errors.required">
+                                      * El lugar de estudio es requerido
+                                    </div>
+                                    <div *ngIf="est_institucion.errors.maxlength">
+                                      * Se requieren maximo 20 caracteres 
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div class="col-sm-12 col-lg-6 my-3">
+                                <div class="barra-azul-lateral"></div>
+                                <label for="fechaInicioInput">Fecha de Inicio *</label>
+                                <input type="date" id="fechaInicioInput" name="fechaInicioInput" class="form-control" formControlName="est_fech_ini">
+                                <div *ngIf="est_fech_ini.invalid && (est_fech_ini.dirty || est_fech_ini.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                    <div *ngIf="est_fech_ini.errors.required">
+                                      * La fecha de inicio es requerida
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-lg-6 my-3">
+                                <div class="barra-azul-lateral"></div>
+                                <label for="fechaFinInput">Fecha de Finalizacion *</label>
+                                <label class="pull-right" ><input type="checkbox" (change)="procesoDatosCheckEstudio()" [checked]="isCheckEstudio"><small> En curso</small></label>
+                                <input type="date" id="fechaFinInput" name="fechaFinInput" class="form-control" formControlName="est_fech_fin">
+                                <div *ngIf="est_fech_fin.invalid && (est_fech_fin.dirty || est_fech_fin.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                    <div *ngIf="est_fech_fin.errors.required">
+                                      * La fecha de fin es requerida
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div class="col-12 my-3">
+                                <div class="barra-azul-lateral"></div>
+                                <label for="descripcionInput">Descripción *</label>
+                                <textarea class="form-control" id="descripcionInput" name="descripcionInput" rows="3" formControlName="est_descripcion"></textarea>
+                                <div *ngIf="est_descripcion.invalid && (est_descripcion.dirty || est_descripcion.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                    <div *ngIf="est_descripcion.errors.required">
+                                      * La descripción es requerida
+                                    </div>
+                                    <div *ngIf="est_descripcion.errors.maxlength">
+                                      * Se requieren maximo 60 caracteres 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        
+                        <button 
+                          *ngIf="cargandoDatos || estudiosForm.invalid; else noValido" 
+                          type="button" class="btn btn-sm change-btn float-right rounded-pill p-2 
+                          px-4 bold-tipografy" 
+                          style="opacity: 60%;" [disabled]="true" (click)="mostrarAlerta = false; mensajes = []; errorActualizar = []; agregarEstudio()" 
+                          >AGREGAR</button>
+                        <!-- [disabled]="cargandoDatos || estudiosForm.invalid" -->
+                        <ng-template #noValido>
+                          <button 
+                            type="button" 
+                            class="btn btn-sm  change-btn float-right rounded-pill p-2 px-4 bold-tipografy" 
+                            (click)="mostrarAlerta = false; mensajes = []; errorActualizar = []; agregarEstudio()">
+                            AGREGAR
+                          </button>
+                        </ng-template>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div style="margin-top: 15px;" class="row">    
+          <div class="col-xl-12">
+            <div *ngIf="cargandoActualizar" class="progress" style="height:.1rem">
+              <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+            </div>
+          </div>   
+        </div>
+       
+        <div class="card-design p-2" *ngFor="let ESTUDIO of ESTUDIOS | slice:(currentPage-1)*itemsPerPage:currentPage*itemsPerPage">
+            <div>
+                <h5  style="cursor: pointer;" (click)="setCollapsed(ESTUDIO); updateValuesEstudioUpdate(ESTUDIO)" [attr.aria-expanded]="!ESTUDIO['IS_COLLAPSED']" aria-controls="collapseExample">
+                  <label>{{ESTUDIO.EST_TIPO}} - {{ESTUDIO.EST_INSTITUCION}} <em class="fa fa-chevron-down"></em></label>
+                </h5>
+                <hr style="background-color:var(--color-raya); height: 1px;" >
+                <div class="card-body" id="collapseExample" [ngbCollapse]="ESTUDIO['IS_COLLAPSED']">
+                    <form [formGroup]="estudiosUpdateForm">
+                        <div class="row">
+                            <div class="col-sm-12 col-lg-6 my-3">
+                                <div class="barra-azul-lateral"></div>
+                                <label for="tipoEstudioInput">Tipo de Estudio *</label>
+                                <input type="text" class="form-control" formControlName="est_tipo_update">
+                                <div *ngIf="est_tipo_update.invalid && (est_tipo_update.dirty || est_tipo_update.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                    <div *ngIf="est_tipo_update.errors.required">
+                                      * El tipo de estudio es requerido
+                                    </div>
+                                    <div *ngIf="est_tipo_update.errors.pattern">
+                                      * Solo se permiten caracteres alfabéticos
+                                    </div>
+                                    <div *ngIf="est_tipo_update.errors.maxlength">
+                                      * Se requieren maximo 20 caracteres 
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-lg-6 my-3">
+                                <div class="barra-azul-lateral"></div>
+                                <label for="lugarEstudioInput">Lugar de Estudio *</label>
+                                <input type="text" class="form-control" formControlName="est_institucion_update">
+                                <div *ngIf="est_institucion_update.invalid && (est_institucion_update.dirty || est_institucion_update.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                    <div *ngIf="est_institucion_update.errors.required">
+                                      * El lugar de estudio es requerido
+                                    </div>
+                                    <div *ngIf="est_institucion_update.errors.maxlength">
+                                      * Se requieren máximo 20 caracteres 
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div class="col-sm-12 col-lg-6 my-3">
+                                <div class="barra-azul-lateral"></div>
+                                <label for="fechaInicioInput">Fecha de Inicio *</label>
+                                <input type="date" class="form-control" formControlName="est_fech_ini_update">
+                                <div *ngIf="est_fech_ini_update.invalid && (est_fech_ini_update.dirty || est_fech_ini_update.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                    <div *ngIf="est_fech_ini_update.errors.required">
+                                      * La fecha de inicio es requerida
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-lg-6 my-3">
+                              <div class="barra-azul-lateral"></div>
+                              <label for="fechaFinInput">Fecha de Finalizacion *</label>
+                              <label class="pull-right" ><input type="checkbox" (change)="procesoDatosCheckEstudioUpdate()" [checked]="isCheckEstudioActualizar"> <small> En curso</small></label>
+                              <input  type="date" class="form-control" formControlName="est_fech_fin_update">
+                              
+                              <div *ngIf="est_fech_fin_update.invalid && (est_fech_fin_update.dirty || est_fech_fin_update.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                  <div *ngIf="est_fech_fin_update.errors.required">
+                                    * La fecha de fin es requerida
+                                  </div>
+                              </div>
+                            </div>
+                        
+                            <div class="col">
+                                <div class="barra-azul-lateral"></div>
+                                <label for="descripcionInput">Descripción *</label>
+                                <textarea class="form-control" rows="3" formControlName="est_descripcion_update"></textarea>
+                                <div *ngIf="est_descripcion_update.invalid && (est_descripcion_update.dirty || est_descripcion_update.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                    <div *ngIf="est_descripcion_update.errors.required">
+                                      * La descripción es requerida
+                                    </div>
+                                    <div *ngIf="est_descripcion_update.errors.maxlength">
+                                      * Se requieren maximo 60 caracteres 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="btn" *ngIf="estudiosUpdateForm.invalid || cargandoActualizar; else EsEditable"
+                        class="btn float-right my-2 change-btn  rounded-pill p-2 
+                        px-4 bold-tipografy" [disabled]="estudiosUpdateForm.invalid" style="opacity: 60%;" (click)="mostrarAlerta = false; mensajes = []; errorActualizar = []; actualizarEstudio(ESTUDIO)"
+                        [disabled]="cargandoActualizar || estudiosUpdateForm.invalid">ACTUALIZAR</button>
+
+                        <ng-template #EsEditable>
+                          <button type="btn" class="btn float-right my-2 change-btn  rounded-pill p-2 
+                          px-4 bold-tipografy" 
+                          (click)="mostrarAlerta = false; mensajes = []; errorActualizar = []; actualizarEstudio(ESTUDIO)"
+                          [disabled]="cargandoActualizar || estudiosUpdateForm.invalid">ACTUALIZAR</button>
+                        </ng-template>
+                    </form>
+                    <br>
+                </div>
+            </div>
+        </div>
+        <div class="my-4">
+          <p> (*) Campo obligatorio</p>
+        </div>
+
+        <div class="d-flex flex-wrap justify-content-sm-around  justify-content-md-between">
+          <div class="" style="font-size: 8px;">
+            <ngb-pagination *ngIf="ESTUDIOS?.length > itemsPerPage" class="d-flex justify-content-start" [maxSize]="5"  
+              [pageSize]="itemsPerPage"  [collectionSize]="ESTUDIOS.length" [(page)]="currentPage"></ngb-pagination>
+          </div>
+          <div class="">
+            <select class="pull-right" [(ngModel)]="itemsPerPage" class="form-control form-control-sm custom-select">
+              <option value="10">10 elementos</option>
+              <option value="15">15 elementos</option>
+              <option value="20">20 elementos</option>                    
+            </select> 
+          </div>
+        </div>
+        <br><br>
+      </div>    
+    </div>
+</div>
+
+<div>
+  <app-especialistas-sidebar id="sidebar2"></app-especialistas-sidebar> 
+</div>

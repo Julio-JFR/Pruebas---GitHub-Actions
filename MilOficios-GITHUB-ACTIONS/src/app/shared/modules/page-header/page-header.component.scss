@@ -1,0 +1,26 @@
+// .titulo-subtitulo{
+//     margin-left: 1rem;
+// }
+.subtitulo{
+    font-size: 3rem;
+    color: #3E11BC;
+}
+.titulo{
+    font-size: 40px;
+    font-family: 'montserrat-bold', sans-serif;
+}
+
+@media(min-width:1024px){
+    .subtitulo{
+        margin-top: 10px;
+    }
+}
+
+@media(max-width:1024px){
+    .subtitulo{
+        font-size:28px;
+    }
+    .titulo{
+        font-size: 28px;
+    }
+}

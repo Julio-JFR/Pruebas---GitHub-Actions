@@ -1,0 +1,204 @@
+<app-alerta-general 
+    *ngIf="mostrarAlerta"
+    [tipoAlerta]="tipoAlerta">
+    {{mensajes}}
+</app-alerta-general>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div *ngIf="cargandoDatos" class="progress" style="height:.1rem">
+            <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true"
+                [animated]="true"></ngb-progressbar>
+        </div>
+    </div>
+</div>
+<div class="d-flex flex-column divGeneral">
+    <div class="d-flex" >
+        <app-cliente-sidebar id="sidebar"></app-cliente-sidebar>
+        <div class="container" style="margin-top: -1rem;">
+            <div class="card" id="wrapper">
+                <div id="lineaIntermedia" class="barra-azul-lateral"></div>
+                <div class="container" id="containerTodo">
+                    <div class="card-design">
+                        <div class="card" style="border: 0;">
+                            <h5 class="card-header pb-0"><label>Servicios Realizados</label></h5>
+                            <triangular-bar></triangular-bar>
+                        </div>
+                        <div class="mt-4 table-responsive-sm table-responsive-md table-responsive-lg table-responsive-xl">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="text-center align-middle table-border-left" sortable="SER_NOMBRES" (sort)="sort($event)">Nombre</th>
+                                        <th scope="col" class="text-center align-middle line" sortable="UBI_DIRECCION" (sort)="sort($event)">Dirección</th>
+                                        <th scope="col" class="text-center align-middle line" sortable="SERE_FECH_INI_REAL" (sort)="sort($event)">Fecha de Inicio</th>
+                                        <th scope="col" class="text-center align-middle line" sortable="SERE_FECH_FIN_REAL" (sort)="sort($event)">Fecha Fin</th>
+                                        <th scope="col" class="text-center align-middle line " sortable="SERE_ESTADO" (sort)="sort($event)">Estado</th>
+                                        <th scope="col" class="text-center align-middle line table-border-rigth">Ver detalles</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngIf="serviciosContratados?.length===0 && !cargandoDatos"><td colspan="9" class="td-center"><span>No hay bonificaciones para mostrar</span></td></tr>      
+                                    <tr *ngFor="let serv of serviciosContratados | slice:(currentPage-1)*itemsPerPage:currentPage*itemsPerPage ; let i = index">
+                                    <td class="text-center">{{serv.SER_NOMBRES}}</td>
+                                    <td class="text-center">{{serv.UBI_DIRECCION}}</td>
+                                    <td class="text-center">{{serv.SERE_FECH_INI_REAL}}</td>
+                                    <td class="text-center">{{serv.SERE_FECH_FIN_REAL}}</td>
+                                    <td >
+                                        <div style="display: flex; justify-content: center;" class="text-center">
+                                            <div *ngIf="serv.SERE_ESTADO == 0">
+                                                <div class="estado-desactive"><strong>Pendiente</strong></div>
+                                            </div>
+                                            <div *ngIf="serv.SERE_ESTADO == 1">
+                                                <div class="estado-aceptado"><strong>Aceptado por el cliente</strong></div>
+                                            </div>
+                                            <div *ngIf="serv.SERE_ESTADO == 2">
+                                            <div class="colorNoConcretado"><strong>Rechazado por el cliente</strong></div>
+                                            </div>
+                                            <div *ngIf="serv.SERE_ESTADO == 3">
+                                            <div class="colorNoConcretado"><strong>Cancelado por el Especialista</strong></div>
+                                            </div>
+                                            <div *ngIf="serv.SERE_ESTADO == 4">
+                                            <div class="colorNoConcretado"><strong>Expirado</strong></div>
+                                            </div>
+                                            <div *ngIf="serv.SERE_ESTADO == 5">
+                                            <div class="estado-active"><strong>Realizado</strong></div>
+                                            </div>
+                                            <div *ngIf="serv.SERE_ESTADO == 6">
+                                            <div class="colorNoConcretado"><strong>Realizado tardío</strong></div>
+                                            </div>
+                                            <div *ngIf="serv.SERE_ESTADO == 7">
+                                            <div class="colorNoConcretado"><strong>Cancelado por el cliente</strong></div>
+                                            </div>
+                                            <div *ngIf="serv.SERE_ESTADO == 8">
+                                            <div class="colorNoConcretado"><strong>No aceptado</strong></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <em class="fa fa-fw fa-eye spanAccion" ngbTooltip="Ver más" (click)="open(serv,modalDetalle)"></em>
+                                    </td> 
+                                    </tr>
+                                    <tr *ngIf="serviciosContratados?.length > 0">
+                                        <td colspan="9"><strong class="pull-right">Total: {{serviciosContratados.length}} {{serviciosContratados.length==1 ? 'elemento' :'elementos'}}</strong></td>
+                                    </tr>                   
+                                </tbody>
+                            </table>
+                        </div>
+                        <br>
+                        <!---------------PAGINACIÓN------------->
+                        <div *ngIf="serviciosContratados?.length>0" 
+                            class="d-flex flex-wrap justify-content-sm-around  justify-content-md-between">
+                            <div class="" style="font-size: 8px;">
+                            <ngb-pagination *ngIf="serviciosContratados?.length>10" class="d-flex justify-content-start" [maxSize]="5"  
+                                [pageSize]="itemsPerPage"  [collectionSize]="serviciosContratados.length" [(page)]="currentPage"></ngb-pagination>
+                            </div>
+                            <div class="">
+                            <select class="pull-right form-control form-control-sm custom-select"
+                                [(ngModel)]="itemsPerPage" >
+                                <option value="5">5 elementos</option>
+                                <option value="10">10 elementos</option>
+                                <option value="15">15 elementos</option>
+                                <option value="20">20 elementos</option>                    
+                            </select> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <app-cliente-sidebar id="sidebar2"></app-cliente-sidebar>
+</div>
+
+
+  
+<!---------------------------MODAL PARA VISUALIZAR TODO EL DETALLE --------------------------------->
+<ng-template #modalDetalle let-modal>
+    <div class="modal-header">
+    <h4 class="modal-title"><label>{{servicioSeleccionado?.SER_NOMBRES}}</label></h4>
+    <span type="button" class="close" (click)="modal.dismiss()">&times;</span>
+    </div>
+    <div class="modal-body" style="max-height: 78vh; overflow: auto;">
+    <div class="container px-2">
+        <label><h5>Servicio</h5></label>
+        <div class="row">
+        <div class="col-12 col-sm-6">
+            <div class="barra-azul-lateral"></div>
+            <label>Fecha de Inicio estimada</label>
+            <input type="date" disabled [value]="servicioSeleccionado?.inicioEstimado" class="form-control"><br>
+        </div>
+        <div class="col-12 col-sm-6">
+            <div class="barra-azul-lateral"></div>
+            <label>Fecha fin estimada</label>
+            <input type="date" disabled [value]="servicioSeleccionado?.finEstimado" class="form-control"><br>
+        </div>
+        <br><br>
+        </div>
+
+        <label><h5>Categoría</h5></label>
+        <div class="row">
+        <div class="col-12 col-sm-6">
+            <div class="barra-azul-lateral"></div>
+            <label>Nombre</label>
+            <input type="text" disabled [value]="servicioSeleccionado?.CAT_NOMBRE" class="form-control"><br>
+        </div>
+        <div class="col-12 col-sm-6">
+            <div class="barra-azul-lateral"></div>
+            <label>Tipo</label>
+            <input type="text" disabled [value]="servicioSeleccionado?.CAT_TIPO" class="form-control"><br>
+        </div>
+        </div>
+
+        <label><h5>Solicitud</h5></label>
+        <div class="row">
+            <div class="col-12 col-sm-6">
+                <div class="barra-azul-lateral"></div>
+                <label>Fecha de solicitud</label>
+                <input type="date" disabled [value]="servicioSeleccionado?.solFecha" class="form-control"><br>
+            </div>
+            <div class="col-12 col-sm-6">
+                <div class="barra-azul-lateral"></div>
+                <label>Fecha de registro</label>
+                <input type="date" disabled [value]="servicioSeleccionado?.solRegistro" class="form-control"><br>
+            </div>
+            <div class="col-12 col-sm-6">
+                <div class="barra-azul-lateral"></div>
+                <label>Descripción</label>
+                <input disabled [value]="servicioSeleccionado?.SOL_DESCRIPCION" class="form-control"><br>
+            </div>
+            <div class="col-12 col-sm-6">
+                <div class="barra-azul-lateral"></div>
+                <label>Estado</label>
+                <input *ngIf="servicioSeleccionado?.SERE_ESTADO == 0" value="Pendiente" class="form-control" disabled>
+                <input *ngIf="servicioSeleccionado?.SERE_ESTADO == 1" value="Aceptado por el cliente" class="form-control" disabled>
+                <input *ngIf="servicioSeleccionado?.SERE_ESTADO == 2" value="Rechazado por el cliente" class="form-control" disabled>
+                <input *ngIf="servicioSeleccionado?.SERE_ESTADO == 3" value="Cancelado por el Especialista" class="form-control" disabled>
+                <input *ngIf="servicioSeleccionado?.SERE_ESTADO == 4" value="Expirado" class="form-control" disabled>
+                <input *ngIf="servicioSeleccionado?.SERE_ESTADO == 5" value="Realizado" class="form-control" disabled>
+                <input *ngIf="servicioSeleccionado?.SERE_ESTADO == 6" value="Realizado tardío" class="form-control" disabled>
+                <input *ngIf="servicioSeleccionado?.SERE_ESTADO == 7" value="Cancelado por el cliente" class="form-control" disabled>
+                <input *ngIf="servicioSeleccionado?.SERE_ESTADO == 8" value="No aceptado" class="form-control" disabled>
+            </div>
+        </div>
+        
+        <label><h5>Especialista</h5></label>
+        <div class="row">
+        <div class="col-12">
+            <div class="barra-azul-lateral"></div>
+            <label>Nombre</label>
+            <input type="text" disabled [value]="servicioSeleccionado?.USU_NOMBRES+' '+servicioSeleccionado?.USU_APE_PAT+' '+servicioSeleccionado?.USU_APE_MAT" class="form-control"><br>
+        </div>
+        <div class="col-12 col-sm-6">
+            <div class="barra-azul-lateral"></div>
+            <label>Celular</label>
+            <input type="text" disabled [value]="servicioSeleccionado?.USU_CELULAR" class="form-control"><br>
+        </div>
+        <div class="col-12 col-sm-6">
+            <div class="barra-azul-lateral"></div>
+            <label>Sexo</label>
+            <input type="text" disabled [value]="servicioSeleccionado?.USU_SEXO == 'M' ? 'Masculino' : 'Femenino'" class="form-control"><br>
+        </div>
+        </div>
+    </div>
+    </div>
+</ng-template>    

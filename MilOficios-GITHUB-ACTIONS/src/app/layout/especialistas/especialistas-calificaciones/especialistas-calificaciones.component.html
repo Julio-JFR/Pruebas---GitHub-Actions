@@ -1,0 +1,106 @@
+<app-alerta-general 
+    *ngIf="mostrarAlerta"
+    [tipoAlerta]="tipoAlerta">
+    {{mensaje}}
+</app-alerta-general>
+
+<div style="margin-top: 15px;" class="row">    
+    <div class="col-xl-12">
+      <div *ngIf="cargandoDatos" class="progress" style="height:.1rem">
+        <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+      </div>
+    </div>   
+</div>
+<br>
+
+<div class="d-flex" id="wrapper">
+    <app-especialistas-sidebar id="sidebar"></app-especialistas-sidebar>
+    <div class="container" style="padding-right: 0px;padding-left: 10px;">
+        <div class="card-design" >
+            <div  id="contentAll" >
+                <h5 class="title-bonus my-3 bold-tipografy">Calificaciones de los servicios</h5>
+
+                <triangular-bar></triangular-bar>
+                
+                <br>
+                <!-------------------- FILTRAS LAS CALIFICACIONES ---------------------------->
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 col-sm-4 col-md-3">
+                            <label>Calificación </label>
+                            <select [disabled]="cargandoDatos" class="form-control form-control-sm custom-select" [(ngModel)]="FILTRO_CALIFICACION">
+                                <option [ngValue]="null">Todas</option>
+                                <option class="estrella" [ngValue]="1">★ ✰ ✰ ✰ ✰</option>
+                                <option class="estrella" [ngValue]="2">★ ★ ✰ ✰ ✰</option>
+                                <option class="estrella" [ngValue]="3">★ ★ ★ ✰ ✰</option>                    
+                                <option class="estrella" [ngValue]="4">★ ★ ★ ★ ✰</option>                    
+                                <option class="estrella" [ngValue]="5">★ ★ ★ ★ ★</option>                    
+                            </select>
+                            <br><br>
+                        </div>
+                        <div class="col-12 col-sm-3">
+                            <label>Desde </label>
+                            <input [disabled]="cargandoDatos" [(ngModel)]="FILTRO_FECHA_INICIO" type="date" class="form-control form-control-sm">
+                            <br>
+                        </div>
+                        <div class="col-12 col-sm-3">
+                            <label>Hasta </label>
+                            <input [disabled]="cargandoDatos" [(ngModel)]="FILTRO_FECHA_FIN" type="date" class="form-control form-control-sm">
+                            <br>
+                        </div>
+                        <div 
+                            style="margin-top: 18px;" class="col-12 col-sm-1 btn-span">
+                            <span [ngClass]="{'disabledSpan': cargandoDatos}" 
+                                class=""
+                                (click)="listarCalificaciones()" >
+                                <em style="color:white; display: flex;
+                                    justify-content: center;
+                                    align-items: center;"
+                                    class="fa fa-fw fa-2x btn-style
+                                    fa-search spanAccion pull-right" ></em>
+                            </span>
+                        </div>
+
+                        <div class="col-12 col-sm-1 btn-movil">
+                            <button type="btn" class="btn change-btn"
+                                style="border-radius: 2rem;"
+                                (click)="listarCalificaciones()" >Buscar</button>
+                        </div>
+
+                    </div>
+                </div>
+                <br>
+                <!----------------------- TABLA DE CALIFICACIONES -------------------------->
+                <div class="table-responsive-sm table-responsive-md table-responsive-lg table-responsive-xl table-responsive">
+                    <table class="table table-hover table-width">
+                        <thead>
+                            <tr>
+                                <th class="table-border-left text-center  " scope="col" sortable="MON_CLAVE" (sort)="sort($event)">Nombre del servicio</th>
+                                <th class="text-center line" scope="col" sortable="MON_CLAVE" (sort)="sort($event)">Calificación</th>
+                                <th class="text-center line" scope="col" sortable="BON_TIPO" (sort)="sort($event)">Fecha del servicio</th>
+                                <th class="table-border-rigth text-center  line" scope="col" sortable="IS_VALID" (sort)="sort($event)">Comentario</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngIf="calificaciones?.length===0 && !cargandoDatos"><td colspan="8" class="td-center"><span>No hay calificaciones para mostrar</span></td></tr>      
+                            <tr *ngFor="let calificacion of calificaciones | slice:(currentPage-1)*itemsPerPage:currentPage*itemsPerPage ; let i = index">
+                                <td class="text-left trMin">{{calificacion?.SER_NOMBRES}}</td>
+                                <td class="text-center trMin"><ngb-rating class="estrella" [rate]="calificacion?.CA_CALIFICACION"></ngb-rating></td>
+                                <td class="text-center trMin">{{calificacion?.SERE_FECH_INI_REAL | date: 'dd/MM/yyyy'}}</td>
+                                <td class="text-left pl-4">{{calificacion?.CA_COMENTARIO}}</td>
+                            </tr>
+                            <tr *ngIf="calificaciones?.length > 0">
+                                <td colspan="8"><strong class="pull-right">Total: {{calificaciones.length}} {{calificaciones.length == 1 ? 'elemento' : 'elementos'}}</strong></td>
+                            </tr>                   
+                        </tbody>
+                    </table>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <app-especialistas-sidebar id="sidebar2"></app-especialistas-sidebar> 
+  </div>

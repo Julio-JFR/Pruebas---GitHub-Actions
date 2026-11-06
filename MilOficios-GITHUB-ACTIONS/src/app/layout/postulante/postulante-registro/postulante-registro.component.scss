@@ -1,0 +1,365 @@
+.exampleInputEmail1 {
+    width: 85rem;
+}
+.contenedor {
+    padding: 1rem;
+}
+#foto {
+    width: 1rem;
+}
+
+.fa-eye-slash,
+.fa-eye {
+    font-size: 1rem;
+    //margin-top: -30px;
+    //margin-right: 8%;
+    //align-items: center;
+    color: white;
+    background-color: #3e11bc;
+    height: 1.5rem;
+    width: 1.5rem;
+    border-radius: 50%;
+    position: absolute;
+    margin-left: -7%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin-top: 28px;
+}
+
+.fa-trash-o {
+    font-size: 1rem;
+    color: white;
+    background-color: #3e11bc;
+    height: 1.5rem;
+    width: 1.5rem;
+    border-radius: 50%;
+    position: relative;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+h6 {
+    margin-top: 16px;
+}
+
+.btn-acep {
+    margin-top: -4rem;
+    margin-left: 25%;
+}
+
+.cuerpo {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin-top: 0.5rem;
+    width: 97%;
+}
+
+.centrar {
+    align-items: center;
+}
+
+#agregarProfesion {
+    margin-left: auto;
+}
+
+#agregarEL {
+    margin-left: auto;
+}
+
+.btnAñadirProfesion {
+    margin-left: 50%;
+    padding-bottom: 1rem;
+}
+
+.btnAñadirEL {
+    margin-left: 50%;
+    padding-bottom: 1rem;
+}
+
+textarea {
+    resize: none;
+    height: 7rem;
+}
+
+.scroll {
+    overflow-y: scroll;
+}
+
+#scrollTermino {
+    height: 25rem;
+    overflow-y: scroll;
+}
+
+hr {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    border-color: #24deec;
+}
+
+.custom-select {
+    border-radius: 2rem;
+}
+
+#icono-foto {
+    margin-right: 25rem;
+    cursor: pointer;
+}
+
+#profile-logo {
+    width: 12rem;
+    height: 12rem;
+}
+
+.tdCelda {
+    vertical-align: middle;
+}
+
+.passwordInput {
+    margin-left: 15px;
+}
+
+::placeholder {
+    /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: rgb(168, 168, 168);
+    opacity: 1; /* Firefox */
+}
+
+.textoGris {
+    color: rgb(168, 168, 168);
+    opacity: 1; /* Firefox */
+}
+
+#postular {
+    height: 3rem;
+    color: white;
+    background-color: #3e11bc;
+    border-radius: 2rem;
+    margin-left: 40%;
+}
+
+#postular:hover {
+    background: #24deec;
+    color: #3e11bc;
+}
+
+.iconAgregar {
+    margin-top: -32px;
+    margin-left: 200px;
+}
+
+.iconAgregar2 {
+    margin-top: -40px;
+    margin-left: 260px;
+}
+
+.btnAgregar {
+    color: white;
+    background-color: #3e11bc;
+    height: 1.5rem;
+    width: 1.5rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin-bottom: 10px;
+}
+
+@media (min-width: 1500px) {
+    .fa-eye-slash,
+    .fa-eye {
+        margin-left: -6%;
+    }
+}
+@media (max-width: 340px) {
+    .iconAgregar2 {
+        margin-top: 0;
+        margin-left: 0;
+    }
+}
+
+@media (min-width: 1700px) {
+    .fa-eye-slash,
+    .fa-eye {
+        margin-left: -5%;
+    }
+}
+
+@media (max-width: 1200px) {
+    .fa-eye-slash,
+    .fa-eye {
+        margin-left: -9.5%;
+    }
+}
+
+@media (max-width: 1000px) {
+    .fa-eye-slash,
+    .fa-eye {
+        margin-left: -12%;
+    }
+}
+
+@media (max-width: 790px) {
+    .fa-eye-slash,
+    .fa-eye {
+        margin-left: -16%;
+    }
+}
+
+@media (min-width: 574px) and (max-width: 790px) {
+    .passwordInput {
+        margin-left: 7px;
+    }
+}
+
+@media (min-width: 380px) and (max-width: 575px) {
+    .fa-eye-slash,
+    .fa-eye {
+        margin-left: -12%;
+    }
+}
+
+@media (max-width: 380px) {
+    .fa-eye-slash,
+    .fa-eye {
+        margin-left: -18%;
+    }
+    .passwordInput {
+        margin-left: 6px;
+    }
+}
+
+@media (max-width: 250px) {
+    .fa-eye-slash,
+    .fa-eye {
+        margin-left: -22%;
+    }
+}
+
+@media (max-width: 734px) {
+    #postular {
+        height: 2.5rem;
+    }
+}
+
+@media (max-width: 390px) {
+    #postular {
+        margin-left: -25%;
+    }
+}
+
+//alertas
+.posicion {
+    padding: 0;
+    padding-right: 2.5rem;
+    z-index: 1;
+    width: 100%;
+}
+.modal-header {
+    .posicion {
+        padding-right: 2rem;
+        margin: 0;
+        z-index: 1;
+        width: 100%;
+    }
+}
+
+.raya-separadora-a {
+    background-color: #24deec;
+    height: 1rem;
+    margin-left: 1rem;
+}
+
+::-webkit-scrollbar {
+    height: 5px;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #3e11bc;
+}
+
+.raya-separadora-b {
+    background-color: #24deec;
+    height: 1rem;
+    margin-left: 1rem;
+    max-width: 98%;
+}
+
+.triangulo-equilatero-bottom-rigth {
+    width: 0;
+    height: 0;
+    border-right: 8px solid transparent;
+    border-left: 8px solid #24deec;
+    border-bottom: 16px solid #24deec;
+}
+
+@media screen and (max-width: 390px) {
+    .btn-acep {
+        margin-left: 35%;
+    }
+}
+
+@media (max-width: 1060px) {
+    .col-6-col-lg-6-raya-separadora-a {
+        flex: 0 0 30%;
+        max-width: 30%;
+    }
+    .raya-separadora-a {
+        background-color: #24deec;
+        height: 0.5rem;
+    }
+    .raya-separadora-b {
+        background-color: #24deec;
+        height: 0.4rem;
+        margin-top: -1px;
+        max-width: 90%;
+    }
+    .triangulo-equilatero-bottom-rigth {
+        border-bottom: 8px solid #24deec;
+        border-left: 5px solid #24deec;
+    }
+}
+
+@media (min-width: 450px) and (max-width: 550px) {
+    .raya-separadora-b {
+        max-width: 94%;
+    }
+}
+
+@media (min-width: 550px) and (max-width: 700px) {
+    .raya-separadora-b {
+        max-width: 95%;
+    }
+}
+
+@media (min-width: 700px) and (max-width: 1100px) {
+    .raya-separadora-b {
+        max-width: 97%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .datosUsuario {
+        margin-left: -10%;
+    }
+}
+
+
+
+input[type="file"] {
+    display: none;
+}
+.inputFile{
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 3px 10px;
+    cursor: pointer;
+    background-color: #e7e7ed;
+    color: black;
+    font-weight: 500;
+    letter-spacing: 0.025em;
+}

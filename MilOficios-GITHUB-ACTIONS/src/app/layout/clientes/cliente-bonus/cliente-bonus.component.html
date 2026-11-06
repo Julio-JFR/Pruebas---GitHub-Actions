@@ -1,0 +1,209 @@
+<app-alerta-general 
+    *ngIf="mostrarAlerta"
+    [tipoAlerta]="tipoAlerta">
+    {{mensaje}}
+</app-alerta-general>
+
+<div class="row">    
+    <div class="col-xl-12">
+      <div *ngIf="cargandoDatos" class="progress" style="height:.1rem">
+        <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+      </div>
+    </div>   
+</div>
+<div class="d-flex flex-column divGeneral">
+  <div class="d-flex" >
+      <app-cliente-sidebar id="sidebar"></app-cliente-sidebar>
+      <div class="container">
+          <div class="card" id="wrapper">
+              <div id="lineaIntermedia" class="barra-azul-lateral"></div>
+              <div class="container" id="containerTodo">
+                  <div class="card-design">
+                    <div class="card" style="border: 0;">
+                      <h5 class="title-bonus bold-tipografy mb-3"><label>Mis bonos</label>
+                        <strong class="float-right tamanio" >Total: {{MONEDA_CLIENTE}} {{ SUMA_BONOS_ACTIVOS | number:'1.2' }}</strong>
+                      </h5>
+                      <triangular-bar></triangular-bar>
+                    </div>
+                    <!------------------------- TABLA DE BONIFICACIONES------------------------->
+                    <div class="mt-4 table-responsive-sm table-responsive-md table-responsive-lg table-responsive-xl table-responsive">
+                      <table class="table table-hover table-width">
+                          <thead>
+                              <tr>
+                                <th scope="col" class="text-center table-border-left " sortable="BON_TIPO" (sort)="sort($event)">Tipo de bono</th>
+                                <th scope="col" class="text-center line" sortable="BON_FECH_INI" (sort)="sort($event)">Fecha de inicio</th>
+                                <th scope="col" class="text-center line" sortable="BON_FECH_FIN" (sort)="sort($event)">Fecha de fin</th>
+                                <th scope="col" class="text-center line" sortable="MON_NOMBRE" (sort)="sort($event)">Moneda</th>
+                                <th scope="col" class="text-center line" sortable="BON_MONTO" (sort)="sort($event)">Monto</th>
+                                <th scope="col" class="text-center line" sortable="BON_SALDO" (sort)="sort($event)">Saldo</th>
+                                <th scope="col" class="text-center line">Ver detalles</th>
+                                <th scope="col" class="text-center line table-border-rigth">Devolución</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr *ngIf="BONOSVIGENTES?.length===0 && !cargandoDatos"><td colspan="8" class="td-center"><span>No hay bonificaciones para mostrar</span></td></tr>      
+                              <tr *ngFor="let bono of BONOSVIGENTES | slice:(currentPage-1)*itemsPerPage:currentPage*itemsPerPage ; let i = index">
+                                <td class="text-center">{{(bono?.BON_TIPO==0)?'Pago':
+                                      (bono?.BON_TIPO==1)?'Descuento':
+                                      (bono?.BON_TIPO==2)?'Devolución':
+                                      (bono?.BON_TIPO==3)?'Promoción':'Error en el bono'}}</td>
+                                <td class="text-center">{{bono?.BON_FECH_INI | date: 'dd/MM/yyyy'}}</td>
+                                <td class="text-center">{{bono?.BON_FECH_FIN | date: 'dd/MM/yyyy'}}</td>
+                                <td class="text-center">{{bono.MON_NOMBRE}}</td>
+                                <td class="text-center">{{bono?.BON_MONTO}}</td>
+                                <td class="text-center">{{bono?.BON_SALDO}}</td>
+                                <td class="text-center">
+                                  <em class="fa fa-fw fa-eye" ngbTooltip="Ver más" (click)="obtenerBonoActual(bono);open(modalBono)"></em>
+                                </td> 
+                                <td class="text-center">
+                                  <em (click)="bon_id = bono.BON_ID;open(content)" *ngIf="bono?.BON_TIPO == 2" class="fa fa-fw fa-money" ngbTooltip="Devolver dinero"></em>
+                                </td>
+                              </tr>
+                              <tr *ngIf="BONOSVIGENTES?.length > 0">
+                                  <td colspan="8"><strong class="pull-right">Total: {{BONOSVIGENTES.length}} {{BONOSVIGENTES.length == 1 ? 'elemento' : 'elementos'}}</strong></td>
+                              </tr>                   
+                          </tbody>
+                        </table>
+                    </div>
+                    <!---------------PAGINACIÓN------------->
+                    <!-- <div *ngIf="BONOSVIGENTES?.length>0" style="margin-top: 5px;" class="row box-footer clearfix">     
+                      <div class="col-xl-10 col-lg-9 col-md-9 col-sm-9 col-7">
+                        <ngb-pagination *ngIf="BONOSVIGENTES?.length>10" class="d-flex justify-content-start" size="sm" [maxSize]="5" [pageSize]="itemsPerPage"  [collectionSize]="BONOSVIGENTES?.length" [(page)]="currentPage"></ngb-pagination>
+                      </div>
+                      <div class="row d-block">
+                        <div class="float-md-right">
+                          <select class="pull-right" [(ngModel)]="itemsPerPage" class="form-control form-control-sm custom-select">
+                            <option value="10">10 elementos</option>
+                            <option value="15">15 elementos</option>
+                            <option value="20">20 elementos</option>                    
+                          </select> 
+                        </div>
+                      </div>
+                    </div> -->
+                    <div *ngIf="BONOSVIGENTES?.length>0" 
+                      class="d-flex flex-wrap justify-content-sm-around  justify-content-md-between">
+                      <div class="" style="font-size: 8px;">
+                      <ngb-pagination *ngIf="BONOSVIGENTES?.length>10" class="d-flex justify-content-start" [maxSize]="5"  
+                          [pageSize]="itemsPerPage"  [collectionSize]="BONOSVIGENTES.length" [(page)]="currentPage"></ngb-pagination>
+                      </div>
+                      <div class="">
+                      <select class="pull-right form-control form-control-sm custom-select"
+                          [(ngModel)]="itemsPerPage" >
+                          <option value="5">5 elementos</option>
+                          <option value="10">10 elementos</option>
+                          <option value="15">15 elementos</option>
+                          <option value="20">20 elementos</option>                    
+                      </select> 
+                      </div>
+                  </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <app-cliente-sidebar id="sidebar2"></app-cliente-sidebar>
+</div>
+
+
+
+
+<!-------------------------- Modal de devolución -------------------->
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Devolución</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    Esta a punto de reembolsar este monto a su cuenta bancaria. ¿Está seguro de cobrar el dinero?
+  </div>
+  <!------------------ Progress bar------------------>
+  <div style="margin-top: 15px;" class="row">    
+    <div class="col-xl-12">
+      <div *ngIf="cargandoModal" class="progress" style="height:.1rem">
+        <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+      </div>
+    </div>   
+  </div>
+  <div class="modal-footer">
+    <button type="button" [disabled]="cargandoModal" class="btn btn-outline-dark" (click)="devolverDinero()">Aceptar</button>
+  </div>
+</ng-template>
+
+<!-------------------------- Modal de mensaje de confirmación de la devolución -------------------->
+<ng-template #modalConfirmacion let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Mensaje</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    La devolución ha realizado de manera correcta. Revisar su estado de cuenta en los próximos días.
+  </div>
+  <div class="modal-footer">
+    <button type="button" [disabled]="cargandoModal" class="btn btn-outline-dark" (click)="d('Cross click')">Aceptar</button>
+  </div>
+</ng-template>
+
+  <!---------------------------MODAL PARA VISUALIZAR TODO EL DETALLE DEL BONO--------------------------------->
+  <ng-template #modalBono let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">Ver Bono</h4>
+      <span type="button" class="close" (click)="modal.dismiss()">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="container">
+        <div class="row">
+          <div class="col-12 col-sm-6">
+            <div class="barra-azul-lateral"></div>
+            <label for="fecha-inicio-input">Fecha de Inicio</label>
+            <input type="date" disabled [(ngModel)]="BONOACTUAL.BON_FECH_INI" class="form-control"><br>
+          </div>
+          <div class="col-12 col-sm-6">
+            <div class="barra-azul-lateral"></div>
+            <label for="fecha-inicio-input">Fecha de Fin</label>
+            <input type="date" disabled [(ngModel)]="BONOACTUAL.BON_FECH_FIN" class="form-control"><br>
+          </div>
+          <br><br>
+          <div class="col-12 col-sm-6">
+            <div class="barra-azul-lateral"></div>
+            <label>Tipo de bonificación</label>
+            <input type="text" disabled  [value]="(BONOACTUAL.BON_TIPO==0)?'Pago':
+                                                  (BONOACTUAL.BON_TIPO==1)?'Descuento':
+                                                  (BONOACTUAL.BON_TIPO==2)?'Devolución':
+                                                  (BONOACTUAL.BON_TIPO==3)?'Promoción':'Error en el bono'" class="form-control"><br>
+          </div>
+          <div class="col-12 col-sm-6">
+            <div class="barra-azul-lateral"></div>
+            <label>Monto</label>
+            <input disabled class="form-control" [(ngModel)]="BONOACTUAL.BON_MONTO"><br>
+          </div>
+          <br><br>
+          <div class="col-12 col-sm-6">
+            <div class="barra-azul-lateral"></div>
+            <label>Saldo</label>
+            <input disabled class="form-control" [(ngModel)]="BONOACTUAL.BON_SALDO"><br>
+          </div>
+          <div class="col-12 col-sm-6">
+            <div class="barra-azul-lateral"></div>
+            <label>Moneda</label>
+            <input disabled class="form-control" [(ngModel)]="BONOACTUAL.MON_NOMBRE"><br>
+          </div>
+          <div class="col-12 ">
+            <div class="barra-azul-lateral"></div>
+            <label>Descripción</label>
+            <textarea disabled class="form-control" [(ngModel)]="BONOACTUAL.BON_DESCRIPCION" name="" id="" cols="30" rows="7"></textarea><br>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top: 15px;" class="row">    
+      <div class="col-xl-12">
+          <div *ngIf="cargandoModal" class="progress" style="height:.1rem">
+              <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+          </div>
+      </div>   
+    </div>
+  </ng-template>

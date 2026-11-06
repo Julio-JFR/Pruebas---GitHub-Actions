@@ -1,0 +1,46 @@
+.dropdown-info{
+    width: 100%;
+}
+
+.margin{
+    padding: 0px 0px 0px 10px;
+}
+
+em, span{
+    cursor: pointer;
+}
+
+label{
+    font-weight: bold;
+}
+
+#contentAll{
+    border: transparent; 
+    border-left: 1px solid #24DEEC;
+    padding-left: 1rem;
+}
+
+
+
+.title-services{
+    margin: 20px;
+}
+
+@media (max-width: 540px) {
+    #sidebar {
+        display: none;
+    }
+    #contentAll{
+        border-left: none;
+        padding-left: 0;
+    }
+    .margin{
+        padding: 0px 0px 0px 0px;
+    }
+}
+
+@media (min-width: 541px) {
+    #sidebar2 {
+        display: none;
+    }
+}

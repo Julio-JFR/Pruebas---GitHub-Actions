@@ -1,0 +1,202 @@
+
+<div class="alertas-container">
+
+  
+
+  <app-alerta-general 
+      *ngIf="mostrarAlerta"
+      (enviarEvento) = "mostrarAlerta = false"
+      [tipoAlerta]="tipoAlerta">
+      {{mensaje}}
+  </app-alerta-general>
+
+  <!--<app-alerta-general 
+      *ngIf="mostrarAlertaNotification"
+      [tipoAlerta]="tipoAlertaNotification" (close)="cerrarAlertaNotification()">
+      {{mensajeNotification}}
+  </app-alerta-general> -->
+
+
+  <app-alerta-general 
+      *ngIf="mostrarAlertaNotification"
+      (enviarEvento) = "mostrarAlertaNotification = false"
+      [tipoAlerta]="tipoAlertaNotification">
+      {{mensajeNotification}}
+  </app-alerta-general>
+
+
+</div>
+
+
+<!--<app-alerta-general 
+    *ngIf="mostrarAlerta"
+    [tipoAlerta]="tipoAlerta">
+    {{mensaje}}
+</app-alerta-general>
+
+<br><br>
+<br><br>
+
+<app-alerta-general 
+    *ngIf="mostrarAlertaNotification"
+    [tipoAlerta]="tipoAlertaNotification">
+    {{mensajeNotification}}
+</app-alerta-general> -->
+
+<app-page-header [subtitulo]="'Solicita tu'" [heading]="'Servicio aquí'"></app-page-header>
+<br><strong class="descripcion-sub h5">Elige tu categoría y selecciona tu servicio  a solicitar</strong>
+<br><br>
+
+
+
+<div class="row" style="width: 100%;margin:0">
+  <div class="col-6 col-md-3 raya-separadora-a">
+  </div>
+  <div class="triangulo-equilatero-bottom-rigth"></div>
+  <div class="col-12 raya-separadora-b">
+  </div>
+</div>
+<br>
+<!--  raya extraña -->
+<div *ngIf="loading" class="progress" style="height:.1rem">
+  <ngb-progressbar class="indeterminate" type="primary" height="auto" [value]="100" [striped]="true" [animated]="true">|
+  </ngb-progressbar>
+</div>
+<div *ngIf="cargando" class="progress" style="height:.1rem">
+  <ngb-progressbar class="indeterminate" type="primary" height="auto" [value]="100" [striped]="true" [animated]="true">|
+  </ngb-progressbar>
+</div>
+<br>
+<div class="contenedor-general row ">
+  <div class="col-12">
+    <div class="row justify-content-between">
+      <div class="h3 col-3 barrac" style="color:#3E11BC;">
+        <div class="barra-azul-lateral"></div>
+        <p class="bold-tipografy">CATEGORIA</p>
+      </div>
+
+      <div *ngIf="width>=768 && mostrar_servicios && !cargando" class="h3 col-6"
+        style="color:#3E11BC;margin-right: -35px;">
+        <div class="barra-azul-lateral"></div>
+        <p class="bold-tipografy"> {{categoriaSeleccionada}}: SERVICIOS </p>
+      </div>
+    </div>
+
+  </div>
+  <div class="contenedor-categorias col-xs-12 col-sm-12 col-md-5 col-lg-5">
+    <div *ngFor="let categoria of this.listaDeCategorias" class="card categoryCard" style="color: #3E11BC; font-weight: bold; margin-top: 10px;
+      margin-bottom: 10px;cursor: pointer;" (click)="obtenerServiciosPorCategorias(categoria.CAT_ID);">
+      <div class="row categoria_">
+        <div class="col-9">
+          <h4 style="margin-left:1rem;margin-top: 1rem;font-size: 20px;" class="card-title bold-tipografy">
+            {{categoria.CAT_NOMBRE}} </h4>
+          <br *ngIf="width>=768">
+          <h6 style="margin-left:1rem;margin-bottom: 1rem;font-weight: bold;font-size: 14px;" class="card-text">
+            {{categoria.CAT_DESCRIPCION}} </h6>
+        </div>
+        <div class="col-2" style="text-align:center" [ngStyle]="{'margin-top':width<768?'2vh':0}">
+          <img class="imagen img-fluid img-thumbnail" appImgRota [url]="'../../../assets/images/no-img-categoria.png'"
+            [src]="DOMINIO+(categoria.img??'../../../assets/images/no-img-categoria.png')" alt="Imagen categoria" >
+            
+        </div>
+        <div *ngIf="width<768" class="row">
+          <button class="btn_servicios_responsive ml-3"
+            (click)="obtenerServiciosPorCategorias(categoria.CAT_ID);"><strong>Servicios</strong></button>
+        </div>
+      </div>
+
+      <div *ngIf="width<768 && colorFondo===categoria.CAT_ID">
+        <hr>
+        <div class="servicios_responsive">
+          <div *ngFor="let servicio of this.listarServiciosPorCategoria" class="iterator_services">
+            <!-- repite segun la cantidad de servicios que haya segúnsu categoría -->
+            <div class="row">
+              <div class=" card card_servicios_" (click)="goToDetails('/datos-servicios', servicio)">
+                <div class="row ">
+                  <div class="col-2 ml-3 mt-3">
+                    <img class="imagen_servicio img-fluid img-thumbnail" appImgRota
+                      [url]="'../../../assets/images/no-img.png'" [src]="DOMINIO+servicio.SER_IMG" alt="Imagen del servicio">
+                    <!-- src={{servicio.SER_IMG}}> -->
+                  </div>
+                  <div class="col-9">
+                    <h4 [ngStyle]="{'font-size':width<768?'18px':0}" style="margin-left:1rem;margin-top: 1rem;color: #3e11bc;"
+                      class="card-title bold-tipografy">  </h4>
+                    <h6 style="font-size:14px;margin-left:1rem;margin-bottom: 1rem;font-weight: bold;color: #3e11bc;" class="card-text">
+                      Rango de precios &nbsp;
+                        <i class="fa fa-question-circle" style="width: 1.5rem;" ngbTooltip="Mín.  S/.{{(servicio['SER_PRECIO_BASE'])*precioMinimo}}&nbsp;&nbsp;máx.  S/.{{(servicio['SER_PRECIO_BASE'])*precioMaximo}}"></i>
+                    </h6>
+                    <h6 [ngStyle]="{'font-size':width<768?'12px':0}"
+                      style="margin-left:1rem;margin-bottom: 1rem;font-weight: bold;color: #3e11bc;" class="card-text">
+                      {{servicio.SER_DESCRIPCION}} </h6>
+                    <h6 style="font-size:1rem;margin-left:1rem;margin-bottom: 1rem;font-weight: bold;color: #3e11bc;"
+                      class="card-text">
+                      Modalidad:&nbsp;{{servicio.SER_REMOTO===2?'Presencial o remoto':servicio.SER_REMOTO===1?'Remoto':'Presencial'}}</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="vermas && width<768 && colorFondo===categoria.CAT_ID" class="link_listar_servicio"
+        style="text-align: right;margin-right: 1rem;">
+        <button type="button" class="btn btn-link" style="color: indigo;font-weight: bold; font-style: italic;"
+          (click)="verMasServicios()">Ver todos los servicios
+        </button>
+      </div>
+
+
+
+
+    </div>
+  </div>
+  <br><br>
+  <div *ngIf="listarServiciosPorCategoria && !cargando" id="lineaIntermedia" class="barra-azul-lateral"
+    style="margin-left: 48%;">
+  </div>
+  <div *ngIf="!cargando" [@animacionServicios]="mostrar_servicios"
+    class="contenedor-servicios col-xs-12 col-sm-12 col-md-5 col-lg-5"
+    [ngStyle]="{'background':mostrar===true ?'white':'white','border':mostrar===true?'none':'none','margin-left':mostrar===true?'-6%':'0'}">
+
+    <div *ngFor="let servicio of this.listarServiciosPorCategoria" class="card categoryCard" style="color: #3E11BC; font-weight: bold; margin-top: 10px;
+    margin-bottom: 10px;cursor: pointer;" (click)="goToDetails('/datos-servicios', servicio)">
+      <!-- repite segun la cantidad de servicios que haya segúnsu categoría -->
+      <div class="row categoria_">
+
+        <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+          <h4 style="font-size:20px;margin-left:1rem;margin-top: 1rem;margin-bottom: 1rem;"
+          class="card-title bold-tipografy">{{servicio.SER_NOMBRES}} </h4>
+          <h6 style="font-size:14px;margin-left:1rem;margin-bottom: 1rem;font-weight: bold;" class="card-text">Rango de precios:&nbsp;Mínimo: S/.&nbsp;{{(servicio['SER_PRECIO_BASE'])*precioMinimo}} - Máximo: S/.&nbsp;{{(servicio['SER_PRECIO_BASE'])*precioMaximo}}
+            <!-- <i class="fa fa-question-circle" style="width: 1.5rem;" ngbTooltip="Mín.  S/.{{(servicio['SER_PRECIO_BASE'])*precioMinimo}}&nbsp;&nbsp;máx.  S/.{{(servicio['SER_PRECIO_BASE'])*precioMaximo}}"></i> -->
+          </h6>
+          
+          <!-- {{servicio.SER_PRECIO_BASE}}  -->
+
+          <h6 style="font-size:14px;margin-left:1rem;margin-bottom: 1rem;font-weight: bold;" class="card-text">
+            {{servicio.SER_DESCRIPCION}} </h6>
+          <h6 style="font-size:14px;margin-left:1rem;margin-bottom: 1rem;font-weight: bold;" class="card-text">
+            Modalidad:&nbsp;{{servicio.SER_REMOTO===2?'Presencial o remoto':servicio.SER_REMOTO===1?'Remoto':'Presencial'}}</h6>
+        </div>
+
+        <div class="col-2" style="text-align:center" [ngStyle]="{'margin-top':width<768?'2vh':0}">
+          <img class="imagen img-fluid img-thumbnail" appImgRota [url]="'../../../assets/images/no-img.png'"
+            [src]="DOMINIO+servicio.SER_IMG" alt="Imagen del servicio"> <!-- src={{servicio.SER_IMG}}> -->
+        </div>
+
+        <div class="col-1">
+          <!-- botones de cada servicio -->
+          <button class="btn_servicio" style="cursor:pointer; min-width: 110%"
+            (click)="goToDetails('datos-servicios', servicio)"><strong
+              class="bold-tipografy">SOLICITAR</strong></button>
+        </div>
+
+      </div>
+    </div>
+    <div *ngIf='vermas' class="link_listar_servicio" style="position:fixed; ">
+      <button type="button" class="btn btn-link" style="color: indigo;font-weight: bold; font-style: italic;"
+        (click)="verMasServicios()">Ver
+        todos los
+        servicios</button>
+    </div>
+
+  </div>

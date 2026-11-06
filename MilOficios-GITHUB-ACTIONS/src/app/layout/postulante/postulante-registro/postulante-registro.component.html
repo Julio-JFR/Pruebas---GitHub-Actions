@@ -1,0 +1,1151 @@
+<app-alerta-general 
+    *ngIf="mostrarAlerta"
+    [tipoAlerta]="tipoAlerta" >
+    {{mensaje}}
+</app-alerta-general>
+
+<app-page-header class="notranslate" [heading]="'Registrar Nuevo Postulante'"></app-page-header>
+<br>
+<div class="row" style="width: 100%;margin:0">
+    <div class="col-6 col-md-3 raya-separadora-a">
+    </div>
+    <div class="triangulo-equilatero-bottom-rigth"></div>
+    <div class="col-12 raya-separadora-b">
+    </div>
+</div>
+<br>
+
+<div class="row contenedor">
+    <div class="col-lg-12">
+        <h5 style="display: inline-block;"> <label>Usuario</label> </h5>
+        <hr>
+        <div class="cuerpo">
+            <form class="form-group" [formGroup]="usuarioForm">
+                <div class="row ">
+                    <div class="datosUsuario col-12 col-sm-6 col-md-6 col-xl-7 align-self-center"><br>
+                        <div class="row justify-content-center">
+                            <div class="col-11 col-md-8 col-xl-5">
+                                <label style="padding-left:0.5rem">Nickname *</label>
+                                <input class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                                    placeholder="Nickname" formControlName="usu_apodo">
+                                <div *ngIf="usu_apodo.invalid && (usu_apodo.dirty || usu_apodo.touched)" class="my-1"
+                                    style="color: rgb(224, 191, 191);">
+                                    <div *ngIf="usu_apodo.errors.required">
+                                        * El Nickname es requerido.
+                                    </div>
+                                    <div *ngIf="usu_apodo.errors.pattern">
+                                        * Solo se permiten caracteres alfanuméricos.
+                                    </div>
+                                    <div *ngIf="usu_apodo.errors.maxlength">
+                                        * Se requieren maximo 15 caracteres.
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <br>
+                        <div class="row justify-content-center">
+                            <div class="passwordInput col-11 col-md-8 col-xl-5">
+                                <label style="padding-left:0.5rem">Contraseña *</label>
+                                <input type={{PASSWORD_CURRENT_TYPE}} class="form-control" id="exampleInputEmail1"
+                                    aria-describedby="emailHelp" placeholder="Contraseña" formControlName="contrasena">
+                                <div *ngIf="contrasena.invalid && (contrasena.dirty || contrasena.touched)" class="my-1"
+                                    style="color: rgb(197, 68, 68);">
+                                    <div *ngIf="contrasena.errors.required">
+                                        * La contraseña es requerida.
+                                    </div>
+                                    <div *ngIf="contrasena.errors.minlength">
+                                        * Se requieren mínimo 8 caracteres.
+                                    </div>
+                                    <div *ngIf="contrasena.errors.maxlength">
+                                        * Se requieren máximo 20 caracteres.
+                                    </div>
+                                    <div *ngIf="contrasena.errors.passwordValidation">
+                                        *{{contrasena.errors.passwordValidation.mensaje}}
+                                    </div>
+                                </div>
+                            </div>
+                            <span style="padding-left: 0px;" (click)="cambiarVistaContrasenaActual()"
+                                class="btn btn-rounded">
+                                <em class={{PASSWORD_CURRENT_ICON}} aria-hidden="true"></em>
+                            </span>
+                        </div>
+                        <br>
+                        <div class="row justify-content-center">
+                            <div class="passwordInput col-11 col-md-8 col-xl-5">
+                                <label style="padding-left:0.5rem">Confirmar Contraseña *</label>
+                                <input style="margin-bottom: 2rem;" type={{PASSWORD_NEW_TYPE}} class="form-control"
+                                    id="exampleInputEmail1" aria-describedby="emailHelp"
+                                    placeholder="Confirmar contraseña" formControlName="contrasenaConfirmar">
+                                <div *ngIf="contrasenaConfirmar.invalid && (contrasenaConfirmar.dirty || contrasenaConfirmar.touched)"
+                                    class="my-1" style="color: rgb(197, 68, 68);">
+                                    <div *ngIf="contrasenaConfirmar.errors.required">
+                                        * La confirmación de la contraseña es requerida.
+                                    </div>
+                                    <div *ngIf="contrasenaConfirmar.errors.minlength">
+                                        * Se requieren mínimo 8 caracteres.
+                                    </div>
+                                    <div *ngIf="contrasenaConfirmar.errors.maxlength">
+                                        * Se requieren máximo 20 caracteres.
+                                    </div>
+                                </div>
+                                <div *ngIf="contrasenaConfirmar.value !== contrasena.value && (contrasenaConfirmar.dirty || contrasenaConfirmar.touched)  "
+                                    class="my-1" style="color: rgb(197, 68, 68);">
+                                    * Las contraseñas deben ser iguales.
+                                </div>
+                            </div>
+                            <span style="padding-left: 0px;" (click)="cambiarVistaContrasenaNueva()"
+                                class="btn btn-rounded">
+                                <em class={{PASSWORD_NEW_ICON}} aria-hidden="true"></em>
+                            </span>
+                        </div><br>
+                    </div>
+                    <div class="col-12 col-sm-1"></div>
+                    <div class="col-12 col-sm-4 col-md-4 col-xl-4 align-self-end" id="profile">
+                        <div style="align-items: center; text-align: center;"
+                            class="col-12 col-sm-12 col-md-12 col-xl-12">
+                            <span><em accept="image/*" (click)="mostrarModalSubirImagen()" ngbTooltip="añadir foto"
+                                    id="icono-foto" class="fa fa-camera table-bordered"></em></span>
+                            <img id="profile-logo" *ngIf="cambiarProfile === false; else profileUpdate"
+                                    [src]="sexo== 'M' ? '../../../assets/images/AVATAR-PREDETERMINADO-HOMBRE.png': '../../../assets/images/AVATAR-PREDETERMINADO-MUJER.png'" alt="Imagen de postulante Mil Oficios">
+                            <ng-template #profileUpdate>
+                                <img [src]="croppedImage" alt="Imagen de perfil"/>
+                            </ng-template>
+                            <div class="col-12 col-sm-12 col-md-12 col-xl-12"
+                                style="text-align: center;align-items: center;" id="mensajeProfile"
+                                *ngIf="cambiarProfile === false;">
+                                <h6 style="align-items: center;text-align: center;">Queremos conocerte, agrega una foto
+                                    de perfil.</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- INICIO DE DATOS PERSONALES -->
+        <div class="row">
+            <div class="col">
+                <h5 style="display: inline-block;"> <label>{{(TIPO_POSTULANTE == 0)?'Datos Personales':'Datos del Representante'}}</label> </h5>
+                <hr>
+            </div>
+        </div>
+        <br>
+        <form [formGroup]="datosPersonalesForm" style="margin-left: 2rem; margin-right: 2rem;">
+            <div class="row ">
+                <div class="col-12 col-lg-6 ">
+                    <div class="form-group">
+                        <label>Nombres *</label>
+                        <input class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"  placeholder="Nombres"
+                            formControlName="nombre">
+                    </div>
+                    <div *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)" class="my-1"
+                        style="color: rgb(197, 68, 68);">
+                        <div *ngIf="nombre.errors.required">
+                            * El nombre es requerido.
+                        </div>
+                        <div *ngIf="nombre.errors.pattern">
+                            * Solo se permiten caracteres alfabéticos.
+                        </div>
+                        <div *ngIf="nombre.errors.maxlength">
+                            * Se requieren maximo 50 caracteres.
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group  ">
+                        <label>Apellido Paterno *</label>
+                        <input formControlName="apellidoPaterno" class="form-control " id="exampleInputEmail1"  placeholder="Apellido Paterno"
+                            aria-describedby="emailHelp">
+                    </div>
+                    <div *ngIf="apellidoPaterno.invalid && (apellidoPaterno.dirty || apellidoPaterno.touched)"
+                        class="my-1" style="color: rgb(197, 68, 68);">
+                        <div *ngIf="apellidoPaterno.errors.required">
+                            * El apellido paterno es requerido.
+                        </div>
+                        <div *ngIf="apellidoPaterno.errors.pattern">
+                            * Solo se permiten caracteres alfabéticos.
+                        </div>
+                        <div *ngIf="apellidoPaterno.errors.maxlength">
+                            * Se requieren maximo 30 caracteres.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-lg-6">
+                    <div class="form-group">
+                        <label>Apellido Materno *</label>
+                        <input formControlName="apellidoMaterno" type="email" class="form-control"  placeholder="Apellido Materno"
+                            id="exampleInputEmail1" aria-describedby="emailHelp">
+                    </div>
+                    <div *ngIf="apellidoMaterno.invalid && (apellidoMaterno.dirty || apellidoMaterno.touched)"
+                        class="my-1" style="color: rgb(197, 68, 68);">
+                        <div *ngIf="apellidoMaterno.errors.required">
+                            * El apellido materno es requerida.
+                        </div>
+                        <div *ngIf="apellidoMaterno.errors.pattern">
+                            * Solo se permiten caracteres alfabéticos.
+                        </div>
+                        <div *ngIf="apellidoMaterno.errors.maxlength">
+                            * Se requieren maximo 30 caracteres.
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label>Fecha de nacimiento *</label>
+                        <input [max]="getTodayFechaNacimiento()" [ngClass]="{'textoGris': opacarDateFechaNacimiento }"  placeholder="Fecha Nacimiento"
+                            (change)="cambiarDeStyleDate()" formControlName="date" type="date" id="fechaInput"
+                            name="fechaInput" class="form-control">
+                        <div *ngIf="date.invalid && (date.dirty || date.touched)" class="my-1"
+                            style="color: rgb(197, 68, 68);">
+                            <div *ngIf="date.errors.required">
+                                * La fecha es requerida.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-lg-6">
+                    <div class="form-group">
+                        <label>Email *</label>
+                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"  placeholder="Email"
+                            formControlName="correo">
+                    </div>
+                    <div *ngIf="correo.invalid && (correo.dirty || correo.touched)" class="my-1"
+                        style="color: rgb(197, 68, 68);">
+                        <div *ngIf="correo.errors.required">
+                            * El email es requerido.
+                        </div>
+                        <div *ngIf="correo.errors.pattern">
+                            * El formato del correo no es válido.
+                        </div>
+                        <div *ngIf="correo.errors.maxlength">
+                            * Se requieren maximo 60 caracteres.
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label>Celular *</label>
+                        <input formControlName="celular" class="form-control" id="exampleInputEmail1"  placeholder="Celular"
+                            aria-describedby="celularHelp">
+                        <small style="opacity: 65%;
+                        font-style: italic;">Ejemplo: +51998745638</small>
+                        <div *ngIf="celular.invalid && (celular.dirty || celular.touched)" class="my-1"
+                            style="color: rgb(197, 68, 68);">
+                            <div *ngIf="celular.errors.required">
+                                * El celular es requerido.
+                            </div>
+                            <div *ngIf="celular.errors.pattern">
+                                * Solo se permiten caracteres numéricos.
+                            </div>
+                            <div *ngIf="celular.errors.maxlength">
+                                * Se requieren maximo 20 caracteres.
+                            </div>
+                            <div *ngIf="celular.errors.minlength">
+                                * Se requieren minimo 12 caracteres.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-lg-6">
+                    <div class="form-group">
+                        <label>DNI *</label>
+                        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"  placeholder="Dni"
+                            formControlName="dni">
+                    </div>
+                    <div *ngIf="dni.invalid && (dni.dirty || dni.touched)" class="my-1"
+                        style="color: rgb(197, 68, 68);">
+                        <div *ngIf="dni.errors.required">
+                            * El dni es requerido.
+                        </div>
+                        <div *ngIf="dni.errors.pattern">
+                            * Solo se permiten caracteres numéricos.
+                        </div>
+                        <div *ngIf="dni.errors.maxlength">
+                            * Se requiere 8 caracteres como maximo.
+                        </div>
+                        <div *ngIf="dni.errors.minlength">
+                            * Se requieren 8 caracteres númericos.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <div class="form-group">
+                        <label>RUC *</label>
+                        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"  placeholder="Ruc"
+                            formControlName="rucD">
+                    </div>
+                    <div *ngIf="rucD.invalid && (rucD.dirty || rucD.touched)" class="my-1"
+                        style="color: rgb(197, 68, 68);">
+                        <div *ngIf="rucD.errors.required">
+                            * El ruc es requerido.
+                        </div>
+                        <div *ngIf="rucD.errors.pattern">
+                            * Solo se permiten caracteres numéricos.
+                        </div>
+                        <div *ngIf="rucD.errors.maxlength">
+                            * Se requieren máximo 11 caracteres.
+                        </div>
+                        <div *ngIf="rucD.errors.minlength">
+                            * Se requieren mínimo 11 caracteres.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <div class="form-group">
+                        <label>Idioma *</label>
+                        <select formControlName="idioma" (change)="obtenerIDIdioma($event.target.value)" 
+                            class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+                            <option disabled selected value="null">Seleccionar</option>
+                            <option [value]="idioma.IDI_ID" *ngFor="let idioma of IDIOMAS"> {{idioma.IDI_NOMBRE}}
+                            </option>
+                        </select>
+                        <div *ngIf="idioma.invalid && (idioma.dirty || idioma.touched)" class="my-1"
+                            style="color: rgb(197, 68, 68);">
+                            <div *ngIf="idioma.errors.required">
+                                * El idioma es requerido.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <label>Sexo *</label>
+            <br>
+            <div class="row">
+                <div class="col">
+                    <div class="form-check">
+                        <input (change)="obtenerSexo('M')" class="form-check-input" type="radio" name="exampleRadios"
+                            id="exampleRadios1" value="option1" checked>
+                        <label class="form-check-label" for="exampleRadios1">
+                            Masculino
+                        </label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-check">
+                        <input (change)="obtenerSexo('F')" class="form-check-input" type="radio" name="exampleRadios"
+                            id="exampleRadios1" value="option1" >
+                        <label class="form-check-label" for="exampleRadios1">
+                            Femenino
+                        </label>
+                    </div>
+                </div>
+            </div><br><br>
+            <h5>Vivienda</h5>
+            <hr><br>
+            <div class="row">
+                <div class="col-12 col-sm-6">
+                    <div class="form-row align-items-center">
+                        <div class="col-12 col-sm-6 col-md-6 my-1">
+                            <label class="mr-sm-2" for="inlineFormCustomSelect">País *</label>
+                            <select formControlName="pais" class="custom-select mr-sm-2" id="inlineFormCustomSelect"
+                                (change)="obtenerRegion($event.target.value)">
+                                <option selected disabled value="null">Seleccionar</option>
+                                <option [value]="pais.PAI_ID" *ngFor="let pais of PAISES">{{pais.PAI_NOMBRE}}
+                                </option>
+                            </select>
+                            <div *ngIf="pais.invalid && (pais.dirty || pais.touched)" class="my-1"
+                                style="color: rgb(197, 68, 68);">
+                                <div *ngIf="pais.errors.required">
+                                    * El país es requerido.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-row align-items-center">
+                        <div class="col-12 col-sm-6 col-md-6 my-1">
+                            <label class="mr-sm-2" for="inlineFormCustomSelect">Región *</label>
+                            <select formControlName="departamento" class="custom-select mr-sm-2"
+                                id="inlineFormCustomSelect" (change)="obtenerProvincia($event.target.value)">
+                                <option disabled selected value="null">Seleccionar</option>
+                                <option [value]="region.REG_ID" *ngFor="let region of REGIONES">
+                                    {{region.REG_NOMBRE}}</option>
+                            </select>
+                            <div *ngIf="departamento.invalid && (departamento.dirty || departamento.touched)"
+                                class="my-1" style="color: rgb(197, 68, 68);">
+                                <div *ngIf="departamento.errors.required">
+                                    * La región es requerida.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-sm-6">
+                    <div class="form-row align-items-center">
+                        <div class="col-12 col-sm-6 col-md-6 my-1">
+                            <label class="mr-sm-2" for="inlineFormCustomSelect">Provincia *</label>
+                            <select formControlName="provincia" class="custom-select mr-sm-2"
+                                id="inlineFormCustomSelect" (change)="obtenerDistrito($event.target.value)">
+                                <option disabled selected value="null">Seleccionar</option>
+                                <option [value]="provincia.PRO_ID" *ngFor="let provincia of PROVINCIAS">
+                                    {{provincia.PRO_NOMBRE}} </option>
+                            </select>
+                            <div *ngIf="provincia.invalid && (provincia.dirty || provincia.touched)" class="my-1"
+                                style="color: rgb(197, 68, 68);">
+                                <div *ngIf="provincia.errors.required">
+                                    * La provincia es requerida.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-row align-items-center">
+                        <div class="col-12 col-sm-6 col-md-6 my-1">
+                            <label class="mr-sm-2" for="inlineFormCustomSelect">Distrito *</label>
+                            <select (change)="obtenerIDDistrito($event.target.value)" formControlName="distrito"
+                                class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+                                <option disabled selected value="null">Seleccionar</option>
+                                <option [value]="distrito.DIST_ID" *ngFor="let distrito of DISTRITOS">
+                                    {{distrito.DIST_NOMBRE}} </option>
+                            </select>
+                            <div *ngIf="distrito.invalid && (distrito.dirty || distrito.touched)" class="my-1"
+                                style="color: rgb(197, 68, 68);">
+                                <div *ngIf="distrito.errors.required">
+                                    * El distrito es requerido.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <hr><br>
+            <label>Dirección *</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                formControlName="direccion">
+            <div *ngIf="direccion.invalid && (direccion.dirty || direccion.touched)" class="my-1"
+                style="color: rgb(197, 68, 68);">
+                <div *ngIf="direccion.errors.required">
+                    * La direccion es requerida.
+                </div>
+                <div *ngIf="direccion.errors.pattern">
+                    * Solo se acepta alfanúmericos y espacios.
+                </div>
+                <div *ngIf="direccion.errors.maxlength">
+                    * Se requiere 100 caracteres como máximo.
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- INICIO DATOS ACADEMICOS -->
+    <br><br>
+    <div class="contenedor col-12">
+        <div *ngIf="TIPO_POSTULANTE == 0" class="row">
+            <div class="col">
+                <h5 style="display: inline-block;"> <label>Datos académicos *</label> </h5>
+                <div class="iconAgregar2">
+                    <div id="agregarProfesion">
+                        <span class="btn btn-rounded btnAgregar">
+                            <em (click)="mostrarModalEstudios();validarCamposEstudios(true)" ngbTooltip="Agregar" class="fa fa-plus"
+                                aria-hidden="true"></em>
+                        </span>
+                    </div>
+                </div>
+                <hr>
+            </div>
+        </div>
+        <div *ngIf="TIPO_POSTULANTE == 0" class="row">
+            <div class="col">
+               
+                <br>
+                <div class="scroll">
+                    <div class="col" style="padding-left: 0;padding-right:0">
+                        <div class="table-responsive-sm table-responsive-md table-responsive-lg table-responsive-xl">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="text-center" style="min-width: 130px;">Acciones</th>
+                                        <th scope="col" class="text-center" style="min-width: 133px;">Tipo de estudio
+                                        </th>
+                                        <th scope="col" class="text-center" style="min-width: 144px;">Lugar de estudio
+                                        </th>
+                                        <th scope="col" class="text-center">Descripción</th>
+                                        <th scope="col" class="text-center" style="min-width: 108px;">Fecha inicio</th>
+                                        <th scope="col" class="text-center" style="min-width: 108px;">Fecha fin</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngIf="obtenerLenthEstudios() === 0">
+                                        <td colspan="6" style="text-align: center;"><span>No hay estudios para
+                                                mostrar</span></td>
+                                    </tr>
+                                    <tr *ngFor=" let estudio of listaDeEstudios">
+                                        <td *ngIf="estudio.EST_INSTITUCION!=='no'" class="text-center tdCelda">
+                                            <div *ngIf="estudio != null">
+                                                <span class="btn btn-rounded">
+                                                    <i ngbTooltip="Editar" class="fa fa-eye" style="position: relative;margin-top: 0;" aria-hidden="true"
+                                                        (click)="abrirModalEditar(estudio)"></i>
+                                                </span>
+                                                <span class="btn btn-rounded">
+                                                    <i ngbTooltip="Eliminar" class="fa fa-trash-o" aria-hidden="true"
+                                                        (click)="abrirModalEliminarEstudio(estudio)"></i>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td *ngIf="estudio.EST_INSTITUCION!=='no'" class="text-center tdCelda">
+                                            {{estudio?.EST_TIPO}}</td>
+                                        <td *ngIf="estudio.EST_INSTITUCION!=='no'" class="text-center tdCelda">
+                                            {{estudio?.EST_INSTITUCION}}</td>
+                                        <td *ngIf="estudio.EST_INSTITUCION!=='no'" class="text-center tdCelda">
+                                            {{estudio?.EST_DESCRIPCION}}</td>
+                                        <td *ngIf="estudio.EST_INSTITUCION!=='no'" class="text-center tdCelda">
+                                            {{estudio?.EST_FECH_INI}}</td>
+                                        <td *ngIf="estudio.EST_INSTITUCION!=='no'" class="text-center tdCelda">
+                                            {{estudio?.EST_FECH_FIN}}</td>
+                                    </tr>
+                                    <tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <br>
+            </div>
+        </div>
+
+
+        <!-- INCIO DATOS JURIDICOS -->
+        <div *ngIf="TIPO_POSTULANTE == 1" class="col-lg-12">
+            <h5 style="display: inline-block;"> <label>Datos Jurídicos</label> </h5>
+            <hr>
+            <div style="padding-top: 15px;padding-bottom: 15px;margin-top: 1rem; width: 97%;">
+                <form class="form-group" [formGroup]="datosEmpresa">
+                    <div class="row justify-content-center">
+                        <div class="col-11">
+                            <div class="row justify-content-center">
+                                <div class="col-12">
+                                    <label style="padding-left:0.5rem">Razón social *</label>
+                                    <input type="text" class="form-control" formControlName="razonSocial">
+                                    <div *ngIf="razonSocial.invalid && (razonSocial.dirty || razonSocial.touched)"
+                                        class="my-1" style="color: rgb(197, 68, 68);">
+                                        <div *ngIf="razonSocial.errors.required">
+                                            * La razón social es requerida.
+                                        </div>
+                                        <div *ngIf="razonSocial.errors.pattern">
+                                            * El formato de la razón social no es válido
+                                        </div>
+                                        <div *ngIf="razonSocial.errors.maxlength">
+                                            * Se requieren máximo 100 caracteres.
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="col-12 col-md-6">
+                                    <label style="margin-top: 1.2rem;" class="mr-sm-2" for="inlineFormCustomSelect">Tipo
+                                        de
+                                        Empresa *</label>
+                                    <select formControlName="tipoEmpresa" class="custom-select mr-sm-2">
+                                        <option hidden value="" disabled selected>Seleccionar</option>
+                                        <option [value]="tipoEmpresa.TIP_EMP_ID"
+                                            *ngFor="let tipoEmpresa of TIPOS_EMPRESA">
+                                            {{tipoEmpresa.TIP_EMP_DESCRIPCION}}</option>
+                                    </select>
+                                    <div *ngIf="tipoEmpresa.invalid && (tipoEmpresa.dirty || tipoEmpresa.touched)"
+                                        class="my-1" style="color: rgb(197, 68, 68);">
+                                        <div *ngIf="tipoEmpresa.errors.required">
+                                            * El tipo de empresa es requerido.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <h5 *ngIf="TIPO_POSTULANTE == 1" style="display: inline-block;"> <label>Clientes Destacados *</label>
+                </h5>
+                <h5 *ngIf="TIPO_POSTULANTE == 0" style="display: inline-block;"> <label>Experiencias Laborales *</label>
+                </h5>
+                <div class="iconAgregar2">
+                    <div id="agregarEL">
+                        <span class="btn btn-rounded btnAgregar">
+                            <em (click)="mostrarModalExperienciaLaboral();validarCamposExpLaborales(true)" ngbTooltip="Agregar" class="fa fa-plus"
+                                aria-hidden="true"></em>
+                        </span>
+                    </div>
+                </div>
+                <hr>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col">
+                
+                <div class="scroll">
+                    <div class="col" style="padding-left: 0;padding-right:0">
+                        <div class="table-responsive-sm table-responsive-md table-responsive-lg table-responsive-xl">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="text-center" style="min-width: 130px;">Acciones</th>
+                                        <th scope="col" class="text-center">{{(TIPO_POSTULANTE ==
+                                            0)?'Empresa':'Cliente'}}
+                                        </th>
+                                        <th scope="col" class="text-center" style="min-width: 150px;">{{(TIPO_POSTULANTE ==
+                                            0)?'Especialidad':'Tipo de servicio'}}</th>
+                                        <th scope="col" class="text-center">Descripción</th>
+                                        <th scope="col" class="text-center" style="min-width: 108px;">Fecha inicio</th>
+                                        <th scope="col" class="text-center" style="min-width: 108px;">Fecha fin</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngIf="obtenerLengthExperienciaLaboral() === 0">
+                                        <td colspan="6" style="text-align: center;"><span>No hay experiencia laboral
+                                                para
+                                                mostrar</span></td>
+                                    </tr>
+                                    <tr *ngFor=" let experienciaLaboral of listaDeExperienciasLaborales">
+                                        <td *ngIf="experienciaLaboral.EXP_DESCRIPCION != 'no'"
+                                            class="text-center tdCelda">
+                                            <div>
+                                                <span class="btn btn-rounded">
+                                                    <em ngbTooltip="Editar" class="fa fa-eye" style="position: relative;margin-top: 0;" aria-hidden="true"
+                                                        (click)="abrirModalEditarExperienciaLaboral(experienciaLaboral)"></em>
+                                                </span>
+                                                <span class="btn btn-rounded">
+                                                    <em ngbTooltip="Eliminar" class="fa fa-trash-o" aria-hidden="true"
+                                                        (click)="abrirModalEliminarExperienciaLaboral(experienciaLaboral)"></em>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td *ngIf="experienciaLaboral.EXP_DESCRIPCION != 'no'"
+                                            class="text-center tdCelda">
+                                            {{experienciaLaboral?.EXP_EMPRESA}}</td>
+                                        <td *ngIf="experienciaLaboral.EXP_DESCRIPCION != 'no'"
+                                            class="text-center tdCelda">
+                                            {{experienciaLaboral?.EXP_ESPECIALIDAD}}</td>
+                                        <td *ngIf="experienciaLaboral.EXP_DESCRIPCION != 'no'"
+                                            class="text-center tdCelda">
+                                            {{experienciaLaboral?.EXP_DESCRIPCION}}</td>
+                                        <td *ngIf="experienciaLaboral.EXP_DESCRIPCION != 'no'"
+                                            class="text-center tdCelda">
+                                            {{experienciaLaboral?.EXP_FECH_INI}}</td>
+                                        <td *ngIf="experienciaLaboral.EXP_DESCRIPCION != 'no'"
+                                            class="text-center tdCelda">
+                                            {{experienciaLaboral?.EXP_FECH_FIN}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <!-- <div class="row-12 row-lg-12">
+            <input #inputCV type="file" class="form-control" id="exampleInputEmail1" accept=".pdf"
+                (change)="subirArchivoCV($event)" aria-describedby="emailHelp">
+            <div *ngIf="mostrarAlertaArchivo" style="color: rgb(197, 68, 68);">
+                <strong>* {{mensajeArchivo}}</strong>
+            </div>
+        </div> -->
+        <h5 *ngIf="TIPO_POSTULANTE == 1"><label>Adjuntar carta de presentación *</label> </h5>
+        <h5 *ngIf="TIPO_POSTULANTE == 0"><label>Adjuntar CV *</label> </h5>
+        <p style="font-size: 14px; margin: 4px 0;">Solo se permiten archivos en formato PDF (.pdf).</p>
+        <div class="border rounded-lg py-2 pl-1">
+            <label for="file-uploadCv" class="border rounded-lg inputFile">
+                <i class="fa fa-cloud-upload"></i>Elegir archivo
+            </label>
+            <input id="file-uploadCv"
+                #inputCV
+                accept=".pdf" (change)="subirArchivoCV($event)"  name="file" type="file"/>
+            <label class="ml-2 text-gray-300">{{tituloArchivo ? tituloArchivo :'Ningún archivo seleccionado'}}</label>
+        </div>
+        <br>
+        <div class="ml-4">
+            <input type="checkbox" class="form-check-input me-2" [(ngModel)]="checkTerminos"
+                style="width: 15px; height: 15px; border: 1px solid #3E11BC; box-shadow: none; vertical-align: middle;">
+            <span>Acepto los <label style="cursor: pointer;" (click)="abrirVentana()">Términos y Condiciones</label></span>
+        </div>
+        
+        <br>
+        <br>
+        <div class="leyenda">
+            <p> (*) Campo obligatorio</p>
+        </div>
+        <div class="btn-acep col-6">
+            <div>
+                <button id="postular"
+                    [disabled]=" esValidoContrasena === false || !checkTerminos || carga"
+                    (click)="mensaje='';terminosYCondiciones();mostrarAlertaTerminos=false" style="margin-top: 4rem;font-weight: bold;"
+                    class="btn">POSTULAR</button>
+                <!-- <button id="postular" *ngIf="TIPO_POSTULANTE == 1"
+                    [disabled]=" esValidoContrasena === false || !checkTerminos"
+                    (click)="mostrarTerminosyCondiciones();mostrarAlertaTerminos=false;mensaje=''" style="margin-top: 4rem;font-weight: bold;"
+                    class="btn">POSTULAR</button> -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #foto>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle"><label>Actualizar imagen de perfil</label></h5>
+        <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="4 / 4"
+            (imageCropped)="imageCropped($event)" [resizeToWidth]="192" [resizeToHeight]="192"></image-cropper>
+        <div class="border rounded-lg py-2 pl-1">
+            <label for="file-upload" class="border rounded-lg inputFile">
+                <i class="fa fa-cloud-upload"></i>Elegir archivo
+            </label>
+            <input id="file-upload" type="file" 
+                #fileInput
+                accept="image/png, .jpeg, .jpg" 
+                (change)="subirImagen($event)" name="file" type="file"/>
+            <label class="ml-2 text-gray-300" *ngIf="!croppedImage">Ningún archivo seleccionado</label>
+            
+        </div>
+        <div *ngIf="mostrarAlertaFoto" style="color: rgb(197, 68, 68);">
+            <strong>* {{mensajeFotoError}}</strong>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" (click)="closeModal()" style="color: rgb(255, 255, 255);"
+            class="btn btn-danger fw-bold">Cancelar</button>
+        <button [disabled]="mostrarAlertaFoto" type="button" (click)="confirmarSubidaDeImagen()"
+            class="btn btn-success fw-bold">Confirmar</button>
+    </div>
+</ng-template>
+
+<ng-template #terminos let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle"><label >Términos y Condiciones</label></h5>
+        <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body" id="scrollTermino">
+        <app-alerta-modal *ngIf="mostrarAlertaTerminos" [tipoAlerta]="tipoAlerta">{{mensaje}}</app-alerta-modal>
+
+        <span> Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            Iste dolore, harum beatae amet, laboriosam molestiae earum aliquid nisi
+            dolores fugit reprehenderit! Cum velit fuga asperiores eveniet, impedit
+            quibusdam nostrum? Reiciendis.
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+            Quos quo dolores quibusdam quis enim ipsa fuga molestias nemo
+            tempore recusandae! Atque natus at neque sunt distinctio dignissimos
+            corrupti facere iste!. Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            Iste dolore, harum beatae amet, laboriosam molestiae earum aliquid nisi
+            dolores fugit reprehenderit! Cum velit fuga asperiores eveniet, impedit
+            quibusdam nostrum? Reiciendis.
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+            Quos quo dolores quibusdam quis enim ipsa fuga molestias nemo
+            tempore recusandae! Atque natus at neque sunt distinctio dignissimos
+            corrupti facere iste! . Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            Iste dolore, harum beatae amet, laboriosam molestiae earum aliquid nisi
+            dolores fugit reprehenderit! Cum velit fuga asperiores eveniet, impedit
+            quibusdam nostrum? Reiciendis.
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+            Quos quo dolores quibusdam quis enim ipsa fuga molestias nemo
+            tempore recusandae! Atque natus at neque sunt distinctio dignissimos
+            corrupti facere iste!. Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            Iste dolore, harum beatae amet, laboriosam molestiae earum aliquid nisi
+            dolores fugit reprehenderit! Cum velit fuga asperiores eveniet, impedit
+            quibusdam nostrum? Reiciendis.
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+            Quos quo dolores quibusdam quis enim ipsa fuga molestias nemo
+            tempore recusandae! Atque natus at neque sunt distinctio dignissimos
+            corrupti facere iste!. Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            Iste dolore, harum beatae amet, laboriosam molestiae earum aliquid nisi
+            dolores fugit reprehenderit! Cum velit fuga asperiores eveniet, impedit
+            quibusdam nostrum? Reiciendis.
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+            Quos quo dolores quibusdam quis enim ipsa fuga molestias nemo
+            tempore recusandae! Atque natus at neque sunt distinctio dignissimos
+            corrupti facere iste!
+        </span>
+    </div>
+    <div style="margin-top: 15px;" class="row">
+        <div class="col-xl-12">
+            <div *ngIf="carga" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true"
+                    [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button [disabled]="inhabilitarBotonesPostular" type="button" (click)="closeModal();mostrarAlertaTerminos=false"
+            style="color: rgb(255, 255, 255);" class="btn btn-danger bold">Cancelar</button>
+        <button [disabled]="inhabilitarBotonesPostular" type="button" (click)="terminosYCondiciones()"
+            class="btn btn-success bold">Confirmar</button>
+    </div>
+</ng-template>
+
+<ng-template #agregarP let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle"><strong>{{tituloModalEstudios}}</strong> </h5>
+        <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <app-alerta-modal *ngIf="mostrarAlertaModal || mostrarAlertaEstudio" [tipoAlerta]="tipoAlerta">{{mensaje}}</app-alerta-modal>
+        <fieldset class="scheduler-border">
+            <form [formGroup]="estudiosForm">
+                <div class="form-group">
+                    <label for="exampleInputTEstudio">Tipo de estudio *</label>
+                    <input class="form-control" id="exampleInputTEstudio" aria-describedby="emailHelp"
+                        formControlName="est_tipo">
+                    <small>{{ est_tipo.value?.length }}/20</small>
+                    <div *ngIf="est_tipo.invalid && (est_tipo.dirty || est_tipo.touched)" class="my-1"
+                        style="color: rgb(197, 68, 68);">
+                        <div *ngIf="est_tipo.errors.required">
+                            * El tipo de estudio es requerido
+                        </div>
+                        <div *ngIf="est_tipo.errors.pattern">
+                            * Solo se permiten caracteres alfabéticos
+                        </div>
+                        <div *ngIf="est_tipo.errors.maxlength">
+                            * Se requieren maximo 20 caracteres
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea2">Descripción *</label>
+                    <textarea class="form-control rounded-0" id="exampleFormControlTextarea2" rows="3"
+                        formControlName="est_descripcion"></textarea>
+                    <small>{{ est_descripcion.value?.length }}/60</small>
+                    <div *ngIf="est_descripcion.invalid && (est_descripcion.dirty || est_descripcion.touched)"
+                        class="my-1" style="color: rgb(197, 68, 68);">
+                        <div *ngIf="est_descripcion.errors.required">
+                            * La descripción es requerida
+                        </div>
+                        <div *ngIf="est_descripcion.errors.maxlength">
+                            * Se requieren máximo 60 caracteres
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="Lugardeestudio">Lugar de estudio *</label>
+                    <input class="form-control" id="Lugardeestudio" aria-describedby="emailHelp"
+                        formControlName="est_institucion">
+                    <small>{{ est_institucion.value?.length }}/20</small>
+                    <div *ngIf="est_institucion.invalid && (est_institucion.dirty || est_institucion.touched)"
+                        class="my-1" style="color: rgb(197, 68, 68);">
+                        <div *ngIf="est_institucion.errors.required">
+                            * El lugar de estudio es requerido
+                        </div>
+                        <div *ngIf="est_institucion.errors.maxlength">
+                            * Se requieren maximo 20 caracteres
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col">
+                            <label for="exampleFormControlTextarea2">Fecha de inicio *</label>
+                            <input [max]="getToday()" [ngClass]="{'textoGris': opacarDateFechaInicioEstudio }"
+                                (change)="cambiarDeStyleDateInicioEstudio()" type="date" id="fechaInput"
+                                name="fechaInput" class="form-control" formControlName="est_fech_ini">
+                            <div *ngIf="est_fech_ini.invalid && (est_fech_ini.dirty || est_fech_ini.touched)"
+                                class="my-1" style="color: rgb(197, 68, 68);">
+                                <div *ngIf="est_fech_ini.errors.required">
+                                    * La fecha de inicio es requerida
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <label class="pull-right"><input type="checkbox" (change)="procesoDatosCheckEstudio()"
+                                    [checked]="isCheckEstudio"><small> En curso</small></label>
+                            <label for="exampleFormControlTextarea2">Fecha de fin *</label>
+                            <input [max]="getToday()" [ngClass]="{'textoGris': opacarDateFechaFinEstudio }"
+                                (change)="cambiarDeStyleDateFinEstudio()" type="date" id="fechaInput" name="fechaInput"
+                                class="form-control" formControlName="est_fech_fin">
+                            <div *ngIf="est_fech_fin.invalid && (est_fech_fin.dirty || est_fech_fin.touched)"
+                                class="my-1" style="color: rgb(197, 68, 68);">
+                                <div *ngIf="est_fech_fin.errors.required">
+                                    * La fecha de fin es requerida
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="leyenda">
+                <p> (*) Campo obligatorio</p>
+            </div>
+        </fieldset>
+    </div>
+    <div class="modal-footer" class="btnAñadirProfesion">
+        <button (click)="anadirEstudios()" [disabled]="estudiosForm.invalid" style="color: #ffffff;" type="button"
+        class="btn btn-success bold" data-dismiss="modal"> {{textoDeBotonModal}} </button>
+    </div>
+</ng-template>
+
+<ng-template #agregarEL let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle"> <label>{{tituloModalExperienciaLaboral}} </label> </h5>
+        <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body" style="margin: 0px; padding: 0px;">
+        <div class="container">
+            <app-alerta-modal *ngIf="mostrarAlertaModal" [tipoAlerta]="tipoAlerta">{{mensaje}}</app-alerta-modal>
+    
+            <fieldset class="scheduler-border" style="margin-left: 20px;margin-right: 20px;">
+                <form [formGroup]="experienciaLaboralForm">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label *ngIf="TIPO_POSTULANTE == 0" for="exampleEspecialidad">Especialidad *</label>
+                                <label *ngIf="TIPO_POSTULANTE == 1" for="exampleEspecialidad">Tipo de servicio *</label>
+                                <input formControlName="especialidad" class="form-control" id="exampleEspecialidad"
+                                    aria-describedby="emailHelp">
+                                <small>{{ especialidad.value?.length }}/20</small>
+                                <div *ngIf="especialidad.invalid && (especialidad.dirty || especialidad.touched)"
+                                    class="my-1" style="color: rgb(197, 68, 68);">
+                                    <div *ngIf="especialidad.errors.required">
+                                        * {{ (TIPO_POSTULANTE == 0)?'La especialidad es requerida':'El tipo de servicio es requerido'}}.
+                                    </div>
+                                    <div *ngIf="especialidad.errors.pattern">
+                                        * El formato no es válido.
+                                    </div>
+                                    <div *ngIf="especialidad.errors.maxlength">
+                                        * Se requieren máximo 20 caracteres.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label *ngIf="TIPO_POSTULANTE == 0" for="exampleEmpresa">Lugar / Empresa *</label>
+                                <label *ngIf="TIPO_POSTULANTE == 1" for="exampleEmpresa">Cliente *</label>
+                                <input formControlName="lugarempresa" class="form-control" id="exampleEmpresa"
+                                    aria-describedby="emailHelp">
+                                <small>{{ lugarempresa.value?.length }}/20</small>
+                                <div *ngIf="lugarempresa.invalid && (lugarempresa.dirty || lugarempresa.touched)"
+                                    class="my-1" style="color: rgb(197, 68, 68);">
+                                    <div *ngIf="lugarempresa.errors.required">
+                                        * {{ (TIPO_POSTULANTE == 0)?'El lugar/empresa es requerido':'El cliente es requerido'}}.
+                                    </div>
+                                    <div *ngIf="lugarempresa.errors.pattern">
+                                        * El formato no es válido.
+                                    </div>
+                                    <div *ngIf="lugarempresa.errors.maxlength">
+                                        * Se requieren maximo 20 caracteres.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="exampleFormControlTextarea2">Descripción *</label>
+                                <textarea class="form-control rounded-0" id="exampleFormControlTextarea2" rows="3"
+                                    formControlName="descripcion"></textarea>
+                                <small>{{ descripcion.value?.length }}/60</small>
+                                <div *ngIf="descripcion.invalid && (descripcion.dirty || descripcion.touched)" class="my-1"
+                                    style="color: rgb(197, 68, 68);">
+                                    <div *ngIf="descripcion.errors.required">
+                                        * La descripción es requerida.
+                                    </div>
+                                    <div *ngIf="descripcion.errors.maxlength">
+                                        * Se requieren maximo 60 caracteres.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col">
+                            <label for="exampleFormControlTextarea2">Fecha de inicio *</label>
+                            <input [max]="getToday()" [ngClass]="{'textoGris': opacarDateFechaInicioExperienciaLaboral }"
+                                (change)="cambiarDeStyleDateInicioExperienciaLaboral()" formControlName="fechaInicio"
+                                type="date" id="fechaInput" name="fechaInput" class="form-control">
+                            <div *ngIf="fechaInicio.invalid && (fechaInicio.dirty || fechaInicio.touched)" class="my-1"
+                                style="color: rgb(197, 68, 68);">
+                                <div *ngIf="fechaInicio.errors.required">
+                                    * La fecha de inicio es requerido.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <label for="exampleFormControlTextarea2">Fecha de fin *</label>
+                            <label class="pull-right"><input type="checkbox" (change)="procesoDatosCheckExperiencia()"
+                                    [checked]="isCheckExperiencia"><small> En curso</small></label>
+                            <input [max]="getToday()" [ngClass]="{'textoGris': opacarDateFechaFinExperienciaLaboral }"
+                                (change)="cambiarDeStyleDateFinExperienciaLaboral()" formControlName="fechaFin" type="date"
+                                id="fechaInput" name="fechaInput" class="form-control">
+                            <div *ngIf="fechaFin.invalid && (fechaFin.dirty || fechaFin.touched)" class="my-1"
+                                style="color: rgb(197, 68, 68);">
+                                <div *ngIf="fechaFin.errors.required">
+                                    * La fecha de fin es requerido.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br><br>
+                    <label for="exampleFormControlTextarea2"><strong>Contacto de referencia </strong></label>
+                    <hr><br>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="exampleNombres">Nombres *</label>
+                                <input formControlName="nombreEL" class="form-control" id="exampleNombres" placeholder="Nombres"
+                                    aria-describedby="emailHelp">
+                                <small>{{ nombreEL.value?.length }}/50</small>
+                                <div *ngIf="nombreEL.invalid && (nombreEL.dirty || nombreEL.touched)" class="my-1"
+                                    style="color: rgb(197, 68, 68);">
+                                    <div *ngIf="nombreEL.errors.required">
+                                        * El nombre es requerido.
+                                    </div>
+                                    <div *ngIf="nombreEL.errors.pattern">
+                                        * Solo se permiten caracteres alfabéticos.
+                                    </div>
+                                    <div *ngIf="nombreEL.errors.maxlength">
+                                        * Se requieren maximo 50 caracteres.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="exampleApellidos">Apellidos *</label>
+                                <input formControlName="apellido" class="form-control" id="exampleApellidos" placeholder="Apellidos"
+                                    aria-describedby="emailHelp">
+                                <small>{{ apellido.value?.length }}/30</small>
+                                <div *ngIf="apellido.invalid && (apellido.dirty || apellido.touched)" class="my-1"
+                                    style="color: rgb(197, 68, 68);">
+                                    <div *ngIf="apellido.errors.required">
+                                        * El campo es requerido.
+                                    </div>
+                                    <div *ngIf="apellido.errors.pattern">
+                                        * Solo se permiten caracteres alfabéticos.
+                                    </div>
+                                    <div *ngIf="apellido.errors.maxlength">
+                                        * Se requieren maximo 30 caracteres.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleCorreo">Correo *</label>
+                        <input formControlName="correoEL" class="form-control" id="exampleCorreo"  placeholder="Correo electrónico"
+                            aria-describedby="emailHelp">
+                        <small>{{ correoEL.value?.length }}/60</small>
+                        <div *ngIf="correoEL.invalid && (correoEL.dirty || correoEL.touched)" class="my-1"
+                            style="color: rgb(197, 68, 68);">
+                            <div *ngIf="correoEL.errors.pattern">
+                                * El correo no tiene el formato correcto.
+                            </div>
+                            <div *ngIf="correoEL.errors.maxlength">
+                                * Se requieren maximo 60 caracteres.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleCelular">Celular *</label>
+                        <input formControlName="celularEL" class="form-control" id="exampleCelular"  placeholder="Celular"
+                            aria-describedby="emailHelp">
+                        <small style="opacity: 65%;
+                            font-style: italic;">Ejemplo: +51998745638</small>
+                        <div *ngIf="celularEL.invalid && (celularEL.dirty || celularEL.touched)" class="my-1"
+                            style="color: rgb(197, 68, 68);">
+                            <div *ngIf="celularEL.errors.invalid">
+                                * El campo es requerido.
+                            </div>
+                            <div *ngIf="celularEL.errors.pattern">
+                                * Solo se permiten caracteres numéricos.
+                            </div>
+                            <div *ngIf="celularEL.errors.maxlength">
+                                * Se requieren maximo 20 caracteres.
+                            </div>
+                            <div *ngIf="celularEL.errors.minlength">
+                                * Se requieren minimo 12 caracteres.
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="leyenda">
+                    <p> (*) Campo obligatorio</p>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+    <div style="margin-top: 15px;" class="row">
+        <div class="col-xl-12">
+            <div *ngIf="cargaDeDato" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true"
+                    [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer" class="btnAñadirEL">
+        <button [disabled]="experienciaLaboralForm.invalid" (click)="anadirExperienciasLaborales()"
+            style="color: #ffffff;" type="button" class="btn btn-success bold" data-dismiss="modal"> {{textoDeBotonModal}}
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #eliminarEst>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">¿Estás seguro de eliminar?</h5>
+        <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <span> Tenga en consideración que la eliminación será permanente. </span>
+    </div>
+    <div class="modal-footer">
+        <button type="button" (click)="closeModal()" style="color: rgb(255, 255, 255);"
+            class="btn btn-danger bold">Cancelar</button>
+        <button type="button" (click)="eliminarEstudio()" class="btn btn-success bold">Confirmar</button>
+    </div>
+</ng-template>
+
+<ng-template #eliminarEL>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">¿Estás seguro de eliminar?</h5>
+        <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <span> Tenga en consideración que la eliminación será permanente. </span>
+    </div>
+    <div class="modal-footer">
+        <button type="button" (click)="closeModal()" style="color: rgb(255, 255, 255);"
+            class="btn btn-danger bold">Cancelar</button>
+        <button type="button" (click)="eliminarExperienciasLaborales()" class="btn btn-success bold">Confirmar</button>
+    </div>
+</ng-template>
+
+
+<ng-template #Redirrecionar>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Confirmar</h5>
+        <button type="button" class="close" (click)="redireccionarPagina()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <span> ¡Se ha registrado su postulación de manera exitosa! Redirigiendo a la interfaz de inicio de sesión.
+        </span>
+    </div>
+    <div class="modal-footer">
+        <button type="button" (click)="redireccionarPagina()" class="btn btn-success bold">Confirmar</button>
+    </div>
+</ng-template>

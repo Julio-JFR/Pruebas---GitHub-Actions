@@ -1,0 +1,128 @@
+<app-alerta-general 
+    *ngIf="mostrarAlerta"
+    [tipoAlerta]="tipoAlerta">
+    {{mensajeAlerta}}
+</app-alerta-general>
+
+<div class="d-flex" id="wrapper">
+    <app-postulante-sidebar id="sidebar"></app-postulante-sidebar>
+
+    <div class="container">
+        <div class="card" id="cardstyle">
+            <div class="container">
+                <div class="card-design">
+                    <div class="card border-top-0 border-left-0 border-right-0 border-bottom-0">
+                        <div class="d-flex justify-content-sm-between flex-sm-row flex-column  align-items-center">
+                            <h4 class="card-header" style="background: white;"><label>Datos jurídicos</label></h4>
+                            <button class="btn btn-sm btn-success " id="postularBoton" *ngIf="estado_postulacion!=2 && estado_postulacion!=3"
+                            (click)="open(contentPostulacion)" [disabled]="juridicoForm.invalid" >POSTULAR</button>
+                        </div>
+                        <div class="row" style="width: 100%;margin:0">
+                            <div class="col-6 col-lg-6 raya-separadora-a">
+                            </div>
+                            <div class="triangulo-equilatero-bottom-rigth"></div>
+                            <div class="col-12 raya-separadora-b"></div>
+                          </div>
+
+                        <div class="card-body pb-0" style="margin-top: -1rem;">
+                            <form *ngIf="juridicoForm"  [formGroup]="juridicoForm"  class="form-group" >
+                                <div class="row">
+                                    <div class="col-sm-12 col-lg-6 my-2">
+                                        <label for="nombreInput">RUC *</label>
+                                        <input type="text" id="sizeinput" name="nombreInput" class="form-control" formControlName="ruc">
+                                        <div *ngIf="ruc.invalid && (ruc.dirty || ruc.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                            <div *ngIf="ruc.errors.required">
+                                                * El ruc es requerido
+                                            </div>
+                                            <div *ngIf="ruc.errors.maxlength || ruc.errors.minlength">
+                                                * Se requieren máximo 11 caracteres
+                                            </div>
+                                            <div *ngIf="ruc.errors.pattern">
+                                                * Solo se permiten caracteres numéricos
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-lg-6 my-2">
+                                        <label for="dniInput">Razon social *</label>
+                                        <input type="text" id="sizeinput" name="dniInput" class="form-control" formControlName="razonSocial">
+                                        <div *ngIf="razonSocial.invalid && (razonSocial.dirty || razonSocial.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                            <div *ngIf="razonSocial.errors.required">
+                                                * La razón social es requerida
+                                            </div>
+                                            <div *ngIf="razonSocial.errors.maxlength">
+                                                * Se requieren máximo 100 caracteres
+                                            </div>
+                                            <div *ngIf="razonSocial.errors.pattern">
+                                                * Solo se permiten caracteres alfanuméricos
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12 col-lg-6 my-2">
+                                        <label for="nombreInput">Tipo de empresa *</label>
+                                        <select class="custom-select pl-5 pt-1" id="inlineFormCustomSelect"  formControlName="tipoEmpresa">
+                                            <option [ngValue]=null>Seleccionar</option>
+                                            <option *ngFor="let empresa of TIPOS_EMPRESA" [ngValue]="empresa.TIP_EMP_ID">{{empresa.TIP_EMP_DESCRIPCION}}</option>
+                                        </select>
+                                        <div *ngIf="tipoEmpresa.invalid && (tipoEmpresa.dirty || tipoEmpresa.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                                            <div *ngIf="tipoEmpresa.errors.required">
+                                                * El tipo de empresa es requerido
+                                            </div>
+                                        </div>
+                                    </div>
+                                  
+                                </div>
+                            </form>
+                            
+                            <div class="d-flex justify-content-center col-12 my-2">
+                                <button class="btn btn-sm btn-success float-right" id="actualizarButton" 
+                                    *ngIf="estado_postulacion!=2 && estado_postulacion!=3 && estado_postulacion!=null" 
+                                    [disabled]="juridicoForm.invalid"
+                                    (click)="actualizarPostulante()">ACTUALIZAR</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <app-postulante-sidebar id="sidebar2"></app-postulante-sidebar>
+</div>
+
+
+
+<!----------------- MODAL PARA CONFIRMAR LA POSTULACIÓN --------------------->
+<ng-template #contentPostulacion let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title"><em *ngIf="estado_postulacion == 3" class="fa fa-fw fa-exclamation-triangle"></em> {{(estado_postulacion==3)?'¡Alerta!':'Confirmación'}}</h4>
+        <button *ngIf="estado_postulacion != 3" type="button" class="close" aria-label="Close" (click)="d('Cross click');errorModal = false">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        {{(estado_postulacion==3)? 'Su cuenta ha sido bloqueada.':'¿Está seguro de volver a postular?'}}
+    </div>
+    <!---------------------- PROGESSBAR ---------------------->
+    <div class="row">
+        <div class="col-xl-12">
+            <div *ngIf="loadingModal" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+    </div>
+    <!-------------------------------------------------------->
+    <div class="modal-footer">
+        <!-- el id del estudio es 0 cuando se trata de agregar uno nuevo pero si es otro cualquier número, significa que actualizará un estudio -->
+        <div *ngIf="estado_postulacion != 3">
+            <button type="button" class="btn btn-sm btn-success" [disabled]="loadingModal" (click)="insertarPostulacion()">Confirmar</button>
+            
+            <button style="margin-left: 10px;" type="button" class="btn btn-sm btn-danger bold" [disabled]="loadingModal" (click)="d('Cross click')">Cancelar</button>
+        </div>
+        <div *ngIf="estado_postulacion == 3">
+            <button type="button" class="btn btn-sm btn-success" [disabled]="loadingModal" (click)="cerrarSesion()">Aceptar</button>
+        </div>
+    </div>
+</ng-template>

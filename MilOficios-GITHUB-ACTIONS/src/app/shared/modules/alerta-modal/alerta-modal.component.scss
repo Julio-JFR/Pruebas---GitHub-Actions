@@ -1,0 +1,27 @@
+.alert-success {
+    font-weight: bold;
+    color: #fbfbff;
+    background-color: #12b50c;
+    font-size: 15px;
+    width:100%;
+}
+
+.alert-danger {
+    font-weight: bold;
+    color: #fbfbff;
+    background-color: rgb(163, 23, 23);
+    font-size: 15px;
+    width:100%;
+}
+
+.alert-warning {
+    font-weight: bold;
+    color: #fbfbff;
+    background-color: #e7cb10;
+    font-size: 15px;
+    width:100%;
+}
+
+:host ::ng-deep  .close {
+    display: none!important;
+}

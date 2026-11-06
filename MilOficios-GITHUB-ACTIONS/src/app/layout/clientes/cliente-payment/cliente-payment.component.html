@@ -1,0 +1,319 @@
+<app-alerta-general 
+    *ngIf="mostrarAlerta"
+    [tipoAlerta]="tipoAlerta" >
+    {{mensaje}}
+</app-alerta-general>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div *ngIf="cargando" class="progress" style="height:.1rem">
+            <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true"
+                [animated]="true"></ngb-progressbar>
+        </div>
+    </div>
+</div>
+<div class="d-flex flex-column divGeneral">
+    <div class="d-flex" >
+        <app-cliente-sidebar id="sidebar"></app-cliente-sidebar>
+        <div class="container" style="margin-top: -1rem;margin-left: 12px;">
+            <div class="card" id="wrapper" style="margin-left: -7px;">
+                <div id="lineaIntermedia" class="barra-azul-lateral"></div>
+                <div class="container" id="containerTodo">
+                    <div class="card-design">
+                        <div class="card" style="border: 0;">
+                            <h5 class="card-header pb-0"><label>Configuración de tarjeta</label></h5>
+                            <triangular-bar></triangular-bar>
+                        </div>
+                        <div class="mt-4">
+                            <ng-container *ngIf="EXISTEN_METODOS_PAGO; else NO_EXISTE">
+                                <div class="payment-info">
+                                    <div class="card my-2" *ngFor="let TARJETA of tarjetas">
+                                        <h5 class="mx-3 mt-3"><label>Datos de la tarjeta</label>
+                                            <span style="float: right;">
+                                                <em ngbTooltip="Eliminar"
+                                                    class="fa fa-trash-o btn btn-sm btn-light float-right iconStyle"
+                                                    (click)="abrirModalEliminarTarjeta(TARJETA)"></em>
+                                            </span>
+                                            <span style="float: right;">
+                                                <em ngbTooltip="Editar"
+                                                    class="fa fa-pencil btn btn-sm btn-light float-right iconStyle mr-2"
+                                                    (click)="abrirModalActualizarTarjeta(TARJETA)"></em>
+                                            </span>
+                                        </h5>
+                                        <div class="card-body container">
+                                            <div class="row my-3">
+                                                <div class="col">
+                                                    <label><strong>Número: </strong> {{TARJETA.TAR_NUMERO}}</label>
+                                                </div>
+                                                <div class="col">
+                                                    <label><strong>Titular de Tarjeta: </strong> {{TARJETA.TAR_TITULAR}}</label>
+                                                </div>
+                                            </div>
+                                            <div class="row my-3">
+                                                <div class="col">
+                                                    <label><strong>CVV: </strong> {{TARJETA.TAR_CVV}}</label>
+                                                </div>
+                                                <div class="col">
+                                                    <label><strong>Tipo de Tarjeta: </strong> {{TARJETA.TIP_TAR_NOMBRE}}</label>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="row my-3">
+                                                <div class="col">
+                                                    <label><strong>Fecha de Vencimiento: </strong>
+                                                        {{TARJETA.TAR_MES}}/{{TARJETA.TAR_ANIO}}</label>
+                                                </div>
+                                            </div> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <ng-template #NO_EXISTE>
+                                <h5 class="my-3 text-center"> {{MENSAJE}} </h5>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <app-cliente-sidebar id="sidebar2"></app-cliente-sidebar>
+</div>
+
+
+
+
+<ng-template #modalTarjeta let-modal>
+
+    <div class="modal-header">
+        <h4 class="modal-title"><strong>Datos de la tarjeta</strong></h4>
+        <button type="button" class="close" (click)="cerrarModal(); mensajeModal = ''; mostrarAlertaModal = false "
+            aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="container">
+            
+            <app-alerta-modal *ngIf="mostrarAlertaModal" [tipoAlerta]="tipoAlerta">{{mensajeModal}}</app-alerta-modal>
+
+            <form [formGroup]="tarjetaForm">
+
+                <div class="row">
+                    <div class="col-sm-12 col-lg-6 my-2">
+                        <label for="nombreTitular">Nombre del titular *</label>
+                        <input type="text" id="nombreTitular" name="nombreTitular" class="form-control"
+                            formControlName="nameTitular">
+                        <div *ngIf="nameTitular.invalid && (nameTitular.dirty || nameTitular.touched)" class="my-1"
+                            style="color: rgb(197, 68, 68);">
+                            <div *ngIf="nameTitular.errors.required">
+                                * El campo es requerido.
+                            </div>
+                            <div *ngIf="nameTitular.errors.pattern">
+                                * Solo acepta caracteres alfabéticos.
+                            </div>
+                            <div *ngIf="nameTitular.errors.maxlength">
+                                * Se requiere máximo 100 caracteres.
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-sm-12 col-lg-6 my-2">
+                        <label for="cardNumber">Número de tarjeta *</label>
+                        <input type="text" id="cardNumber" name="cardNumber" class="form-control"
+                            formControlName="cardNumber">
+                        <div *ngIf="cardNumber.invalid && (cardNumber.dirty || cardNumber.touched)" class="my-1"
+                            style="color: rgb(197, 68, 68);">
+                            <div *ngIf="cardNumber.errors.required">
+                                * El campo es requerido.
+                            </div>
+                            <div *ngIf="cardNumber.errors.pattern">
+                                * Solo acepta caracteres númericos.
+                            </div>
+                            <div *ngIf="cardNumber.errors.minlength">
+                                * Se requiere mínimo 13 caracteres.
+                            </div>
+                            <div *ngIf="cardNumber.errors.maxlength">
+                                * Se requiere máximo 16 caracteres.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-lg-6 my-2">
+                        <label for="cvv">CVV *</label>
+                        <input type="text" id="cvv" name="cvv" class="form-control" formControlName="cvv">
+                        <div *ngIf="cvv.invalid && (cvv.dirty || cvv.touched)" class="my-1"
+                            style="color: rgb(197, 68, 68);">
+                            <div *ngIf="cvv.errors.pattern">
+                                * Solo acepta caracteres númericos.
+                            </div>
+                            <div *ngIf="cvv.errors.required">
+                                * El campo es requerido.
+                            </div>
+                            <div *ngIf="cvv.errors.minlength">
+                                * Se requiere mínimo 3 caracteres.
+                            </div>
+                            <div *ngIf="cvv.errors.maxlength">
+                                * Se requiere máximo 4 caracteres.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-lg-6 my-2">
+                        <label for="mesExpiracion">Mes de expiración *</label>
+                        <div id="lista-idiomas">
+                            <select name="mesExpiracion-select" id="mesExpiracion-select"
+                                class="form-control custom-select" formControlName="mesExpiracion">
+                                <option [ngValue]=null>Seleccionar</option>
+                                <option [ngValue]="MES.valor" *ngFor="let MES of MESES">{{MES.mes}}</option>
+                            </select>
+                        </div>
+                        <div *ngIf="mesExpiracion.invalid && (mesExpiracion.dirty || mesExpiracion.touched)"
+                            class="my-1" style="color: rgb(197, 68, 68);">
+                            <div *ngIf="mesExpiracion.errors.required">
+                                * El campo es requerido.
+                            </div>
+                            <div *ngIf="mesExpiracion.errors.maxlength">
+                                * Se requiere máximo 2 caracteres.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-lg-6 my-2">
+                        <label for="anioExpiracion">Año de expiración *</label>
+                        <select name="mesExpiracion-select" id="mesExpiracion-select" class="form-control custom-select"
+                            formControlName="anioExpiracion">
+                            <option [value]=null>Seleccionar</option>
+                            <option [value]="anio" *ngFor="let anio of anios">{{anio}}</option>
+                        </select>
+                        <div *ngIf="anioExpiracion.invalid && (anioExpiracion.dirty || anioExpiracion.touched)"
+                            class="my-1" style="color: rgb(197, 68, 68);">
+                            <div *ngIf="anioExpiracion.errors.required">
+                                * El campo es requerido.
+                            </div>
+                            <div *ngIf="anioExpiracion.errors.pattern">
+                                * Solo acepta caracteres númericos.
+                            </div>
+                            <div *ngIf="anioExpiracion.errors.minlength">
+                                * Se requiere mínimo 4 caracteres.
+                            </div>
+                            <div *ngIf="anioExpiracion.errors.maxlength">
+                                * Se requiere máximo 4 caracteres.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="correo">Correo</label>
+                        <input disabled type="text" id="correo" name="correo" class="form-control"
+                            formControlName="correo" (change)="inspeccionadorElementoCorreo(correo.value)">
+                        <div *ngIf="correo.invalid && (correo.dirty || correo.touched)" class="my-1"
+                            style="color: rgb(197, 68, 68);">
+                            <div *ngIf="correo.errors.required">
+                                * El campo es requerido
+                            </div>
+                            <div *ngIf="correo.errors.pattern">
+                                * El formato del correo no es válido
+                            </div>
+                            <div *ngIf="correo.errors.maxlength">
+                                * Se requieren máximo 60 caracteres
+                            </div>
+                        </div>
+                        <div *ngIf="(correo.dirty || correo.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                            <div *ngIf="correo.value != CORREO_USU">
+                                * El campo no puede ser modificado.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 my-4">
+                        <p> (*) Campo obligatorio</p>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+    <div style="margin-top: 15px;" class="row">
+        <div class="col-xl-12">
+            <div *ngIf="cargandoEnvioCulqi" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true"
+                    [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="ISACTUALIZAR == false; else act">
+        <div class="modal-footer" *ngIf="tarjetas.length<3  ">
+            <button type="button" style="color: #fff" class="btn btn-danger bold" (click)="modal.dismiss();
+               mostrarAlertaModal = false; mensajeModal = ' ' ">Cancelar</button>
+            <button (click)="verificarTarjeta()"
+                [disabled]="cargandoEnvioCulqi  || correoNoEdit==false" type="button"
+                style="color: #fff" class="btn btn-success bold">Aceptar</button>
+        </div>
+    </div>
+    <ng-template #act>
+        <div class="modal-footer" *ngIf="tarjetas.length<=3  ">
+            <button type="button" style="color: #fff" class="btn btn-danger bold" (click)="modal.dismiss();
+               mostrarAlertaModal = false; mensajeModal = ' ' ">Cancelar</button>
+            <button (click)="verificarTarjeta()"
+                [disabled]="cargandoEnvioCulqi || correoNoEdit==false" type="button"
+                style="color: #fff" class="btn btn-success bold">Aceptar</button>
+        </div>
+    </ng-template>
+
+</ng-template>
+
+
+
+<ng-template #modalEliminar let-modal>
+
+    <div class="modal-body mt-0 pt-0 pr-0">
+        <div class="modal-header">
+            <h4 class="modal-title"><label>Confirmación</label></h4>
+            <span type="button" class="close" (click)="cerrarModal();mostrarAlertaModal =false">&times;</span>
+        </div>
+        <app-alerta-modal *ngIf="mostrarAlertaModal" [tipoAlerta]="tipoAlerta">{{mensajeModal}}</app-alerta-modal>
+
+        <p>¿Estás seguro de querer eliminar la tarjeta?</p>
+    </div>
+    <div style="margin-top: 15px;" class="row">
+        <div class="col-xl-12">
+
+            <div *ngIf="cargandoModal" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true"
+                    [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button [disabled]="cargandoModal" type="button" style="color: #fff" class="btn btn-danger bold"
+            (click)="cerrarModal(); mostrarAlertaModal = false">Cancelar</button>
+        <button [disabled]="cargandoModal" (click)="eliminar()" type="button" style="color: #fff"
+            class="btn btn-success bold">Confirmar</button>
+    </div>
+</ng-template>
+
+
+<ng-template #modalActualizar let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title"><label>Confirmación</label></h4>
+        <span type="button" class="close" (click)="cerrarModal()">&times;</span>
+    </div>
+    <div class="modal-body">
+        <p>¿Estás seguro de querer actualizar con los datos ingresados?</p>
+    </div>
+    <div style="margin-top: 15px;" class="row">
+        <div class="col-xl-12">
+            <div *ngIf="cargandoModal" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true"
+                    [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button [disabled]="cargandoModal" type="button" style="color: #fff" class="btn btn-danger bold"
+            (click)="cerrarModal()">Cancelar</button>
+        <button [disabled]="cargandoModal" (click)="verificarTarjeta()" type="button" style="color: #fff"
+            class="btn btn-success bold">Confirmar</button>
+    </div>
+</ng-template>

@@ -1,0 +1,298 @@
+<!-- ALERTAS -->
+<app-alerta-general 
+    *ngIf="alertaGeneral || alertaPostulacion"
+    [tipoAlerta]="tipoAlerta">
+    {{mensajeAlerta}}
+</app-alerta-general>
+<div *ngIf="!alertaGeneral" class="position-absolute col-12 col-md-12 col-xl-12 mr-3 d-flex flex-row-reverse">
+    <ngb-alert style="margin-top: -12.5px;" *ngIf="errorCuenta" type="danger" (closed)="errorCuenta = false">{{mensajeErrorCuenta}}</ngb-alert>
+    <ngb-alert style="margin-top: -12.5px;" *ngIf="errorPost" type="danger" (closed)="errorPost = false">{{mensajeErrorPostulante}}</ngb-alert>
+    <ngb-alert style="margin-top: -12.5px;" *ngIf="errorCv" type="danger" (closed)="errorCv = false">{{mensajeErrorCv}}</ngb-alert>
+    <ngb-alert style="margin-top: -12.5px;" *ngIf="errorEstudio" type="danger" (closed)="errorEstudio = false">{{mensajeErrorEstudio}}</ngb-alert>
+    <ngb-alert style="margin-top: -12.5px;" *ngIf="errorExperiencia" type="danger" (closed)="errorExperiencia = false">{{mensajeErrorExperiencia}}</ngb-alert>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div *ngIf="loadingCuenta" class="progress" style="height:.1rem">
+            <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+        </div>
+    </div>
+</div>
+<div class="d-flex" id="wrapper">
+    <app-postulante-sidebar id="sidebar"></app-postulante-sidebar>  
+
+    <div class="container">
+        <div class="card" id="contentAll">
+            <div class="d-flex justify-content-sm-between flex-sm-row flex-column  align-items-center">
+                <div class="d-flex flex-row align-items-center">
+                    <h5 class="card-header" style="background: transparent; margin-left: 15px;padding-top: 20px;"><label>Datos Académicos</label></h5>
+                    <span *ngIf="estado_postulacion!=2 && estado_postulacion!=null" style="font-size: 28px; cursor: pointer;" ngbTooltip="Agregar" (click)="open(content);nuevoEstudio();" class="fa fa-fw fa-plus-circle fa-lg spanAccion pull-right" [ngClass]="{ disabledSpan: loadingEst }"></span>
+                </div>
+
+                <button class="btn btn-sm btn-success " id="postularBoton" *ngIf="estado_postulacion!=2 && estado_postulacion!=3 && estado_postulacion!=null"
+                (click)="open(contentPostulacion)" >POSTULAR</button>
+            </div>
+            
+            <div  style="overflow: hidden;">
+                <triangular-bar [isProfile]="true"></triangular-bar>
+            </div>
+            
+            <div class="row"  *ngIf="!loadingPost">
+                <div class="col-12">
+                    <div *ngIf="loadingEst" class="progress" style="height:.1rem">
+                        <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+                    </div>
+                </div>
+            </div>
+            <div class="d-lg-flex justify-content-center container">
+                <!-------------- ProgressBar ----------->
+                <!-------------- TABLA DE ESTUDIOS ------------------>
+                <div  *ngIf="!loadingPost" class="mt-4 table-responsive-sm table-responsive-md table-responsive-lg table-responsive-xl" style="margin-bottom: 3rem; text-align: center;">
+                    <table class="table table-hover">
+                        <thead>
+                            <!-- *ngIf="estado_postulacion!=2 && estado_postulacion!=null"  -->
+                            <tr>
+                                <th *ngIf="estado_postulacion!=2 && estado_postulacion!=null" scope="col" class="text-center table-border-left" style="min-width: 10rem;">Acciones</th>
+                                <th scope="col" [ngClass]="{'table-border-left':estado_postulacion==2 || estado_postulacion==null}" class="text-center" style="min-width: 10rem;">Tipo de estudio</th>
+                                <th scope="col" class="text-center" style="min-width: 10rem;">Institución</th>
+                                <th scope="col" class="text-center" style="min-width: 10rem;">Descripción</th>
+                                <th scope="col" class="text-center" style="min-width: 10rem;">Fecha de inicio</th>
+                                <th scope="col" class="table-border-rigth" style="min-width: 10rem;">Fecha de fin</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngIf="estudios?.length===0">
+                                <td colspan="6"><span>No hay estudios para mostrar</span></td>
+                            </tr>
+                            <tr *ngFor="let estudio of estudios ; let i = index">
+                                <td *ngIf="estado_postulacion!=2 && estado_postulacion!=null" class="detail-button">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-6" id="centradoflex">
+                                                <span ngbTooltip="Editar" class="fa fa-fw fa-lg fa-pencil spanAccion" id="iconstyle" style="cursor: pointer;" (click)="open(content);obtenerEstudioActual(estudio)" [ngClass]="{ disabledSpan: loadingEst }"></span>
+                                            </div>
+                                            <div class="col-6" id="centradoflex">
+                                                <span ngbTooltip="Eliminar" class="fa fa-fw fa-lg fa-trash-o spanAccion" id="iconstyle" style="cursor: pointer;" (click)="open(contentDelete);obtenerIdEstudio(estudio.EST_ID);eliminacionEstudio = true" [ngClass]="{ disabledSpan: loadingEst }"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">{{estudio.EST_TIPO}}</td>
+                                <td>{{estudio.EST_INSTITUCION}}</td>
+                                <td class="text-center">{{estudio.EST_DESCRIPCION}}</td>
+                                <td>{{estudio.EST_FECH_INI | date: 'dd/MM/yyyy'}}</td>
+                                <td>{{(estudio.EST_FECH_FIN == null)? 'En curso':estudio.EST_FECH_FIN | date: 'dd/MM/yyyy'}}</td>
+                            </tr>
+                            <tr *ngIf="estudios?.length > 0">
+                                <td colspan="6"><strong class="pull-right" style="color: #3e11bc;" >Total: {{estudios.length}} {{estudios.length ==1 ? 'elemento' : 'elementos'}}</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+              
+            </div>
+            <br><br>
+        </div>
+    </div>
+</div>
+
+<div>
+    <app-postulante-sidebar id="sidebar2"></app-postulante-sidebar>  
+</div>
+  
+
+
+<!----------------- MODAL PARA CONFIRMAR LA POSTULACIÓN --------------------->
+<ng-template #contentPostulacion let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title"><em *ngIf="estado_postulacion == 3" class="fa fa-fw fa-exclamation-triangle"></em> {{(estado_postulacion==3)?'¡Alerta!':'Confirmación'}}</h4>
+        <button *ngIf="estado_postulacion != 3" type="button" class="close" aria-label="Close" (click)="d('Cross click');errorModal = false">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        {{(estado_postulacion==3)? 'Su cuenta ha sido bloqueada.':'¿Está seguro de volver a postular?'}}
+    </div>
+    <!---------------------- PROGESSBAR ---------------------->
+    <div class="row">
+        <div class="col-xl-12">
+            <div *ngIf="loadingModal" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+    </div>
+    <!-------------------------------------------------------->
+    <div class="modal-footer">
+        <!-- el id del estudio es 0 cuando se trata de agregar uno nuevo pero si es otro cualquier número, significa que actualizará un estudio -->
+        <div *ngIf="estado_postulacion != 3">
+            <button type="button" class="btn btn-sm btn-success" [disabled]="loadingModal" (click)="insertarPostulacion()">Confirmar</button>
+            
+            <button style="margin-left: 10px;" type="button" class="btn btn-sm btn-danger bold" [disabled]="loadingModal" (click)="d('Cross click')">Cancelar</button>
+        </div>
+        <div *ngIf="estado_postulacion == 3">
+            <button type="button" class="btn btn-sm btn-success" [disabled]="loadingModal" (click)="cerrarSesion()">Aceptar</button>
+        </div>
+    </div>
+</ng-template>
+
+<!----------------- MODAL PARA CONFIRMAR LA ELIMINACION DE UN REGISTRO --------------------->
+<ng-template #contentDelete let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">¿Está seguro?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click');errorModal = false">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <app-alerta-modal *ngIf="errorModal" [tipoAlerta]="'danger'"><em class="fa fa-fw fa-exclamation-triangle"></em>{{mensajeModal}}</app-alerta-modal>
+
+        ¿Desea eliminar el registro actual?
+    </div>
+    <!---------------------- PROGESSBAR ---------------------->
+    <div class="row">
+        <div class="col-xl-12">
+            <div *ngIf="loadingModal" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+    </div>
+    <!-------------------------------------------------------->
+    <div class="modal-footer">
+        <!-- el id del estudio es 0 cuando se trata de agregar uno nuevo pero si es otro cualquier número, significa que actualizará un estudio -->
+        <button type="button" class="btn btn-sm btn-success bold" [disabled]="loadingModal" (click)="eliminarEstudio()">Confirmar</button>
+        <button type="button" class="btn btn-sm btn-danger bold" [disabled]="loadingModal" (click)="d('Cross click')">Cancelar</button>
+    </div>
+</ng-template>
+
+
+<!----------------- MODAL PARA CONFIRMAR LA POSTULACIÓN --------------------->
+<ng-template #contentPostulacion let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title"><em *ngIf="estado_postulacion == 3" class="fa fa-fw fa-exclamation-triangle"></em> {{(estado_postulacion==3)?'¡Alerta!':'Confirmación'}}</h4>
+        <button *ngIf="estado_postulacion != 3" type="button" class="close" aria-label="Close" (click)="d('Cross click');errorModal = false">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        {{(estado_postulacion==3)? 'Su cuenta ha sido bloqueada.':'¿Está seguro de volver a postular?'}}
+    </div>
+    <!---------------------- PROGESSBAR ---------------------->
+    <div class="row">
+        <div class="col-xl-12">
+            <div *ngIf="loadingModal" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+    </div>
+    <!-------------------------------------------------------->
+    <div class="modal-footer">
+        <!-- el id del estudio es 0 cuando se trata de agregar uno nuevo pero si es otro cualquier número, significa que actualizará un estudio -->
+        <div *ngIf="estado_postulacion != 3">
+            <button type="button" class="btn btn-sm btn-success" [disabled]="loadingModal" (click)="insertarPostulacion()">Confirmar</button>
+            
+            <button style="margin-left: 10px;" type="button" class="btn btn-sm btn-danger bold" [disabled]="loadingModal" (click)="d('Cross click')">Cancelar</button>
+        </div>
+        <div *ngIf="estado_postulacion == 3">
+            <button type="button" class="btn btn-sm btn-success" [disabled]="loadingModal" (click)="cerrarSesion()">Aceptar</button>
+        </div>
+    </div>
+</ng-template>
+
+<!----------------- MODAL PARA EDITAR Y AGREGAR ESTUDIOS --------------------->
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <label class="modal-title" id="modal-basic-title" style="font-size: 19px;">Detalles Académicos</label>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click');errorModal = false">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <app-alerta-modal *ngIf="errorModal" [tipoAlerta]="'danger'"><em class="fa fa-fw fa-exclamation-triangle"></em>{{mensajeModal}}</app-alerta-modal>
+        <form [formGroup]="estudioForm">
+            <div class="row">
+                <div class="col-12 col-sm-6">
+                    <label for="">Tipo de estudio *</label>
+                    <input type="text" class="form-control form-control-sm" formControlName="est_tipo">
+                    <div *ngIf="est_tipo.invalid && (est_tipo.dirty || est_tipo.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                        <div *ngIf="est_tipo.errors.required">
+                            * El tipo de estudio es requerido
+                        </div>
+                        <div *ngIf="est_tipo.errors.maxlength">
+                            * Se requieren máximo 20 caracteres
+                        </div>
+                        <div *ngIf="est_tipo.errors.pattern">
+                            * Solo se permiten caracteres alfabéticos
+                        </div>
+                    </div>
+                    <br>
+                </div>
+                <div class="col-12 col-sm-6">
+                    <label for="">Institución *</label>
+                    <input type="text" class="form-control form-control-sm" formControlName="est_institucion">
+                    <div *ngIf="est_institucion.invalid && (est_institucion.dirty || est_institucion.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                        <div *ngIf="est_institucion.errors.required">
+                            * El nombre de la institución es requerido
+                        </div>
+                        <div *ngIf="est_institucion.errors.maxlength">
+                            * Se requieren máximo 20 caracteres
+                        </div>
+                        <div *ngIf="est_institucion.errors.pattern">
+                            * Solo se permiten caracteres alfabéticos
+                        </div>
+                    </div>
+                    <br>
+                </div>
+                <div class="col-12">
+                    <label for="">Descripción *</label>
+                    <input type="text" class="form-control form-control-sm" formControlName="est_descripcion">
+                    <div *ngIf="est_descripcion.invalid && (est_descripcion.dirty || est_descripcion.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                        <div *ngIf="est_descripcion.errors.required">
+                            * La descripción es requerida
+                        </div>
+                        <div *ngIf="est_descripcion.errors.maxlength">
+                            * Se requieren máximo 60 caracteres
+                        </div>
+                        <div *ngIf="est_descripcion.errors.pattern">
+                            * Solo se permiten caracteres alfanuméricos
+                        </div>
+                    </div>
+                    <br>
+                </div>
+                <div class="col-12 col-sm-6">
+                    <label for="">Fecha de Inicio *</label>
+                    <input type="date" [max]="getToday()" [ngClass]="{'colorGris': opacarDateFechaInicioEstudio }" (change)="cambiarDeStyleDateInicioEstudio()" class="form-control form-control-sm" formControlName="est_fech_ini">
+                    <div *ngIf="est_fech_ini.invalid && (est_fech_ini.dirty || est_fech_ini.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                        <div *ngIf="est_fech_ini.errors.required">
+                            * La fecha de inicio es requerida
+                        </div>
+                    </div>
+                    <br>
+                </div>
+                <div class="col-12 col-sm-6">
+                    <label for="">Fecha de Fin *</label>
+                    <label class="pull-right" ><input type="checkbox" (change)="procesoDatosCheckEstudio()" [checked]="isCheckEstudio"><small>  En curso</small></label>
+                    <input type="date" [max]="getToday()" [ngClass]="{'colorGris': opacarDateFechaFinEstudio }" (change)="cambiarDeStyleDateFinEstudio()" class="form-control form-control-sm" formControlName="est_fech_fin">
+                    <div *ngIf="est_fech_fin.invalid && (est_fech_fin.dirty || est_fech_fin.touched)" class="my-1" style="color: rgb(197, 68, 68);">
+                        <div *ngIf="est_fech_fin.errors.required">
+                            * La fecha de fin es requerida
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!---------------------- PROGESSBAR ---------------------->
+    <div class="row">
+        <div class="col-xl-12">
+            <div *ngIf="loadingModal" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+    </div>
+    <!-------------------------------------------------------->
+    <div class="modal-footer">
+        <!-- el id del estudio es 0 cuando se trata de agregar uno nuevo pero si es otro cualquier número, significa que actualizará un estudio -->
+        <button type="button" [disabled]="estudioForm.invalid || loadingModal" class="btn btn-sm btn-success" (click)="agregarActualizar()">{{(estudio.EST_ID==0)?'Agregar':'Actualizar'}}</button>
+    </div>
+</ng-template>

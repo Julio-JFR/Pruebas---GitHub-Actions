@@ -1,0 +1,27 @@
+<div>
+    <div class="modal-header" style="text-align: center;align-items: center;">
+        <h6 class="modal-title col-11 text-center" id="titulomodalcard">
+            <label id="labeldisable">Políticas de seguridad</label>
+        </h6>
+        <!-- <button  type="button" class="close" id="btnclose" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>     -->
+    </div>
+    <div class="modal-body row mx-4" style="display: flex; flex-direction: column;">
+        <div class="">
+            <input type="checkbox" class="form-check-input mb-1" [(ngModel)]="checkCookies">
+            <span>Acepto la <label style="cursor: pointer;" (click)="abrirVentana(1)">Política de cookies</label></span>
+        </div>
+        <div class="">
+            <input type="checkbox" class="form-check-input mb-1" [(ngModel)]="checkPrivacidad">
+            <span>Acepto la <label style="cursor: pointer;" (click)="abrirVentana(2)">Política de privacidad y uso de datos</label></span>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="row justify-content-center" style="margin:0px"> 
+            <button type="button" style="padding-left: auto;padding-right: auto;" 
+            class="btn btn-success bold" 
+            [disabled]="!checkCookies || !checkPrivacidad" (click)="closeModal()">Confirmar</button>
+        </div>
+    </div>
+</div>

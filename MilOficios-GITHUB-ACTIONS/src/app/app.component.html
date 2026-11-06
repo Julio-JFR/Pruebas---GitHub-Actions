@@ -1,0 +1,10 @@
+<router-outlet>
+</router-outlet>
+
+<div *ngIf="loadingS" class="logoResponsive">      
+  <img 
+      class="animate__animated rotarLogo"  [ngStyle]="{'animation-name': animation}" src="../assets/images/LOGO_01.png" alt="IMG">
+</div>
+<div *ngIf="loadingD" class="fixed-top progress" style="position: absolute; height:.1rem">
+  <ngb-progressbar class="indeterminate" type="secondary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+</div>

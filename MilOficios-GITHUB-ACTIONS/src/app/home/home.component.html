@@ -1,0 +1,290 @@
+<div style="max-width: auto;" style="position: relative;">
+	<div class="content-background" *ngIf="!checkCookies"></div>
+	<div class="modalCookies" *ngIf="!checkCookies">
+		<div class="container-cookies">
+			<div class="texto-cookies">
+				<h4 style="margin-bottom: 0;">
+					<label>Política de cookies</label>
+				</h4>
+				<p class="parrafo-cookies">
+					100Oficios emplea cookies tanto internas como externas con el 
+					objetivo de proporcionarte la óptima experiencia de navegación y para fines estadísticos. Si decides continuar navegando con la configuración actual,
+					entenderemos que aceptas nuestra política de cookies.
+					<br>
+					<span><label style="cursor: pointer;text-decoration: underline;" (click)="abrirVentana()">Más información</label></span>
+				</p>
+			</div>
+			<div style="display: flex;" class="my-2">
+				<button type="submit" class="btn btn-success login-button" (click)="aceptarCookies()"><strong>Aceptar cookies</strong></button>
+			</div>
+		</div>
+	</div>
+	<header>
+		<app-navbar></app-navbar>
+		<br><br>
+		<div class="tagline"> 
+			<div class="custom-margin">
+				<span>
+					<label>{{'Bienvenido'}},</label> nos alegra tenerte aquí!
+				</span>
+				<strong style="text-align: justify;">
+					En 100Oficios buscamos conectar a los <em><label class="m-0 p-0">clientes</label></em> 
+					que necesitan resolver alguna tarea cotidiana, con los mejores <em><label class="m-0 p-0">especialistas</label></em> para resolver 
+					estas tareas. Sé parte de nuestro propósito como cliente o especialista y ayúdanos a que muchas personas puedan encontrar soluciones de manera más 
+					rápida, acertada y segura.
+				</strong>
+			</div>
+		</div>
+		<br><br>
+		<div class="row_img">
+			<div class="row_img__1" (click)="redirectToLogin('/clientes/login')">
+				<div class="txt-cliente" id="textimg">CLIENTE</div>
+				<img src="../../../assets/images/login-cliente.png" alt="img-clientes" />
+			</div>
+
+			<div class="row_img__2" (click)="redirectToLogin('/especialistas/login')" id="img2tam">
+				<div class="txt-especialista" id="textimg">ESPECIALISTA</div>
+				<img src="../../../assets/images/homeImages/IMG HOME ESPECIALISTA.png" alt="img-especialista" />
+			</div>
+
+		</div>
+
+	</header>
+	<br><br><br>
+	<!--  raya extraña -->
+	<div class="row" style="width: 100%;margin:0">
+		<div class="col-6 col-md-3 raya-separadora-a">
+		</div>
+		<div class="triangulo-equilatero-bottom-left"></div>
+		<div class="w-100"></div>
+		<div class="col-12 raya-separadora-b">
+		</div>
+	</div>
+
+	<main>
+		<div class="container-fluid func-container">
+			<div class="row justify-content-center">
+				<div class="col-12 col-md-10"><br><br>
+					<h1>Funcionalidades como Cliente</h1>
+					<br><br><br>
+					<div class="row">
+						<img class="col-8 col-lg-4" src="../../../assets/images/homeImages/IMG-CLIENTE-2.jpg" alt="img-clientes"/>
+						<span class="col-sm-12 col-lg-6 offset-lg-2 my-4">
+							<p class="texto-a" style="text-align: justify;">
+								Busca, elige y solicita servicios a domicilio o de manera remota, para atender tus principales necesidades. 
+								Aquí podrás encontrar muchos especialistas dispuestos a ayudarte con las tareas cotidianas más importantes para ti.
+							</p>
+						</span>
+					</div>
+				</div>
+			</div><br>
+			<div class="row justify-content-center">
+				<div class="col-12 col-md-10">
+					<div class="row">
+						<img class="col-8  col-lg-4 offset-lg-2 small-screen-img cuadros-imagenes-funciones" src="../../../assets/images/homeImages/IMG-CLIENTE-1.jpg" alt="img-clientes"/>
+						<span class="col-sm-12 col-lg-6 my-4"> 
+							<p class="texto-a" style="text-align: justify;">
+								Conoce y elige a tu especialista, contrátalo, evalúa su servicio y recomienda. Administra tu cuenta, revisa tu historial, consulta tus promociones vigentes y tus datos de pago guardados. 
+							</p>
+						</span>
+						<img class="col-8  col-lg-4 offset-lg-2 big-screen-img cuadros-imagenes-funciones" src="../../../assets/images/homeImages/IMG-CLIENTE-1.jpg" alt="img-clientes"/>
+					</div>
+				</div>
+			</div>
+			<br><br><br><br>
+			<div class="row justify-content-center" style="background-color:#3E11BC ;">
+				<div class="col-12">
+					<br><br>
+					<div class="row"><br><br>
+						<div class="col-12"><br><br>
+							<div class="row justify-content-center" style="height: 1.3rem;background-color:#24DEEC ;position: relative;">
+								<div class="col-10 col-lg-4 text-center cuadro-titulo-a" >
+									
+									<h2 class="titulos-funciones text-center"><strong>¿Cómo pedir servicios?</strong></h2>
+								</div>
+							</div>
+						</div>
+					</div><br><br><br><br><br>
+					<div class="row justify-content-center">
+						<div class="col-12 col-lg-10">
+							<div class="row justify-content-center">
+								<div *ngFor="let card of cardClienteContainer" class="card card-info px-4 col-10 col-sm-4 col-lg-3" id="sizecardCliente">
+									<img class="card-img-top img-thumbnail" src="{{card.img}}" alt="Imagen 1" (click)="open(modalImagen,card.img,card.header)">
+									<div class="p-2">
+										<p class="card-text" id="textCardstyle">{{card.text}}</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<br><br>
+				</div>
+			</div>
+		</div>
+<br><br><br><br><br>
+		<!--  raya extraña -->
+		<div class="row" style="width: 100%;margin:0">
+			<div class="col-6 col-md-3 raya-separadora-a" >
+			</div>
+			<div class="triangulo-equilatero-bottom-left"></div>
+			<div class="w-100"></div>
+			<div class="col-12 raya-separadora-b" >
+			</div>
+		</div><br>
+		
+		<div class="container-fluid func-container">
+			<div class="row justify-content-center">
+				<div class="col-12 col-md-10"><br> 
+					<h1>Funcionalidades como Especialista</h1>
+					<br><br><br>
+					<div class="row">
+						<img class="col-8 col-lg-4" src="../../../assets/images/homeImages/IMG-ESPEC-1.jpg" alt="img-clientes"/>
+						<span class="col-sm-12 col-lg-6 offset-lg-2 my-4">
+							<p class="texto-a" style="text-align: justify;">
+								Postula con nosotros y sé uno de nuestros especialistas. Regístrate para que 
+								nuestro equipo pueda evaluarte y aprobar tu admisión. Después de ser evaluado 
+								recibirás una confirmación de parte nuestra.
+							</p>
+						</span>
+					</div>
+				</div>
+			</div><br>
+			<div class="row justify-content-center">
+				<div class="col-12 col-md-10">
+					<div class="row">
+						<img class="col-8  col-lg-4 offset-lg-2 small-screen-img" src="../../../assets/images/homeImages/IMG-ESPEC-2.jpg" alt="img-clientes"/>
+						<span class="col-sm-12 col-lg-6 my-4" style="text-align: justify;"> 
+							<p class="texto-a">
+								Como especialista, recibe solicitudes de servicio cercanas a ti de 
+								acuerdo con tu especialidad y disponibilidad. Elige los servicios que deseas 
+								realizar. Realiza los servicios y califica a tus clientes.Administra tu cuenta, revisa tu historial de trabajos 
+								realizados, consulta el estado de tus pagos y otros.
+							</p>
+						</span>
+						<img class="col-lg-4 offset-lg-2 big-screen-img" src="../../../assets/images/homeImages/IMG-ESPEC-2.jpg" alt="img-clientes"/>
+					</div>
+				</div>
+			</div>
+			<br><br><br><br>
+			<div class="row justify-content-center" style="background-color:#3E11BC ;">
+				<div class="col-12">
+					<br><br>
+					<div class="row"><br><br>
+						<div class="col-12"><br><br>
+							<div class="row justify-content-center" style="height: 1.5rem;background-color:#24DEEC ;position: relative;">
+								<div class="col-10 col-lg-4 cuadro-titulo-a ">
+									<h2 class="titulos-funciones text-center"><strong>¿Cómo puedo postular?</strong></h2></div>
+							</div>
+						</div>
+					</div><br><br><br><br><br>
+					<div class="row justify-content-center">
+						<div class="col-12 col-md-10">
+							<div class="row justify-content-center">
+								<div *ngFor="let card of cardEspecialistaContainer" class="card card-info col-10 col-sm-4 col-lg-3" id="sizecardEspecialista">
+									<img class="card-img-topEsp img-thumbnail" src="{{card.img}}" alt="Imagen 1"  (click)="open(modalImagen,card.img,card.header)">
+									<div class="card-body m-0 px-1">
+										<p class="card-text" id="">{{card.text}}</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<br><br>
+				</div>
+			</div>
+			<br>
+			<div class="d-flex flex-row gap-3 justify-content-center" style="background-color: #0F003B;">
+				
+				<div class="col-12 col-md-9">
+					<div class="row justify-content-left">
+						<div class="col-12 col-md-12 col-xl-6">
+							<h1 style="color: white;" class="titulo-contrato"><strong>CONTRATO</strong></h1>
+							<p class="parrafo-contrato" style="color: rgb(241, 238, 238);font-size: large;" id="textCardstyle">
+								Al registrarse, nuestros usuarios declaran estar de acuerdo con los
+								términos y condiciones de nuestro servicio. Las personas que se registran en la plataforma 
+								se comprometen a hacerlo de manera exacta, precisa y verdadera y a mantener sus datos siempre
+								actualizados. Para ver más sobre términos y condiciones 
+								<strong id="clickAqui">
+									<a class="vinculo" rel="noopener" href="https://miloficiosapidev.muchiktec.com/archivos/PROTOTIPO.pdf" target="_blank"> click aquí</a>
+								</strong>
+							</p>
+						</div>
+						<div class="col-xl-3 text-center col-12">
+							<img 
+								class="card-img-contrato " 
+								[src]="'../../assets/images/homeImages/contrato.png'"
+								alt="Imagen 1" >							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		
+		<div class="container func-container">
+			
+		</div>
+	</main>
+	<br>
+	<div class="row" style="background-color:#24DEEC ;width: 100%;margin:0">
+		<br>
+	</div>
+	<footer>
+		<div class=" row" style="width: 100%;">
+			<div class="col-xl-6 contact-text">
+				<div class="row recuadro-img">
+					<div class="col-12 col-xl-11">
+						<img src="../../../assets/images/LOGO_01.png" class="imagen-footer" alt="logo">
+						<br><br><br><br>
+						<p style="font-size: large;" id="textCardstyle">
+							<b>Responsabilidad:</b> 100Oficios no es responsable por la calidad de los servicios brindados ni por las acciones de sus usuarios (clientes o especialistas). 100Oficios colaborará con los datos que se encuentran a su alcance en cualquier requerimiento de las autoridades competentes
+						</p>
+					</div>
+					<div class="col-12 col-xl-1">
+						<hr class="hr-footer">
+					</div>
+				</div>
+
+			</div>
+			<div class="col-xl-3 contact-data">
+				<div class="row">
+					<div class="col-12 col-xl-11">
+						<h2 class="letra-footer"><strong>Enlaces</strong></h2>
+						<div class="row pl-2 mt-3">
+							<i class="col-2 fa fa-facebook-official" style="cursor: pointer;"></i>
+							<i class="col-2 fa fa-twitter" style="cursor: pointer;"></i>
+							<i class="col-2 fa fa-instagram" style="cursor: pointer;"></i>
+						</div>
+						<div class="row">
+							<div class="col-12 col-xl-11">
+
+							</div>
+						</div>
+					</div>
+					<div class="col-12 col-xl-1">
+						<hr class="hr-footer">
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+	</footer>
+</div>
+
+<ng-template #modalImagen let-modal>
+	<div class="modal-header" style="text-align: center;align-items: center;">
+        <h5 class="modal-title col-lg-12 col-11 text-center" id="titulomodalcard"><label>{{tituloUrl}}</label></h5>
+        <button type="button" class="close" id="btnclose" (click)="modal.dismiss()" aria-label="Close">
+        <span aria-hidden="false">&times;</span>
+        </button>
+    </div>
+
+	<div class="modal-body text-center">
+		<img class="card-img-modal img-thumbnail" [src]="imagenUrl" alt="Imagen 1">
+	</div>
+</ng-template>
+
+<ng-template #modalCockies>
+
+</ng-template>

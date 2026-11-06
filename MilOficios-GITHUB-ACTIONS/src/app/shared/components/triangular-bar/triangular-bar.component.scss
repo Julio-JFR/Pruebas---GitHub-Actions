@@ -1,0 +1,41 @@
+
+.raya-separadora-a {
+    background-color: #24deec;
+    height: 1rem;
+    margin-left: 12px;
+}
+
+.raya-separadora-b {
+    background-color: #24deec;
+    margin-top: -1px;
+    max-width: 98%;
+    height: 0.4rem;
+    margin-left: 12px;
+
+    max-width: 100%; /* El ancho máximo es el 100% del contenedor padre */
+    max-height: 100%; /* Opcional: limitar el alto */
+    box-sizing: border-box; /* Asegura que padding y border no desborden el contenedor */
+}
+
+.col-6-col-lg-6-raya-separadora-a {
+    flex: 0 0 55%;
+    max-width: 55%;
+}
+
+.triangulo-equilatero-bottom-rigth {
+    width: 0;
+    height: 0;
+    border-right: 8px solid transparent;
+    border-left: 8px solid #24deec;
+    border-bottom: 16px solid #24deec;
+}
+
+.contenedor-barraProfile{
+    padding-left: 1.9rem;
+    margin-right: 2rem ;
+}
+
+
+.contenedor-barra{
+    margin-right: 1rem ;
+}

@@ -1,0 +1,1682 @@
+<app-alerta-general 
+    *ngIf="mostrarAlerta"
+    [tipoAlerta]="tipoAlerta">
+    {{mensaje}}
+</app-alerta-general>
+
+
+<app-alerta-general 
+      *ngIf="mostrarAlertaNotification"
+      (enviarEvento) = "mostrarAlertaNotification = false"
+      [tipoAlerta]="tipoAlertaNotification">
+      {{mensajeNotification}}
+  </app-alerta-general>
+
+<app-page-header [heading]="'Mis Solicitudes'"></app-page-header>
+
+
+
+<div class="col-xl-12">
+    <div *ngIf="carga || cargandoImagen" class="progress" style="height:.1rem">
+      <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+    </div>
+</div><br>
+
+<div class="row contenedor-barra">
+    <div class="col-6 col-md-3 raya-separadora-a" >
+    </div>
+    <div class="triangulo-equilatero-bottom-rigth"></div>
+    <div class="col-12 col-md-12 raya-separadora-b" >
+    </div>
+</div>
+
+<br>
+
+<ul ngbNav #nav="ngbNav" [(activeId)]="active" (navChange)="onNavChange()" class="nav-tabs nav-fill flex-row" id="ulmargenes">
+    <li [ngbNavItem]="1" id="listyle">
+      <a ngbNavLink class="botonModal" 
+      ngbTooltip="Solicitudes realizadas por el cliente"
+      placement="top">Solicitudes</a>
+        <ng-template ngbNavContent>   
+<!-- +++++++++++++++++++++++++++++++++++++++++++++ Seccion donde se muestran las solicitudes ++++++++++++++++++++++++++++++++++++ -->
+            <br>
+            <div class="container-fluid justify-content-center">
+                <div class="row">
+                    
+                </div>
+            </div>
+            <br>
+<!-- +++++++++++++++++++++++++++++++++++++++++++++ Card Para solicitudes ++++++++++++++++++++++++++++++++++++ -->
+            <div *ngIf= "haySolicitudes; else sNoData" class="row"  id="rowcentrado">
+                <ng-container *ngIf="loading">
+                    <div *ngFor="let solicitud of solicitudes | slice: (page-1) * pageSize : page * pageSize async" 
+                        (click)="masDetallesSol(solicitud);"  
+                        class="card cardInt col-12 col-md-7 col-lg-5 col-xl-3">
+                        <div class="card-body" id="sizestyle"  ngbTooltip="Ver detalle"
+                        tooltipClass="tooltip"
+                        placement="left">
+                            <!-- <span style="position: absolute;background-color: red;" class="text-black" >fewfwe fewfw efwe wef wefwef wef wef wef wef </span> -->
+                            <div class="row-12">
+                                <div class="barra-azul-lateral2"></div>
+                                <h4 class="sidebar-heading bold-tipografy" id="boldtipoStyle"><a id="labelstyle"><strong>{{solicitud?.SER_NOMBRES}} </strong></a></h4>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <em class="fa fa-comment" id="iconstyle"></em>
+                                <div style="margin-left: 0px;" class="col">
+                                    
+                                    <h6 style="margin-left: 0px;" class="card-text">
+                                        
+                                        <strong><label>Descripción del servicio:</label></strong> {{solicitud?.SER_DESCRIPCION}}
+                                    </h6>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                    
+                                <em class="fa fa-calendar" id="iconstyle"></em>
+                    
+                                <div class="col">
+                                    <h6 class="card-text">
+                                        
+                                        <strong><label>Fecha del servicio:</label></strong> {{solicitud?.SOL_FECHA_SERVICIO | date: 'dd/MM/yyyy'}}
+                                    </h6>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                    
+                                <em class="fa fa-clock-o" id="iconstyle"></em>
+                    
+                                <div class="col">
+                                    <h6 class="card-text">
+                                        
+                                        <strong><label>Hora del servicio:</label></strong> {{solicitud?.SOL_FECHA_SERVICIO | date: 'h:mm:ss a'}}
+                                    </h6>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                    
+                                <em class="fa fa-bookmark-o" id="iconstyle"></em>
+                    
+                                <div class="col">
+                                    <h6 class="card-text">
+                                    
+                                        <strong><label>Estado:</label></strong>
+                                        <div style="margin-left: 3px;padding: 5px; border-radius: 1rem;color: white; padding-right: 4px;padding-left: 4px; text-align: center;" [ngStyle]="{'background':solicitud?.SOL_ESTADO==0?'#e7b80d':'#dd1212'}">
+                                            <strong>
+                                            {{
+                                                solicitud?.SOL_ESTADO == 0? 'Pendiente de aceptar por especialista':solicitud?.SOL_ESTADO &&
+                                                solicitud?.SOL_ESTADO == 4? 'Expirado':'Expirado'                                           
+                                            }}
+                                        </strong>
+                                        </div>
+                                    </h6>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                    
+                                <em class="fa fa-map-marker" id="iconstyle"></em>
+                    
+                                <div class="col"> 
+                                    <h6 class="card-text">
+                                    <!--<em class="fa fa-comment" style="width: 1.5rem;"></em>-->
+                                        <strong><label>Dirección:</label></strong> {{solicitud?.UBI_DIRECCION}}
+                                    </h6>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                    </div>
+                </ng-container>
+
+            </div>
+            <ng-template #sNoData>
+                <h3 *ngIf="!carga" class="text-center container">No tiene Solicitudes</h3>
+            </ng-template>
+            <br>    
+            <br>
+            <ngb-pagination *ngIf="!carga && !mostrarAlerta  && solicitudes.length > 0"
+            class="d-flex justify-content-center"
+            [(page)]="page"
+            [pageSize]="pageSize"
+            [collectionSize]="solicitudes.length"></ngb-pagination>
+        </ng-template>
+    </li>
+    <!-- Pestaña de servicios Programados -->
+    <li [ngbNavItem]="2" id="listyle">
+        <a ngbNavLink class="botonModal" ngbTooltip="Servicios aceptados por el especialista"
+        placement="top">Servicios Programados</a>
+        <ng-template ngbNavContent>
+ <!-- +++++++++++++++++++++++++++++++++++++++++++++ Seccion donde se muestran los servicios realizados ++++++++++++++++++++++++++++++++++++ -->
+            <br>
+            <div class="container-fluid">
+                <div class="row">
+                   
+                </div>
+            </div>
+            <br>
+<!-- +++++++++++++++++++++++++++++++++++++++++++++ Card Para servicios realizados ++++++++++++++++++++++++++++++++++++ -->
+            <div *ngIf= "hayServiciosProgramados ; else spNoData" class="row" id="rowcentrado">
+                    <div *ngFor="let servicio of serviciosClienteReal | slice: (page-1) * pageSize : page * pageSize"  (click)="masDetallesSer(servicio)" class="card cardInt col-12 col-md-7 col-lg-5 col-xl-3">
+                    <div class="card-body" id="sizestyle"  ngbTooltip="Ver detalle"
+                    tooltipClass="tooltip"
+                    placement="left">
+                        <div class="row-12" >
+                            <div class="barra-azul-lateral2"></div>
+                            <h4 class="sidebar-heading bold-tipografy" id="boldtipoStyle"><a id="labelstyle"><strong>{{servicio?.SER_NOMBRES}}</strong></a></h4>
+                        </div>
+                        <br>
+                        <div class="row" >
+
+                            <em class="fa fa-comment" id="iconstyle"></em>
+
+                            <div style="margin-left: 0px;" class="col">
+                                <h6 style="margin-left: 0px;" class="card-text">
+                                    
+                                    <strong><label>Descripción del servicio:</label></strong> {{servicio?.SER_DESCRIPCION}}
+                                </h6>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+
+                            <em class="fa fa-calendar" id="iconstyle"></em>
+
+                            <div class="col">
+                                <h6 class="card-text">
+                                    
+                                    <strong><label>Fecha del servicio:</label></strong> {{servicio?.SOL_FECHA_SERVICIO | date: 'dd/MM/yyyy'}}
+                                </h6>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+
+                            <em class="fa fa-clock-o" id="iconstyle"></em>
+
+                            <div class="col">
+                                <h6 class="card-text">
+                                    
+                                    <strong><label>Hora del servicio:</label></strong> {{servicio?.SOL_FECHA_SERVICIO | date: 'h:mm:ss a'}}
+                                </h6>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+
+                            <em class="fa fa-bookmark-o" id="iconstyle"></em>
+
+                            <div class="col">
+
+                                <h6 class="card-text">
+                                    
+                                    <strong><label>Estado:</label></strong> 
+                                 <!--  <div [ngStyle]="{'background':servicio?.SERE_ESTADO!==1?'red':'yellow'}" > #e7b80d #dd1212--> 
+                                    <div style="padding: 5px; border-radius: 1rem;color: white; padding-right: 10px;padding-left: 10px; text-align: center;" [ngStyle]="{'background':servicio?.SERE_ESTADO==0?'#e7b80d': (servicio?.SERE_ESTADO==1?'#e7b80d':(servicio?.SERE_ESTADO==2?'#dd1212': ((servicio?.SOL_ESTADO==2 && servicio['sol']) ?'#dd1212': ((servicio?.SOL_ESTADO==1 && servicio['sol']) ?'#e7b80d': '#dd1212')))) }" >
+                                        <strong>
+                                        {{
+                                            servicio?.SERE_ESTADO == 0? 'Pendiente':servicio?.SERE_ESTADO &&
+                                            servicio?.SERE_ESTADO == 1 ? 'Aceptado por el cliente':servicio?.SERE_ESTADO && 
+                                            
+                                            servicio?.SERE_ESTADO == 4? 'Expirado':servicio?.SERE_ESTADO &&
+                                            servicio?.SOL_ESTADO ==1? 'Aceptado por el cliente': 'Aceptado por el cliente' 
+                                        }}
+                                    </strong>
+                                    </div>
+                                    
+                                </h6>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+
+                            <em class="fa fa-map-marker" id="iconstyle"></em>
+
+                            <div class="col"> 
+                                <h6 class="card-text">
+                                    
+                                    <strong><label>Dirección:</label></strong> {{servicio?.UBI_DIRECCION}}
+                                </h6>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <ng-template #spNoData>
+                <h3 *ngIf="!carga" class="text-center container">No tiene Servicios Programados</h3>
+            </ng-template>
+            <br>  
+            <br>
+            <ngb-pagination *ngIf="!carga && !mostrarAlerta && serviciosClienteReal.length > 0 "
+            class="d-flex justify-content-center"
+            [(page)]="page"
+            [pageSize]="pageSize"
+            [collectionSize]="serviciosClienteReal.length"></ngb-pagination>
+        </ng-template>
+    </li>
+    <!-- Pestaña de Servicios Realizados -->
+    <li [ngbNavItem]="3" id="listyle">
+        <a ngbNavLink class="botonModal" ngbTooltip="Servicios realizados por el especialista"
+        placement="top">Servicios Realizados</a>
+        <ng-template ngbNavContent>
+        <!-- +++++++++++++++++++++++++++++++++++++++++++++ Seccion donde se muestran los servicios realizados ++++++++++++++++++++++++++++++++++++ -->
+            <br>
+            <div class="container-fluid">
+                <div class="row">
+                    
+                </div>
+            </div>
+            <br>
+            <div *ngIf= "hayServiciosRealizados; else srNoData" class="row" id="rowcentrado">
+                <div *ngFor="let servicio of serviciosClienteProg | slice: (page-1) * pageSize : page * pageSize" (click)="masDetallesSer(servicio)" class="card cardInt col-12 col-md-7 col-lg-5 col-xl-3">
+                    <div class="card-body" style="height: auto;width: auto;"  ngbTooltip="Ver detalle"
+                        tooltipClass="tooltip"
+                        placement="left">
+                        <div class="row-12 " >
+                            <div class="barra-azul-lateral2"></div>
+                            <h4 class="sidebar-heading bold-tipografy" id="boldtipoStyle"><a id="labelstyle"><strong>{{servicio?.SER_NOMBRES}}</strong></a></h4>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div style="margin-left: 0px;" class="col">
+                                <h6 style="margin-left: 0px;" class="card-text">
+                                    <em class="fa fa-comment" style="width: 1.5rem;"></em>
+                                    <strong><label>Descripción del servicio:</label></strong> {{servicio?.SER_DESCRIPCION}}
+                                </h6>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col">
+                                <h6 class="card-text">
+                                    <em class="fa fa-calendar" style="width: 1.5rem;"></em>
+                                    <strong><label>Fecha del servicio:</label></strong> {{servicio?.SOL_FECHA_SERVICIO | date: 'dd/MM/yyyy'}}
+                                </h6>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col">
+                                <h6 class="card-text">
+                                    <em class="fa fa-clock-o" style="width: 1.5rem;"></em>
+                                    <strong><label>Hora del servicio:</label></strong> {{servicio?.SOL_FECHA_SERVICIO | date: 'h:mm:ss a'}}
+                                </h6>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col">
+                                <h6 class="card-text">
+                                    <em class="fa fa-bookmark-o" style="width: 1.5rem;"></em>
+                                    <strong><label>Estado:</label></strong> 
+                                    <div style="margin-left: 3px;padding: 5px; border-radius: 1rem;color: white; padding-right: 4px;padding-left: 4px; text-align: center;" [ngStyle]="{'background':solicitud?.SOL_ESTADO==5?'#e7b80d':'#dd1212'}">
+                                    <strong>
+                                    {{
+                                        servicio?.SERE_ESTADO == 5? 'Realizado ':servicio?.SERE_ESTADO &&
+                                        servicio?.SERE_ESTADO == 6? 'Realizado tardío':servicio?.SERE_ESTADO 
+                                    }} 
+                                </strong>                                     
+                                </div>
+                                </h6>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col"> 
+                                <h6 class="card-text">
+                                    <em class="fa fa-map-marker" style="width: 1.2rem;"></em>
+                                    <strong><label>Dirección:</label></strong> {{servicio?.UBI_DIRECCION}}
+                                </h6>
+                            </div>
+                        </div>
+                        <div *ngIf="servicio?.CA_CALIFICACION !== null ,else noCalificacion" class="row">
+                            <div class="col"> 
+                                <h6 class="card-text">
+                                    <em class="fa fa-star" style="width: 1.2rem;"></em>
+                                    <strong><label>Calificación:</label></strong>
+                                    <ng-template #t let-fill="fill">
+                                        <span class="star" [class.full]="fill === 100">
+                                          <span class="half" [style.width.%]="fill">&#9733;</span>&#9733;
+                                        </span>
+                                    </ng-template>
+                                    <ngb-rating  [(rate)]="servicio.CA_CALIFICACION" [starTemplate]="t" [readonly]="true" [max]="5"></ngb-rating>
+                                </h6>
+                            </div>
+                        </div>
+                        <ng-template #noCalificacion >
+                            <br>
+                            <div class="row">
+                                <div class="col" style="text-align: center;align-items: center;"> 
+                                    <h6 class="card-text">
+                                        <strong style="color: rgb(255,0,0);">¡Pendiente de calificación!</strong>
+                                    </h6>
+                                </div>
+                            </div>
+                        </ng-template>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <ng-template #srNoData>
+                <h3 *ngIf="!carga" class="text-center container">No tiene Servicios Realizados</h3>
+            </ng-template>
+            <br>   
+            <br>
+            <ngb-pagination *ngIf="!carga && !mostrarAlerta  && serviciosClienteProg.length > 0"
+            class="d-flex justify-content-center"
+            [(page)]="page"
+            [pageSize]="pageSize"
+            [collectionSize]="serviciosClienteProg.length"></ngb-pagination>
+        </ng-template>
+    </li>
+    <!-- Pestaña de Solicitudes Canceladas -->
+    <li [ngbNavItem]="4" id="listyle">
+        <a ngbNavLink class="botonModal">Solicitudes Canceladas</a>
+        <ng-template ngbNavContent >
+    <!-- titulo Solicitudes Canceladas -->
+            <br>
+            <div class="container-fluid">
+                <div class="row">
+                    
+                </div>
+            </div>
+            <br>
+            <!-- cards para Solicitudes Canceladas -->
+            <div *ngIf="haySolicitudesCanceladas ; else sCpNoData " class="row" id="rowcentrado">
+                <div *ngFor="let solicitud of solicitudCancelada | slice: (page-1) * pageSize : page * pageSize" (click)="masDetallesSol(solicitud);" class="card cardInt col-12 col-md-7 col-lg-5 col-xl-3" >
+                    <div class="card-body" id="sizestyle"  ngbTooltip="Ver detalle"
+                    tooltipClass="tooltip"
+                    placement="left">
+                        <div class="row-12">
+                            <div class="barra-azul-lateral2"></div>
+                            <h4 class="sidebar-heading bold-tipografy" id="boldtipoStyle"><a id="labelstyle"><strong>{{solicitud?.SER_NOMBRES}} </strong></a></h4>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div style="margin-left: 0px;" class="col">
+                                <h6 style="margin-left: 0px;" class="card-text">
+                                    <em class="fa fa-comment" style="width: 1.5rem;"></em>
+                                    <strong><label>Descripción del servicio:</label></strong> {{solicitud?.SER_DESCRIPCION}}
+                                </h6>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col">
+                                <h6 class="card-text">
+                                    <em class="fa fa-calendar" style="width: 1.5rem;"></em>
+                                    <strong><label>Fecha del servicio:</label></strong> {{solicitud?.SOL_FECHA_SERVICIO | date: 'dd/MM/yyyy'}}
+                                </h6>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col">
+                                <h6 class="card-text">
+                                    <em class="fa fa-clock-o" style="width: 1.5rem;"></em>
+                                    <strong><label>Hora del servicio:</label></strong> {{solicitud?.SOL_FECHA_SERVICIO | date: 'h:mm:ss a'}}
+                                </h6>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col">
+                                <h6 class="card-text">
+                                    <em class="fa fa-bookmark-o" style="width: 1.5rem;"></em>
+                                    <strong><label>Estado:</label></strong>
+                                    <div style="margin-left: 3px;padding: 5px; border-radius: 1rem;color: white; padding-right: 4px;padding-left: 4px; text-align: center; background: #dd1212;">
+                                        {{
+                                            solicitud?.SOL_ESTADO == 3? 'Cancelado por el cliente':solicitud?.SOL_ESTADO 
+                                        }}
+                                    </div>
+                                </h6>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col"> 
+                                <h6 class="card-text">
+                                    <em class="fa fa-map-marker" style="width: 1.2rem;"></em>
+                                    <strong><label>Dirección:</label></strong> {{solicitud?.UBI_DIRECCION}}
+                                </h6>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <br><br>
+            <ng-template #sCpNoData>
+                <h3 *ngIf="!carga" class="text-center container">No tiene Solicitudes Canceladas</h3>
+            </ng-template>
+            <ngb-pagination *ngIf="!carga && !mostrarAlerta  && solicitudCancelada.length > 0"
+                class="d-flex justify-content-center"
+                [(page)]="page"
+                [pageSize]="pageSize"
+                [collectionSize]="solicitudCancelada.length"></ngb-pagination>
+        </ng-template>
+    </li>
+    <!-- Pestaña de Servicios Cancelados -->
+    <li [ngbNavItem]="5" id="listyle">
+        <a ngbNavLink class="botonModal">Servicios Cancelados</a>
+        <ng-template ngbNavContent>
+        <!-- Servicios Cancelados -->
+        <br>
+            <div class="container-fluid">
+                <div class="row">
+                    
+                </div>
+            </div>
+            <br>
+            <div *ngIf= "hayServiciosCancelados ; else serCNoData" class="row" id="rowcentrado">
+                    <!-- (click)="masDetalles(solicitud);" [ngStyle]="{'background':servicio.SERE_ESTADO!==5?'white':'#f5f5f5','background':servicio.SERE_ESTADO!==6?'white':'#f5f5f5'}" -->
+                <div *ngFor="let servicio of servicioCancelado | slice: (page-1) * pageSize : page * pageSize"  (click)="masDetallesSer(servicio)" style="cursor: pointer;" class="card cardInt col-12 col-12 5 col-xl-3">
+                    <div class="card-body" id="sizestyle"  ngbTooltip="Ver detalle"
+                    tooltipClass="tooltip"
+                    placement="left">
+                        <div class="row-12 " >
+                            <div class="barra-azul-lateral2"></div>
+                            <h4 class="sidebar-heading bold-tipografy" id="boldtipoStyle"><a id="labelstyle"><strong>{{servicio?.SER_NOMBRES}}</strong></a></h4>
+                        </div>
+                        <br>
+                        <div class="row">
+
+                            <em class="fa fa-comment" id="iconstyle"></em>
+
+                            <div style="margin-left: 0px;" class="col">
+                                <h6 style="margin-left: 0px;" class="card-text">
+                                    
+                                    <strong><label>Descripción del servicio:</label> </strong> {{servicio?.SER_DESCRIPCION}}
+                                </h6>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+
+                            <em class="fa fa-calendar" id="iconstyle"></em>
+
+                            <div class="col">
+                                <h6 class="card-text">
+                                    
+                                    <strong><label>Fecha del servicio:</label></strong> {{servicio?.SOL_FECHA_SERVICIO | date: 'dd/MM/yyyy'}}
+                                </h6>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+
+                            <em class="fa fa-clock-o" id="iconstyle"></em>
+
+                            <div class="col">
+                                <h6 class="card-text">
+                                    
+                                    <strong><label>Hora del servicio:</label></strong> {{servicio?.SOL_FECHA_SERVICIO | date: 'h:mm:ss a'}}
+                                </h6>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+
+                            <em class="fa fa-bookmark-o" id="iconstyle"></em>
+
+                            <div class="col">
+                                <h6 class="card-text">
+                                    
+                                    <strong><label>Estado:</label></strong> 
+                                    <div style="padding: 5px; border-radius: 1rem;color: white; padding-right: 10px;paddingh-left: 10px; text-align: center;" [ngStyle]="{'background':servicio?.SERE_ESTADO==3?'#e7b80d': (servicio?.SERE_ESTADO==7?'#e7b80d':'#dd1212')}">
+                                        <strong>
+                                        {{
+                                            servicio?.SERE_ESTADO == 3? 'Cancelado por el especialista':servicio?.SERE_ESTADO &&
+                                            servicio?.SERE_ESTADO == 7? 'Cancelado por el cliente':servicio?.SERE_ESTADO &&
+                                            servicio?.SERE_ESTADO == 8? 'No aceptado':servicio?.SERE_ESTADO &&
+                                            servicio?.SERE_ESTADO == 2? 'Rechazado por el cliente': ''
+                                        }}
+                                    </strong>
+                                    </div>
+                                    
+                                    
+                                </h6>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+
+                            <em class="fa fa-map-marker" id="iconstyle"></em>
+
+                            <div class="col"> 
+                                <h6 class="card-text">
+                                    
+                                    <strong><label>Dirección:</label></strong> {{servicio?.UBI_DIRECCION}}
+                                </h6>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <ng-template #serCNoData>
+                <h3 *ngIf="!carga" class="text-center container">No tiene Servicios Cancelados</h3>
+            </ng-template>
+            <br>  
+            <br>
+            <ngb-pagination *ngIf="!carga && !mostrarAlerta  && servicioCancelado.length > 0"
+                class="d-flex justify-content-center"
+                [(page)]="page"
+                [pageSize]="pageSize"
+                [collectionSize]="servicioCancelado.length"></ngb-pagination>
+        </ng-template>
+    </li>
+</ul>
+  <div [ngbNavOutlet]="nav" class="mt-2 col-12" animation="true">
+
+  </div>
+
+<!-- modal de Solicitudes -->
+<ng-template #masDetallesSolicitudes>
+    <div class="modal-header" style="text-align: center;align-items: center;">
+        <h5 class="modal-title col-11 text-center" id="titulomodalcard"><label id="labeldisable">Servicio:</label> {{solicitudSeleccionada.SER_NOMBRES}}</h5>
+            <button  type="button" class="close" id="btnclose" (click)="closeModal();activeSolicitudes=1" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>    
+    </div>
+    <div class="col-xl-12">
+        <div *ngIf="carga" class="progress" style="height:.1rem">
+            <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+        </div>
+    </div>
+    <div *ngIf="!carga" class="modal-body row">
+        <ul ngbNav #nav="ngbNav" [(activeId)]="activeSolicitudes" class="nav-tabs nav-fill col-12" style="margin-left: 8px; border: transparent;">
+            <li [ngbNavItem]="1" >
+                <a ngbNavLink class="botonModal">Detalle Solicitud</a>
+                <ng-template ngbNavContent class="row">
+                    <br>
+                    <div  class="modal-content col-12" style="padding-left: 3rem;padding-right: 3rem;">
+                        <div class="text-center" id="centradoH5">
+                            
+                        </div>
+                        <br>
+                        <div>
+                            <div class="row">
+
+                                <em class="fa fa-calendar" id="iconstyle" ></em>
+
+                                <div class="col">
+                                    <h6 class="card-text">
+                                        
+                                        <strong>Fecha de registro:</strong> {{solicitudSeleccionada?.SOL_FECHA_REGISTRO | date: 'dd/MM/yyyy'}}
+                                    </h6>
+                                </div>
+                            </div><br>
+                            <div class="row">
+
+                                <em class="fa fa-clock-o" id="iconstyle"></em>
+
+                                <div class="col"> 
+                                    <h6 class="card-text">
+                                        
+                                        <strong>Hora de registro:</strong> {{solicitudSeleccionada?.SOL_FECHA_REGISTRO | date: 'h:mm:ss a'}}
+                                    </h6>
+                                </div>
+                            </div><br>
+                            <div class="row">
+
+                                <em class="fa fa-map-marker" id="iconstyle"></em>
+
+                                <div class="col"> 
+                                    <h6 class="card-text">
+                                        
+                                        <strong>Dirección:</strong> {{solicitudSeleccionada?.UBI_DIRECCION}}
+                                    </h6>
+                                </div>
+                            </div><br>
+
+                            <div class="row">
+
+                                <em class="fa fa-user" id="iconstyle"></em>
+
+                                <div class="col"> 
+                                    <h6 class="card-text">
+                                        
+                                        <strong>Nombre de contacto:</strong> {{usu_name}}
+                                        
+                                    </h6> 
+                                </div>
+                            </div><br>
+                            <div class="row">
+
+                                <em class="fa fa-phone" id="iconstyle"></em>
+
+                                <div class="col"> 
+                                    <h6 class="card-text">
+                                        
+                                        <strong>Numero de contacto:</strong> {{solicitudSeleccionada?.USU_CELULAR}}
+                                    </h6> 
+                                </div>
+                            </div><br>
+                            <div *ngIf="solicitudSeleccionada?.SOL_NOMBRE_CONTACTO !== null && solicitudSeleccionada?.SOL_NOMBRE_CONTACTO !== ''"> 
+                                <div class="row">
+                                    <em class="fa fa-user" id="iconstyle"></em>
+                                    <div class="col"> 
+                                        <h6 class="card-text">
+
+                                                <!--<em class="fa fa-user" style="width: 1.2rem;"></em>-->
+
+                                                <strong>Otro contacto:</strong> {{solicitudSeleccionada?.SOL_NOMBRE_CONTACTO}}
+                                        </h6> 
+                                    </div>
+                                </div><br>
+                            </div>
+                            <div *ngIf="solicitudSeleccionada?.SOL_CELULAR_CONTACTO !== null && solicitudSeleccionada?.SOL_CELULAR_CONTACTO !=='' " >
+                                <div class="row">
+
+                                    <em class="fa fa-phone" id="iconstyle"></em>
+
+                                    <div class="col"> 
+                                        <h6 class="card-text">
+                                                
+                                                <strong>Otro contacto:</strong> {{solicitudSeleccionada?.SOL_CELULAR_CONTACTO}}
+                                        </h6>
+                                    </div>
+                                </div><br>
+                            </div>
+                            <div class="row">
+
+                                <em class="fa fa-certificate" id="iconstyle"></em>
+
+                                <div class="col"> 
+                                    <h6 class="card-text">
+                                        
+                                        <strong>Detalle del Servicio :</strong>
+                                        {{solicitudSeleccionada?.SOL_DESCRIPCION}} 
+                                    </h6>
+                                </div>
+                            </div>
+                        </div><br>
+                    </div>
+                </ng-template>
+            </li>
+            <li [ngbNavItem]="2">
+                <a ngbNavLink class="botonModal">Detalle Servicio</a>
+                <ng-template ngbNavContent class="row">
+                    <br>
+                <div  class="col-12 modal-content" style="padding-left: 3rem;padding-right: 3rem;">
+                    <div class=" text-center">
+            
+                    </div>
+                    <br>
+                    <div>
+                        <div class="row">
+
+                            <em class="fa fa-fw fa-flask" id="iconstyle"></em>
+
+                            <div class="col"> 
+                                <h6 class="card-text">
+                                    
+                                    <strong>Categoria: </strong> {{solicitudSeleccionada?.CAT_NOMBRE}}
+                                </h6>
+                            </div>
+                        </div><br>
+                        <div class="row">
+
+                            <em class="fa fa-truck" id="iconstyle"></em>
+
+                            <div class="col"> 
+                                <h6 class="card-text">
+                                    
+                                    <strong>Servicio: </strong> {{solicitudSeleccionada?.SER_NOMBRES}}
+                                </h6>
+                            </div>
+                        </div><br>
+                        <div class="row">
+
+                            <em class="fa fa-comment" id="iconstyle"></em>
+
+                            <div class="col"> 
+                                <h6 class="card-text">
+                                    
+                                    <strong>Descripción del servicio: </strong> {{solicitudSeleccionada?.SER_DESCRIPCION}}
+                                </h6>
+                            </div>
+                        </div><br>
+                        <div class="row">
+
+                            <em class="fa fa-calendar" id="iconstyle"></em>
+
+                            <div class="col"> 
+                                <h6 class="card-text">
+                                    
+                                    <strong>Fecha de servicio:</strong> {{solicitudSeleccionada?.SOL_FECHA_SERVICIO | date: 'dd/MM/yyyy'}}
+                                </h6>
+                            </div>
+                        </div><br>
+                        <div class="row">
+
+                            <em class="fa fa-clock-o" id="iconstyle"></em>
+
+                            <div class="col"> 
+                                <h6 class="card-text">
+                                    
+                                    <strong>Hora de servicio:</strong> {{solicitudSeleccionada?.SOL_FECHA_SERVICIO | date: 'h:mm:ss a'}}
+                                </h6>
+                            </div>
+                        </div><br>
+                        <div class="row">
+                            <em class="fa fa-money" id="iconstyle"></em>
+                            <div class="col"> 
+                                <h6 class="card-text">                                    
+                                    <strong>Rango de precios</strong>
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="rangoPrecios">
+                            <div class="d-flex flex-md-row flex-column">
+                                <div>
+                                    <strong style="float: left;" class="strongMin" >Precio mínimo: </strong>{{solicitudSeleccionada?.MON_SIMBOLO}}{{solicitudSeleccionada?.SER_PRECIO_BASE * precioMinimo}} 
+                                </div>
+                                <div>
+                                    <p class="strongMax"><strong class="strongCol">Precio máximo:</strong>{{solicitudSeleccionada?.MON_SIMBOLO}}{{solicitudSeleccionada?.SER_PRECIO_BASE * precioMaximo}} </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div><br>
+                </div>
+                </ng-template>
+            </li>
+            <li [ngbNavItem]="3">
+                <a ngbNavLink class="botonModal">Imágenes</a>
+                <ng-template ngbNavContent class="row">
+                    <div style="padding-left: 3rem;padding-right: 3rem; margin-top: 2rem;" class="col-12 modal-content">
+                        <div class="row justify-content-center">
+                            <div class="col"> 
+                                <div class=" text-center">
+                                    
+                                </div>
+                                <br>
+                                <div class="row"><div class="col-12 carousel_img">
+                                    <ngb-carousel *ngIf="solicitudSeleccionada['imagenes'].length > 0; else SinImagen"  [activeId]="activeSliderId"  [class]="solicitudSeleccionada['imagenes'].length==1 ? 'prueba':''" >
+                                        <ng-template  ngbSlide  *ngFor="let imagen of solicitudSeleccionada['imagenes']" >
+                                            <div class="carousel_img_side">
+                                            <img class="img_side"  [src]="DOMINIO + imagen?.SOL_IMA_IMG" appImgRota [url]="'../../../assets/images/no-img.png'" alt="Mil Oficios">
+                                            </div>
+                                        </ng-template>
+                                    </ngb-carousel>
+                                    <ng-template #SinImagen>
+                                        <span style="font-size: larger; font-weight: 600;display: flex; justify-content: center;">No hay imágenes registradas</span>
+                                    </ng-template>
+                                    
+                                </div></div>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </li>
+        </ul>
+        <div [ngbNavOutlet]="nav" class="mt-2" style="width: 100%;"></div>
+    </div>
+    <div class="modal-footer">
+        <div *ngIf="!carga && solicitudSeleccionada.SOL_ESTADO == 0" class="row justify-content-center" style="margin:0px"> 
+        <button type="button" (click)="cancelacion(solicitudSeleccionada.SOL_ID);"   style="padding-left: auto;padding-right: auto;" class="btn btn-danger bold">Cancelar Solicitud</button>
+        </div>
+    </div>
+</ng-template>
+<!-- modal de servicios programados -->
+<ng-template #masDetallesServicios>
+    <div class="modal-header" style="text-align: center;align-items: center;">
+        <h5 class="modal-title col-11 text-center" id="titulomodalcard"><label id="labeldisable">Servicio:</label> {{servicioSeleccionado.SER_NOMBRES}}</h5>
+        <button type="button" class="close" id="btnclose" (click)="closeModal();errorModalDetalleSer = false;activeServicios=1" [disabled]="" aria-label="Close">
+        <span aria-hidden="false">&times;</span>
+        </button>
+    </div>
+    <div class="col-xl-12">
+        <div *ngIf="carga" class="progress" style="height:.1rem">
+          <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+        </div>
+    </div>
+        <div *ngIf="!carga" class="modal-body">
+            <app-alerta-modal *ngIf="errorModalDetalleSer" tipoAlerta="danger">{{mensajeModalDetalleSer}}</app-alerta-modal>
+            <ul ngbNav #nav="ngbNav" [(activeId)]="activeServicios" class="nav-tabs nav-fill">
+                <li [ngbNavItem]="1">
+                    <a ngbNavLink class="botonModal">Detalle Solicitud</a>
+                    <ng-template ngbNavContent class="row">
+                        <br>
+                        <div class="col-12 modal-content " style="padding-left: 3rem;padding-right: 3rem;">
+                            <div class="text-center">
+                                
+                            </div>
+                            <br>
+                            <div>
+                                <div class="row">
+
+                                    <em class="fa fa-calendar" id="iconstyle"></em>
+
+                                    <div class="col">
+                                        <h6 class="card-text">
+                                            
+                                            <strong>Fecha de registro:</strong> {{servicioSeleccionado?.SOL_FECHA_REGISTRO | date: 'dd/MM/yyyy'}}
+                                        </h6>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+
+                                    <em class="fa fa-clock-o" id="iconstyle"></em>
+
+                                    <div class="col"> 
+                                        <h6 class="card-text">
+                                            
+                                            <strong>Hora de registro:</strong> {{servicioSeleccionado?.SOL_FECHA_REGISTRO | date: 'h:mm:ss a'}}
+                                        </h6>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+
+                                    <em class="fa fa-map-marker" id="iconstyle"></em>
+
+                                    <div class="col"> 
+                                        <h6 class="card-text">
+                                            
+                                            <strong>Dirección:</strong> {{servicioSeleccionado?.UBI_DIRECCION}}
+                                        </h6>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+
+                                    <em class="fa fa-user" id="iconstyle"></em>
+
+                                    <div class="col"> 
+                                        <h6 class="card-text">
+                                            
+                                            <strong>Nombre de contacto:</strong> {{usu_name}}
+                                            
+                                        </h6> 
+                                    </div>
+                                </div><br>
+                                <div class="row">
+
+                                    <em class="fa fa-phone" id="iconstyle"></em>
+
+                                    <div class="col"> 
+                                        <h6 class="card-text">
+                                            
+                                            <strong>Numero de contacto:</strong> {{servicioSeleccionado?.NUMERO_USUARIO}}
+                                        </h6> 
+                                    </div>
+                                </div><br>
+                                <div *ngIf="servicioSeleccionado?.SOL_NOMBRE_CONTACTO !==null && servicioSeleccionado?.SOL_NOMBRE_CONTACTO !== ''  "> 
+                                    <div class="row">
+
+                                        <em class="fa fa-user" id="iconstyle"></em>
+
+                                        <div class="col"> 
+                                            <h6 class="card-text">
+                                                
+                                                <strong>Otro contacto:</strong> {{servicioSeleccionado?.SOL_NOMBRE_CONTACTO}}
+                                            </h6> 
+                                        </div>
+                                    </div><br>
+                                </div>
+                                <div *ngIf="servicioSeleccionado?.SOL_CELULAR_CONTACTO !==null && servicioSeleccionado?.SOL_CELULAR_CONTACTO !==''" >
+                                    <div  class="row">
+
+                                        <em class="fa fa-phone" id="iconstyle"></em>
+
+                                        <div class="col"> 
+                                            <h6 class="card-text">
+                                                
+                                                <strong>Otro contacto:</strong> {{servicioSeleccionado?.SOL_CELULAR_CONTACTO}}
+                                            </h6>
+                                        </div>
+                                    </div><br>
+                                </div>
+                                <div class="row">
+
+                                    <em class="fa fa-certificate" id="iconstyle"></em>
+
+                                    <div class="col"> 
+                                        <h6 class="card-text">
+                                            
+                                            <strong>Detalle del Servicio :</strong>
+                                            {{servicioSeleccionado?.SOL_DESCRIPCION}} 
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+                <li [ngbNavItem]="2">
+                    <a ngbNavLink class="botonModal">Detalle Servicio</a>
+                    <ng-template ngbNavContent class="row">
+                        <br>
+                        <div  class="col-12 modal-content " style="padding-left: 3rem;padding-right: 3rem;">
+                            <div class=" text-center">
+                                
+                            </div>
+                            <br>
+                            <div>
+                                <div class="row">
+
+                                    <em class="fa fa-fw fa-flask" id="iconstyle"></em>
+
+                                    <div class="col"> 
+                                        <h6 class="card-text">
+                                            
+                                            <strong>Categoria: </strong> {{servicioSeleccionado?.CAT_NOMBRE}}
+                                        </h6>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+
+                                    <em class="fa fa-truck" id="iconstyle"></em>
+
+                                    <div class="col"> 
+                                        <h6 class="card-text">
+                                            
+                                            <strong>Servicio: </strong> {{servicioSeleccionado?.SER_NOMBRES}}
+                                        </h6>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+
+                                    <em class="fa fa-comment" id="iconstyle"></em>
+
+                                    <div class="col"> 
+                                        <h6 class="card-text">
+                                            
+                                            <strong>Descripción del servicio: </strong> {{servicioSeleccionado?.SER_DESCRIPCION}}
+                                        </h6>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+
+                                    <em class="fa fa-calendar" id="iconstyle"></em>
+
+                                    <div class="col"> 
+                                        <h6 class="card-text">
+                                            <strong>Fecha de servicio:</strong> {{servicioSeleccionado?.SOL_FECHA_SERVICIO | date: 'dd/MM/yyyy'}}
+                                        </h6>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+
+                                    <em class="fa fa-clock-o" id="iconstyle"></em>
+
+                                    <div class="col"> 
+                                        <h6 class="card-text">
+                                            
+                                            <strong>Hora de servicio:</strong> {{servicioSeleccionado?.SOL_FECHA_SERVICIO | date: 'h:mm:ss a'}}
+                                        </h6>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+
+                                    <em class="fa fa-money" id="iconstyle"></em>
+
+                                    <div class="col"> 
+                                        <h6 class="card-text">
+                                            
+                                            <strong>Tarifa :</strong> {{servicioSeleccionado?.MON_SIMBOLO}}{{servicioSeleccionado?.SERE_TARIFA}} 
+                                        </h6><br>
+                                    </div> 
+                                </div>
+                                <div *ngIf="servicioSeleccionado?.SERE_ESTADO == 5 ||servicioSeleccionado?.SERE_ESTADO == 6" class="row">
+                                    <div class="col"> 
+                                        <h6 class="card-text">
+                                            <strong style="font-size: 1.1rem;">Detalle de ejecución:</strong>
+                                        </h6><br>
+                                    </div>
+                                </div>
+                                <div *ngIf="servicioSeleccionado?.SERE_ESTADO == 5 ||servicioSeleccionado?.SERE_ESTADO == 6" class="row">
+                                    <em class="fa fa-calendar" id="iconstyle"></em>
+                                    <div class="col"> 
+                                        <h6 class="card-text">
+                                            
+                                            <strong>Inicio de ejecución :</strong> {{servicioSeleccionado?.SERE_FECH_INI_REAL | date: 'dd/MM/yyyy h:mm:ss a'}} 
+                                        </h6><br>
+                                    </div>
+                                </div>
+                                <div *ngIf="servicioSeleccionado?.SERE_ESTADO == 5 ||servicioSeleccionado?.SERE_ESTADO == 6" class="row">
+                                    <em class="fa fa-clock-o" id="iconstyle"></em>
+                                    <div class="col"> 
+                                        <h6 class="card-text">
+                                            
+                                            <strong>Fin de ejecución :</strong> {{servicioSeleccionado?.SERE_FECH_FIN_REAL |  date: 'dd/MM/yyyy h:mm:ss a'}} 
+                                        </h6><br>
+                                    </div>
+                                </div>
+                                <div *ngIf="servicioSeleccionado?.SERE_ESTADO == 5 ||servicioSeleccionado?.SERE_ESTADO == 6" class="row">
+                                    <em class="fa fa-hourglass-end" id="iconstyle"></em>
+                                    <div class="col"> 
+                                        <h6 class="card-text">
+                                            
+                                            <strong>Duración :</strong> {{duracionServicio}} 
+                                        </h6><br>
+                                    </div>
+                                </div>
+                                <!-- <div *ngIf="servicioSeleccionado?.SERE_ESTADO == 5 ||servicioSeleccionado?.SERE_ESTADO == 6" class="row">
+
+                                    <em class="fa fa-calendar" id="iconstyle"></em>
+
+                                    <div class="col"> 
+                                        <h6 class="card-text">
+                                            
+                                            <strong>Fecha estimada inicio de servicio:</strong> {{servicioSeleccionado?.SERE_FECH_INI_REAL | date: 'dd/MM/yyyy'}} 
+                                        </h6><br>
+                                    </div>
+                                </div>
+                                <div *ngIf="servicioSeleccionado?.SERE_ESTADO == 5 ||servicioSeleccionado?.SERE_ESTADO == 6" class="row">
+
+                                    <em class="fa fa-clock-o" id="iconstyle"></em>
+
+                                    <div class="col"> 
+                                        <h6 class="card-text">
+                                            
+                                            <strong>Hora estimada inicio de servicio:</strong> {{servicioSeleccionado?.SERE_FECH_INI_REAL | date: 'h:mm:ss a'}}
+                                        </h6><br>
+                                    </div>
+                                </div>
+                                <div *ngIf="servicioSeleccionado?.SERE_ESTADO == 5 ||servicioSeleccionado?.SERE_ESTADO == 6" class="row">
+
+                                    <em class="fa fa-calendar" id="iconstyle"></em>
+
+                                    <div class="col"> 
+                                        <h6 class="card-text">
+                                            
+                                            <strong>Fecha real fin de servicio:</strong> {{servicioSeleccionado?.SERE_FECH_FIN_REAL | date: 'dd/MM/yyyy'}} 
+                                        </h6><br>
+                                    </div>
+                                </div>
+                                <div *ngIf="servicioSeleccionado?.SERE_ESTADO == 5 ||servicioSeleccionado?.SERE_ESTADO == 6" class="row">
+
+                                    <em class="fa fa-clock-o" id="iconstyle"></em>
+
+                                    <div class="col"> 
+                                        <h6 class="card-text">
+                                            
+                                            <strong>Hora real fin de servicio:</strong> {{servicioSeleccionado?.SERE_FECH_INI_REAL | date: 'h:mm:ss a'}}
+                                        </h6><br>
+                                    </div>
+                                </div> -->
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+                <li [ngbNavItem]="3">
+                    <a ngbNavLink class="botonModal">Detalle Especialista</a>
+                    <ng-template ngbNavContent class="row">
+                        <br>
+                        <div class="col-12  modal-content" style="padding-left: 3rem;padding-right: 3rem;">
+                            <div class=" text-center">
+                                
+                            </div>
+                            <br>
+                            <div>
+                                <div class="row justify-content-center">
+                                    <div style="align-items: center; text-align: center;"> 
+                                        <div  class="col-12">
+                                            <img id="profile-logo" [src]="DOMINIO + servicioSeleccionado.USU_FOTO" appImgRota [url]="servicioSeleccionado.usu_foyo == 'M' ? '../../../assets/images/AVATAR-PREDETERMINADO-HOMBRE.png': '../../../assets/images/AVATAR-PREDETERMINADO-MUJER.png'" alt="Foto de usuario">
+                                            <label class="col" style="font-weight: unset;">
+                                                <!-- <div class="rating">
+                                                  <input id="star5" name="star" type="radio" value="5" class="radio-btn hide" [checked]="servicioSeleccionado.USU_CALIFICACION == 5" disabled/>
+                                                  <label for="star5" title="5 estrellas">&#9733;</label>
+                                                  <input id="star4" name="star" type="radio" value="4" class="radio-btn hide" [checked]="servicioSeleccionado.USU_CALIFICACION == 4" disabled/>
+                                                  <label for="star4" title="4 estrellas">&#9733;</label>
+                                                  <input id="star3" name="star" type="radio" value="3" class="radio-btn hide" [checked]="servicioSeleccionado.USU_CALIFICACION == 3" disabled/>
+                                                  <label for="star3" title="3 estrellas">&#9733;</label>
+                                                  <input id="star2" name="star" type="radio" value="2" class="radio-btn hide" [checked]="servicioSeleccionado.USU_CALIFICACION == 2" disabled/>
+                                                  <label for="star2" title="2 estrellas">&#9733;</label>
+                                                  <input id="star1" name="star" type="radio" value="1" class="radio-btn hide" [checked]="servicioSeleccionado.USU_CALIFICACION == 1" disabled/>
+                                                  <label for="star1" title="1 estrella" >&#9733;</label>
+                                                </div> -->
+                                                <ng-template #t let-fill="fill">
+                                                    <span class="star" [class.full]="fill === 100">
+                                                      <span class="half" [style.width.%]="fill">&#9733;</span>&#9733;
+                                                    </span>
+                                                </ng-template>
+                                                  <strong>Calificación:</strong>
+                                                  <ngb-rating  [(rate)]="servicioSeleccionado.USU_CALIFICACION" [starTemplate]="t" [readonly]="true" [max]="5"></ngb-rating> 
+                                                
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col"> 
+                                        <h6 class="card-text">
+                                            <!-- <em class="fa fa-fw fa-comment" style="width: 1.2rem;"></em> -->
+                                            <strong>Nombre: </strong> {{servicioSeleccionado.USU_NOMBRES + ' ' + servicioSeleccionado.USU_APE_PAT + ' ' + servicioSeleccionado.USU_APE_MAT}}
+                                        </h6>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col"> 
+                                        <h6 class="card-text">
+                                            <!-- <em class="fa fa-fw fa-comment" style="width: 1.2rem;"></em> -->
+                                            <strong>Email: </strong> {{servicioSeleccionado.USU_EMAIL}}
+                                        </h6>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col"> 
+                                        <h6 class="card-text">
+                                            <!-- <em class="fa fa-fw fa-comment" style="width: 1.2rem;"></em> -->
+                                            <strong>Profesión por definir: </strong> {{servicioSeleccionado.POST_PROFESION}}
+                                        </h6>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col"> 
+                                        <h6 class="card-text">
+                                            <!-- <em class="fa fa-fw fa-comment" style="width: 1.2rem;"></em> -->
+                                            <strong>Celular: </strong> {{servicioSeleccionado.USU_CELULAR}}
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+                <li [ngbNavItem]="4">
+                    <a ngbNavLink class="botonModal">Imágenes</a>
+                    <ng-template ngbNavContent class="row">
+                        <br>
+                        <div class="col-12 modal-content" >
+                            <div class="row justify-content-center  ">
+                                <div class="col"> 
+                                    <div class=" text-center">
+                                        
+                                    </div>
+                                    <br>
+                                    <div class="row"><div class="col-12 carousel_img" style="display: flex;align-items: center;justify-content: center;">
+                                        <ngb-carousel *ngIf="servicioSeleccionado['imagenes'].length > 0; else SinImagen"  [activeId]="activeSliderId" id="imagenesCentrado" [class]="servicioSeleccionado['imagenes'].length==1 ? 'prueba':''">
+                                            <ng-template  ngbSlide  *ngFor="let imagen of servicioSeleccionado['imagenes']" >
+                                                <div class="carousel_img_side">
+                                                    <img class="img_side"  [src]="DOMINIO + imagen?.SOL_IMA_IMG" appImgRota [url]="'../../../assets/images/no-img.png'" alt="Mil Oficios">
+                                                </div>
+                                            </ng-template>
+                                        </ngb-carousel>
+                                        <ng-template #SinImagen>
+                                            <span style="font-size: larger; font-weight: 600;">No hay imágenes registradas</span>
+                                        </ng-template>
+                                    </div></div>
+                                    <br>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+            </ul>
+            <div [ngbNavOutlet]="nav" class="mt-2" style="width: 100%;"></div>
+            <br>
+        </div>
+    <!-------------- ProgressBar ----------->
+    <div style="margin-top: 15px;" class="row">    
+        <div class="col-12">
+            <div *ngIf="loadingModalDetalleSer" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+            </div>
+        </div>   
+    </div>
+    <div class="modal-footer">
+        <div *ngIf="servicioSeleccionado?.SERE_ESTADO === 6 || servicioSeleccionado?.SERE_ESTADO === 5 && !carga && servicioSeleccionado?.CA_CALIFICACION === null ">
+            <button  class="btn btn-sm" style="background-color : #3E11BC; color:white; font-weight:bold" (click)="calificarServicio(servicioSeleccionado)"> Calificar servicio </button>
+        </div>
+        <div >
+            <button  class="btn btn-sm" style="background-color : #3E11BC; color:white; font-weight:bold" (click)="reenviarSolicitud(servicioSeleccionado)" *ngIf="servicioSeleccionado?.SERE_ESTADO==4">Reenviar servicio</button>
+        </div>
+        <div *ngIf="servicioSeleccionado?.SERE_ESTADO == 0 ">
+            <!-- || servicioSeleccionado?.SERE_ESTADO == 1 -->
+            <button [disabled]="carga || loadingModalDetalleSer" class="btn btn-sm btn-success" (click)="abrirModalResumen(resumenServiceContent);montoServicio = servicioSeleccionado.SERE_TARIFA;saldoBonosUtilizados = 0">Aceptar</button>
+            <button [disabled]="carga || loadingModalDetalleSer"  style="margin-left: 10px" class="btn btn-sm btn-danger" (click)="abrirModalRechazoEsp()"> Rechazar </button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #confirmacionCancelacion>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Confirmar</h5>
+        <button  type="button" class="close" (click)="closeModal();" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <span> ¿Está seguro que desea cancelar la solicitud?  </span>
+    </div>
+    <div class="modal-footer">
+        <button  type="button" (click)="closeModal()" style="color: rgb(255, 255, 255);" class="btn btn-danger bold">Cancelar</button>
+        <button  type="button" (click)="confirmarCancelacion()" class="btn btn-success">Confirmar</button>
+    </div>
+</ng-template>
+
+<!---------------------------------- Modal para confirmar el rechazo de la solicitud asignada al especialista X ------------------------------------->
+<ng-template #rechazoEspec let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="exampleModalLongTitle"><label>Confirmación</label></h4>
+        <button  type="button" class="close confirm" (click)="d('Cross click');errorModalConfirRe = false" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-alerta-modal *ngIf="errorModalConfirRe" [tipoAlerta]="'danger'">{{mensajeModalConfirRe}}</app-alerta-modal>
+        ¿Estás seguro de rechazar el servicio a realizar?. 
+        <br><br><br>
+        <input [checked]="isCheckSolicitud" (change)="isCheckSolicitud = !isCheckSolicitud" type="checkbox"> Crear de nuevo la solicitud con los mismos datos
+      </div>
+      <!-------------- ProgressBar ----------->
+      <div class="row">
+        <div class="col-12">
+            <div *ngIf="loadingModalConfirRe" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+    </div>
+      <div class="modal-footer">
+        <button class="btn btn-success" [disabled]="loadingModalConfirRe" (click)="decidirRechazoServicio(modalAviso)">Sí</button>
+        <button class="btn btn-danger" [disabled]="loadingModalConfirRe" (click)="d('Cross click');errorModalConfirRe = false">No</button>
+      </div>
+</ng-template>
+
+<!---------------------------------- Modal para ver resumen el servicio ------------------------------------->
+<ng-template #resumenServiceContent let-d="dismiss">
+    
+    <div class="modal-header">
+        <h4 class="modal-title" id="exampleModalLongTitle">Resumen del servicio</h4>
+        <button  type="button" class="close" (click)="d('Cross click');anuncioModalTar = false;" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body ">
+        <div class="container ">
+            <app-alerta-modal *ngIf="anuncioModalTar" [tipoAlerta]="tipoAnuncioTar">{{mensajeAnuncio}}</app-alerta-modal>
+
+            <div class="row">
+                <br>
+                <!--------------------- Datos del servicio --------------------->
+                <div class="col-12 col-lg-6">
+                    <strong style="font-size: 18px;">Datos del servicio</strong>
+                    <hr>
+                    <br>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-6">
+                                <h6><strong>Nombre del servicio:</strong></h6>
+                            </div>
+                            <div class="col-6">
+                                <h6>{{servicioSeleccionado.SER_NOMBRES}}</h6>
+                            </div>
+                            <br><br>
+                            <div class="col-6">
+                                <h6><strong>Fecha del servicio:</strong></h6>
+                            </div>
+                            <div class="col-6">
+                                <h6>{{servicioSeleccionado?.SOL_FECHA_SERVICIO | date: 'dd/MM/yyyy'}}</h6>
+                            </div>
+                            <br><br>
+                            <div class="col-6">
+                                <h6><strong>Dirección:</strong></h6>
+                            </div>
+                            <div class="col-6">
+                                <h6>{{servicioSeleccionado?.UBI_DIRECCION}}</h6>
+                            </div>
+                            <br><br>
+                            <div class="col-6">
+                                <h6><strong>Hora del servicio:</strong></h6>
+                            </div>
+                            <div class="col-6">
+                                <h6>{{servicioSeleccionado?.SOL_FECHA_SERVICIO | date: 'h:mm:ss a'}}</h6>
+                            </div>
+                            <br><br>
+                            <!--<div class="col-6">
+                                <strong>Precio:</strong>
+                            </div>
+                             <div class="col-6">
+                                <label>S/.{{servicioSeleccionado?.SERE_TARIFA}}</label>
+                            </div> -->
+                            <br><br>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <!--------------------- Datos del especialista --------------------->
+                <div class="col-12 col-lg-6">
+                    <strong style="font-size: 18px;">Datos del especialista</strong>
+                    <hr>
+                    <br>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-5">
+                                <h6><strong>Nombre del especialista:</strong></h6>
+                            </div>
+                            <div class="col-7">
+                                <h6>{{servicioSeleccionado.USU_NOMBRES + ' ' + servicioSeleccionado.USU_APE_PAT + ' ' + servicioSeleccionado.USU_APE_MAT}}</h6>
+                            </div>
+                            <br><br>
+                            <div class="col-5">
+                                <h6><strong>Email:</strong></h6>
+                            </div>
+                            <div class="col-7">
+                                <h6>{{servicioSeleccionado.USU_EMAIL}}</h6>
+                            </div>
+                            <br><br>
+                            <div class="col-5">
+                                <h6><strong>Profesión:</strong></h6>
+                            </div>
+                            <div class="col-7"> <!-- mr1-1-->
+                                <h6>{{servicioSeleccionado.POST_PROFESION}}</h6>
+                            </div>
+                            <br><br>
+                            <div class="col-5">
+                                <h6><strong>Celular:</strong></h6>
+                            </div>
+                            <div class="col-7">
+                                <h6>{{servicioSeleccionado.USU_CELULAR}}</h6>
+                            </div>
+                            <br><br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+            <strong style="font-size:4.8vmin">Monto a pagar: </strong> 
+            <strong style="font-size:4.8vmin" > {{simboloMonedaPeruana}} {{servicioSeleccionado?.SERE_TARIFA}}</strong>
+        </div>
+            
+    </div>
+    <!-------------- ProgressBar ----------->
+    <div class="row">
+        <div class="col-12">
+            <div *ngIf="loadingAceRech" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-success bold" [disabled]="loadingAceRech" (click)="open(pagoContent); idTarjetaSeleccionada = null; isCollapsed = true;montoServicio = servicioSeleccionado.SERE_TARIFA; id_bonos_seleccionados = []">Pagar</button>
+        <button class="btn btn-danger bold" [disabled]="loadingAceRech" (click)="d('Cross click');anuncioModalTar = false;">Cancelar</button>
+    </div>
+</ng-template>
+
+<!---------------------------------- Modal para pagar el servicio ------------------------------------->
+<ng-template #pagoContent let-d="dismiss">
+   
+    <div class="modal-header">
+        <h4 class="modal-title" id="exampleModalLongTitle">Pago del servicio</h4>
+        <button  type="button" [disabled]="loadingModalPago" class="close" (click)="d('Cross click');(!isCollapsed)?collapse.toggle():'';guardarTarjeta = false;anuncioModalPago = false;" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body position-relative">
+        <app-alerta-modal *ngIf="anuncioModalPago" [tipoAlerta]="tipoAlertaModalPago">{{mensajeModalPago}}</app-alerta-modal>
+        <img *ngIf="isCollapsed" src="../../../../assets/images/pago.png" class="img-fluid dimensionImg" alt="">
+        <!----------------- Radio button para las tarjetas----------------->
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-10 mx-auto">
+                    <div *ngIf="isCollapsed">
+                        <div *ngFor="let tarjeta of tarjetas" class="input-group  mx-auto" style="margin-top: 10px;">
+                            <div class="input-group-prepend">
+                              <div *ngIf="montoServicio > 0" style="display: unset;" class="input-group-text">
+                                <input type="radio" (change)="idTarjetaSeleccionada = tarjeta.TAR_ID" name="radioTar" aria-label="Radio button for following text input">
+                              </div>
+                            </div>
+                            <input disabled type="text" value="{{tarjeta.TAR_NUMERO}}" class="form-control" aria-label="Text input with radio button">
+                            <div class="input-group-append">
+                                <div ngbTooltip="Eliminar" (click)="eliminarTarjeta(tarjeta.TAR_ID)" class="input-group-text hoverContenedor spanAccion">
+                                    <span class=" fa fa-fw fa-trash-o"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="d-flex flex-column gap-2 mb-3">
+                        <button [disabled]="loadingModalPago" class="btn btn-sm btn-success float-right" id="actualizarButton" (click)="getBonos(modalBonificaciones)">Usar Bonificaciones</button>
+                        <button [disabled]="loadingModalPago" 
+                            *ngIf="tarjetas?.length < 3 && montoServicio > 0" (click)="idTarjetaSeleccionada = null;collapse.toggle();tarjetaForm.reset();resetCheck();habilitarCamposTarjeta();"
+                            class="btn btn-sm btn-success float-right" id="actualizarButton">Nueva tarjeta</button>
+
+                    </div>
+                    <app-alerta-modal tipoAlerta="warning">Sólo se permiten pagos con tarjetas por montos mayores o iguales a S/3.00</app-alerta-modal>
+                    <!-- <br> -->
+                    <div class="row">
+                        <div class="col-6">Costo del servicio:</div>
+                        <div class="col-6"><label class="pull-right">{{simboloMonedaPeruana + ' ' + (servicioSeleccionado.SERE_TARIFA - (servicioSeleccionado.SERE_TARIFA * (claveComisiones/100)) | number:'.2-2') }}</label></div>
+                        <div class="col-7">Comisiones e impuestos:</div>
+                        <div class="col-5"><label class="pull-right">{{simboloMonedaPeruana + ' ' + (servicioSeleccionado.SERE_TARIFA * (claveComisiones/100) | number:'.2-2')}}</label></div>
+                        <div class="col-6">Costo total del servicio:</div>
+                        <div class="col-6"><label class="pull-right">{{simboloMonedaPeruana + ' ' + servicioSeleccionado.SERE_TARIFA}}</label></div>
+                        <div class="col-6">Saldo de bonos utilizados:</div>
+                        <div class="col-6"><label class="pull-right">{{simboloMonedaPeruana + ' ' + '-'+((saldoBonosUtilizados > servicioSeleccionado.SERE_TARIFA)?servicioSeleccionado.SERE_TARIFA:saldoBonosUtilizados | number:'.2-2')}}</label></div>
+                        <div class="col-6">Saldo por pagar:</div>
+                        <div class="col-6"><label class="pull-right">{{simboloMonedaPeruana + ' ' + (((montoServicio > 0)? montoServicio:0) | number:'.2-2')}}</label></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!---------------- Formulario para guardar la tarjeta ----------------------->
+        <div  #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+            <div class="card">
+              <div class="card-body">
+                <form [formGroup]="tarjetaForm">
+                    <div class="row">
+
+                        <div class="col-sm-12 col-lg-12 my-2">
+                            <label for="nombreTitular">Nombre del titular (*)</label>
+                            <input type="text" id="nombreTitular" name="nombreTitular" class="form-control" formControlName="tar_nombre_titular">
+                            <div *ngIf="tar_nombre_titular.invalid && (tar_nombre_titular.dirty || tar_nombre_titular.touched)"
+                                class="my-1" style="color: rgb(197, 68, 68);">
+                                <div *ngIf="tar_nombre_titular.errors.required">
+                                    * El campo es requerido.
+                                </div>
+                                <div *ngIf="tar_nombre_titular.errors.pattern">
+                                    * Solo acepta caracteres alfabéticos.
+                                </div>
+                                <div *ngIf="tar_nombre_titular.errors.maxlength">
+                                    * Se requiere máximo 100 caracteres.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-lg-6 my-2">
+                            <label for="cardNumber">Número de tarjeta (*)</label>
+                            <input type="text" id="cardNumber" name="cardNumber" class="form-control" formControlName="tar_numero">
+                            <div *ngIf="(tar_numero.invalid && (tar_numero.dirty || tar_numero.touched))" class="my-1" style="color: rgb(197, 68, 68);">
+                                <div *ngIf="tar_numero.errors.required">
+                                    * El campo es requerido.
+                                </div>
+                                <div *ngIf="tar_numero.errors.pattern">
+                                    * Solo acepta caracteres númericos.
+                                </div>
+                                <div *ngIf="tar_numero.errors.minlength">
+                                    * Se requiere mínimo 13 caracteres.
+                                </div>
+                                <div *ngIf="tar_numero.errors.maxlength">
+                                    * Se requiere máximo 16 caracteres.
+                                </div>
+                            </div>
+                        </div>
+        
+                        <div class="col-sm-4 col-lg-6 my-2">
+                            <label for="cvv">CVV (*)</label>
+                            <input type="text" id="cvv" name="cvv" class="form-control" formControlName="tar_cvv">
+                            <div *ngIf="tar_cvv.invalid && (tar_cvv.dirty || tar_cvv.touched)"
+                                class="my-1" style="color: rgb(197, 68, 68);">
+                                <div *ngIf="tar_cvv.errors.pattern">
+                                    * Solo acepta caracteres númericos.
+                                </div>
+                                <div *ngIf="tar_cvv.errors.required">
+                                    * El campo es requerido.
+                                </div>
+                                <div *ngIf="tar_cvv.errors.minlength">
+                                    * Se requiere mínimo 3 caracteres.
+                                </div>
+                                <div *ngIf="tar_cvv.errors.maxlength">
+                                    * Se requiere máximo 4 caracteres.
+                                </div>
+                            </div>
+                        </div>
+        
+                        <div class="col-sm-4 col-lg-6 my-2">
+                            <label for="mesExpiracion">Mes de expiración (*)</label>
+                            <div id="lista-idiomas">
+                                <select name="mesExpiracion-select" id="mesExpiracion-select" class="form-control custom-select" formControlName="tar_mes_expiracion">
+                                    <option [ngValue]=null>Seleccionar</option>
+                                    <option [ngValue]="MES.valor" *ngFor="let MES of MESES">{{MES.mes}}</option>
+                                </select>
+                            </div>
+                            <div *ngIf="tar_mes_expiracion.invalid && (tar_mes_expiracion.dirty || tar_mes_expiracion.touched)"
+                                class="my-1" style="color: rgb(197, 68, 68);">
+                                <div *ngIf="tar_mes_expiracion.errors.required">
+                                    * El campo es requerido.
+                                </div>
+                                <div *ngIf="tar_mes_expiracion.errors.maxlength">
+                                    * Se requiere máximo 2 caracteres.
+                                </div>
+                            </div>
+                        </div>
+        
+                        <div class="col-sm-4 col-lg-6 my-2">
+                            <label for="anioExpiracion">Año de expiración (*)</label>
+                            <select name="mesExpiracion-select" id="mesExpiracion-select" class="form-control custom-select" formControlName="tar_anio_expiracion">
+                                <option [ngValue]=null>Seleccionar</option>
+                                <option [ngValue]="anio" *ngFor="let anio of anios">{{anio}}</option>
+                            </select>
+                            
+                            <div *ngIf="tar_anio_expiracion.invalid && (tar_anio_expiracion.dirty || tar_anio_expiracion.touched)"
+                                class="my-1" style="color: rgb(197, 68, 68);">
+                                <div *ngIf="tar_anio_expiracion.errors.required">
+                                    * El campo es requerido.
+                                </div>
+                                <div *ngIf="tar_anio_expiracion.errors.pattern">
+                                    * Solo acepta caracteres númericos.
+                                </div>
+                                <div *ngIf="tar_anio_expiracion.errors.minlength">
+                                    * Se requiere mínimo 4 caracteres.
+                                </div>
+                                <div *ngIf="tar_anio_expiracion.errors.maxlength">
+                                    * Se requiere máximo 4 caracteres.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <br>
+                <label><input type="checkbox" [checked]="isCheckGuardarTarjeta" (change)="procesoDatosCheckGuardarTarjeta()" aria-label="Radio button for following text input">Guardar tarjeta</label>
+                <div class="row my-2" style="margin-left: 1%;" >
+                    <p> (*) Campo obligatorio</p>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+    <!-------------- ProgressBar ----------->
+    <div class="row">
+        <div class="col-12">
+            <div *ngIf="loadingModalPago" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-success bold" [disabled]="loadingModalPago || ((!isCollapsed)?tarjetaForm.invalid:false)" (click)="(!isCollapsed)?aceptarServicioTarjeta(modalAviso):aceptarServicio(modalAviso)">Pagar</button>
+        <button class="btn btn-danger bold" [disabled]="loadingModalPago" (click)="d('Cross click');anuncioModalPago = false;(!isCollapsed)?collapse.toggle():'';guardarTarjeta = false">Cancelar</button>
+    </div>
+</ng-template>
+
+<!---------------------------------- Modal para  el servicio ------------------------------------->
+<ng-template #modalAviso let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="exampleModalLongTitle">Mensaje de confirmación</h4>
+        <button  type="button" class="close" (click)="d('Cross click')" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        {{mensajeModalAviso}}
+    </div>
+    <!-- <div class="modal-footer">
+    </div> -->
+</ng-template>
+
+<!---------------------------------- Modal fugaz para decir que el pago se hizo exitosamente------------------------------------->
+<ng-template #modalAvisoFugaz let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="exampleModalLongTitle">Mensaje de confirmación</h4>
+        <button  type="button" [disabled]="loadingModalPago" class="close" (click)="d('Cross click')" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        {{mensajeModalFugaz}}
+    </div><!-- 
+    <div class="modal-footer">
+    </div> -->
+</ng-template>
+
+<!---------------------------------- Modal para listar las bonificaciones para pagar ------------------------------------->
+<ng-template #modalBonificaciones let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="exampleModalLongTitle"><label>Bonificaciones</label></h4>
+        <button  type="button" [disabled]="loadingModalPago" class="close" (click)="d('Cross click')" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <h4>
+            <strong> Saldo a pagar: {{simboloMonedaPeruana + ' ' + (((montoServicio > 0)? montoServicio:0) | number:'.2-2')}} </strong>
+        </h4>
+        
+        <!------------------------- TABLA DE BONIFICACIONES------------------------->
+        <div class="table-responsive-sm table-responsive-md table-responsive-lg table-responsive-xl">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col" class="text-center">Seleccionar</th>
+                        <th scope="col" sortable="BON_SALDO" (sort)="sort($event)">Saldo</th>
+                        <th scope="col" sortable="BON_FECH_INI" (sort)="sort($event)">Fecha de inicio</th>
+                        <th scope="col" sortable="BON_FECH_FIN" (sort)="sort($event)">Fecha de fin</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngIf="BONOS_DISPONIBLES?.length===0 && !cargandoDatos"><td colspan="4" class="td-center"><span>No hay bonificaciones para mostrar</span></td></tr>      
+                    <tr *ngFor="let bono of BONOS_DISPONIBLES | slice:(currentPage-1)*itemsPerPage:currentPage*itemsPerPage ; let i = index">
+                        <td class="text-center">
+                            <input *ngIf="montoServicio > 0 || (montoServicio <= 0 && bono?.ISCHECK)" type="checkbox" (change)="seleccionarBonos(bono)" [(ngModel)]="bono.ISCHECK"><!-- (change)="bonosSeleccionados[i].check = !bonosSeleccionados[i].check" [checked]="bonosSeleccionados[i].check" -->
+                        </td> 
+                        <td>{{ simboloMonedaPeruana + ' ' + bono?.BON_SALDO}}</td>
+                        <td>{{bono?.BON_FECH_INI | date: 'dd/MM/yyyy'}}</td>
+                        <td>{{bono?.BON_FECH_FIN | date: 'dd/MM/yyyy'}}</td>
+                    </tr>
+                    <tr *ngIf="BONOS_DISPONIBLES?.length > 0">
+                        <td colspan="4"><strong class="pull-right">Total: {{BONOS_DISPONIBLES.length}} {{BONOS_DISPONIBLES.length ==1 ? 'elemento' : 'elementos'}} </strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!---------------PAGINACIÓN------------->
+        <div *ngIf="BONOS_DISPONIBLES?.length>0" style="margin-top: 5px;" class="row box-footer clearfix">     
+            <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9 col-7">
+                <ngb-pagination *ngIf="BONOS_DISPONIBLES?.length>10" class="d-flex justify-content-start" size="sm" [maxSize]="5" [pageSize]="itemsPerPage"  [collectionSize]="BONOS_DISPONIBLES?.length" [(page)]="currentPage"></ngb-pagination>
+            </div>
+            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-5">
+                <select class="pull-right" [(ngModel)]="itemsPerPage" class="form-control form-control-sm custom-select">
+                <option value="10">10 elementos</option>
+                <option value="15">15 elementos</option>
+                <option value="20">20 elementos</option>                    
+                </select>  
+            </div>    
+        </div>    
+    </div>
+    
+    <div class="modal-footer">
+        <button class="btn btn-sm btn-success" (click)="d('Cross click')">Aceptar</button>
+    </div>
+</ng-template>

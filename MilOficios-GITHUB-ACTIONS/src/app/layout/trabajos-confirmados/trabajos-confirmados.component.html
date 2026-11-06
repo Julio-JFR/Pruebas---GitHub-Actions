@@ -1,0 +1,245 @@
+<app-alerta-general 
+    *ngIf="mostrarAlerta"
+    [tipoAlerta]="tipoAlerta">
+    {{mensaje}}
+</app-alerta-general>
+
+<app-page-header [heading]="'Trabajos Confirmados'"></app-page-header>
+<div style="margin-top: 15px;" class="row" *ngIf="cargando" >
+    <div class="col-xl-12">
+        <div class="progress" style="height:.1rem">
+            <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+        </div>
+    </div>
+</div>
+<ng-container *ngIf="cargando_servicio_remoto">
+    <hr>
+    <div  class="progress" style="height:.1rem">
+        <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+    </div>
+</ng-container>
+
+
+<triangular-bar></triangular-bar>
+
+<br><br>
+
+<div class="container "  *ngIf="LISTADETRABAJOSCONFIRMADOS?.length > 0; else no_data" >
+    <div class="row">
+        <div [ngClass]="{'ocultar': trabajoConfirmado.TIEMPOAGOTADO }"  class="col-md-12 col-xl-6 "  *ngFor="let trabajoConfirmado of this.LISTADETRABAJOSCONFIRMADOS; let indice = odd;  ">
+            <div *ngIf = "trabajoConfirmado.TIEMPOAGOTADO === true; else mostrar" >
+
+            </div>
+            <ng-template #mostrar>
+                <div  class="card seleccionar">
+                    <div class="card-body eventcard"> 
+                        <div class="row-12"  (click)="definirEvento(trabajoConfirmado)">
+                            <div class="row-12">
+                                <div class="barra-azul-lateral position-absolute"></div>
+                                <div class="d-flex flex-row sidebar-heading bold-tipografy" id="boldtipoStyle">
+                                    <h4 class="col-9" ><strong>{{trabajoConfirmado.SER_NOMBRES}}</strong></h4>
+                                    <h4 class="ml-3"><strong>{{trabajoConfirmado.MON_SIMBOLO}}{{trabajoConfirmado.SERE_TARIFA}}</strong></h4>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row-12">
+                                <h6 class=" text-muted">Categoría: {{trabajoConfirmado.CAT_NOMBRE}}</h6>
+                                <span class="btn btn-rounded "  style="float: right;" >
+                                    <h6  [ngClass]="{'textoRojo': trabajoConfirmado.IS_STYLE }" *ngIf="trabajoConfirmado.SERE_ESTADO === 1"  >{{trabajoConfirmado.MENSAJETIEMPOADICIONAL}}</h6>
+                                    <em class="fa fa-clock-o" style="width: 1.4rem;"></em>
+                                    <h6  *ngIf="trabajoConfirmado.SERE_ESTADO === 1 && trabajoConfirmado.HORAE <= 23 ; else noConteo"  class=" notranslate "  [ngClass]="{'textoRojo': trabajoConfirmado.IS_STYLE }"   >{{trabajoConfirmado.HORAE}}h : {{trabajoConfirmado.MINUTOSE}}m : {{trabajoConfirmado.SEGUNDOSE}}s  </h6>
+                                    <ng-template #noConteo>
+                                        <h6 class="card-subtitle mb-2 text-muted" >--h : --m : --s  </h6>
+                                    </ng-template>
+                                </span>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <em class="fa fa-calendar" id="iconstyle"></em>
+                                <div style="margin-left: 0px;" class="col">
+                                    <h6 style="margin-left: 0px;" class="card-text">
+                                        <strong><label>Fecha : </label></strong>  {{trabajoConfirmado.FECHA}}
+                                    </h6>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <em class="fa fa-clock-o" id="iconstyle"></em>
+                                <div style="margin-left: 0px;" class="col">
+                                    <h6 style="margin-left: 0px;" class="card-text">
+                                        <strong><label>Hora : </label></strong>  {{trabajoConfirmado.HORA}}
+                                    </h6>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <em class="fa fa-map-marker" id="iconstyle"></em>
+                                <div style="margin-left: 0px;" class="col">
+                                    <h6 style="margin-left: 0px;" class="card-text">
+                                        <strong><label>Dirección : </label></strong><strong [ngStyle]="{'color':trabajoConfirmado.UBI_DIRECCION!=='Servicio remoto'?'':'#3DC2C9'}">{{trabajoConfirmado.UBI_DIRECCION}}</strong>
+                                        <em 
+                                            (click)="abrirModalUbicacion($event,trabajoConfirmado)"
+                                            *ngIf="trabajoConfirmado.UBI_DIRECCION!=='Servicio remoto'" 
+                                            ngbTooltip="¿Cómo llegar?" 
+                                            style="width: 1.2rem;cursor: pointer;"  
+                                            class="fa fa-question-circle-o eventcard">
+                                        </em>
+                                    </h6>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row-12" *ngIf="trabajoConfirmado.UBI_DIRECCION!=='Servicio remoto' 
+                            && isDesktopDevice  && !trabajoConfirmado.IS_CONFIRMACION && trabajoConfirmado.SERE_ESTADO === 1">
+                                <span style="color:rgb(255, 5, 5); text-align: center;">*Debe confirmar su ubicación para continuar.</span>
+                            </div>
+                            <div *ngIf="trabajoConfirmado.IS_COLLAPSE">
+                                <br>
+                                <hr>
+                                <br>
+                                <div class="row ml-3">
+                                    <em class="fa fa-star-o" id="iconstyle"></em>
+                                    <div class="col pl-2">
+                                        <h6 class="card-text">
+                                            <label>Calificación:&nbsp;</label><ng-template #t let-fill="fill">
+                                                <span class="star" [class.full]="fill === 100">
+                                                  <span class="half" [style.width.%]="fill">&#9733;</span>&#9733;
+                                                </span>
+                                            </ng-template>
+                                            
+                                            <ngb-rating   [(rate)]="trabajoConfirmado.USU_CALIFICACION" [starTemplate]="t" [readonly]="true" 
+                                            [max]="5"></ngb-rating>
+                                        </h6>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row ml-3">
+                                    <em class="fa fa-user" id="iconstyle"></em>
+                                    <div class="col pl-2">
+                                        <h6 class="card-text">
+                                            <label>Cliente:&nbsp;</label>{{trabajoConfirmado.USU_NOMBREAPELLIDO}}
+                                        </h6>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row ml-3">
+                                    <em class="fa fa-check" id="iconstyle"></em>
+                                    <div class="col pl-2">
+                                        <h6 class="card-text">
+                                            <label>Descripción:&nbsp;</label>{{trabajoConfirmado.SOL_DESCRIPCION}}
+                                        </h6>
+                                    </div>
+                                </div>                            
+                                <br>
+                            </div>
+
+                        </div>
+                        <div class="row" style="margin-left: 3px">
+                            <span style="cursor: pointer;text-decoration: underline;" class="view-details" *ngIf="trabajoConfirmado.IS_COLLAPSE; else Colapsed" (click)="trabajoConfirmado.IS_COLLAPSE = !trabajoConfirmado.IS_COLLAPSE;" [attr.aria-expanded]="!trabajoConfirmado.IS_COLLAPSE" aria-controls="collapseDetails">Menos detalles</span>
+                            <ng-template #Colapsed>
+                                <span  style="cursor: pointer;text-decoration: underline;"  class="view-details" (click)="trabajoConfirmado.IS_COLLAPSE = !trabajoConfirmado.IS_COLLAPSE" [attr.aria-expanded]="!trabajoConfirmado.IS_COLLAPSE" aria-controls="collapseDetails">Más detalles</span>
+                            </ng-template>
+                        </div>
+                        <button *ngIf="trabajoConfirmado.SERE_ESTADO === 1; else noBoton"  style="float: right; height: 2.2rem;" class="btn btn-success eventcard" (click)="abrirModalCancelar(trabajoConfirmado)">Cancelar</button>
+                        <ng-template #noBoton>
+                            <p style="color: rgb(255,0,0); float: right;">** El trabajo aún no está confirmado por el cliente. **</p>
+                        </ng-template>
+                        <br>
+                    </div>
+                </div>
+            </ng-template>
+            <br>
+        </div>
+        <br>
+    </div>
+</div>
+
+<ng-template #no_data>
+    <h3 *ngIf="!cargando" class="text-center container">No se encontraron trabajos confirmados disponibles</h3>
+</ng-template>
+
+
+<!-- ELIMINAR UN TRABAJO CONFIRMADO  -->
+<ng-template #modalEliminar let-modal   >
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLongTitle">¿Seguro de cancelar el trabajo?</h5>
+      <button type="button" (click)="closeModal()" class="close" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body" >
+        <app-alerta-modal *ngIf="mostrarAlertaError" [tipoAlerta]="tipoAlerta">{{mensaje}}</app-alerta-modal>
+
+        <p>Estás por cancelar el trabajo, y esto puede afectar a otros datos. ¿Estás seguro de continuar? </p>
+    </div>
+    <!-- POGRESS BAR  -->
+    <div style="margin-top: 15px;" class="row">
+        <div class="col-xl-12">
+            <div *ngIf="cargaDeDato" class="progress" style="height:.1rem">
+                <ngb-progressbar class="indeterminate" type="primary" height=".1rem" [value]="100" [striped]="true" [animated]="true"></ngb-progressbar>
+            </div>
+        </div>
+      </div>
+    <div class="modal-footer">
+      <button [disabled]="invalido"  (click)="closeModal()" type="button" class="btn btn-danger bold" style="color: #ffffff;"  data-dismiss="modal" >Cancelar</button>
+      <button  [disabled]="invalido"  (click)="cancelarServicio()" type="button" class="btn btn-success bold" style="color: #ffffff;"  data-dismiss="modal" >Confirmar</button>
+    </div>
+</ng-template>
+
+
+<!-- CROQUIS DE COMO LLEGAR AL LUGAR  -->
+<ng-template #modalCroquis let-modal>
+    <div class="modal-header">
+      <h5  id="titulo"><label>¿Cómo llegar?</label></h5>
+      <div  id="pac-container">
+        <input id="pac-input" class="pac-container form-control" ngx-google-places-autocomplete [options]='options'
+        (onAddressChange)="handleAddressChange($event)" placeholder="Ingrese una ubicación"  />
+        </div>
+      <button type="button" (click)="closeModal()" class="close" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body" id="map" >
+        <app-alerta-modal *ngIf="mostrarAlertaGoogle" [tipoAlerta]="tipoAlerta">{{mensaje}}</app-alerta-modal>
+
+        <br>
+            <agm-map   width="750" height="450" [latitude] = "origin.lat" [longitude] = "origin.lng"
+         (mapClick) = "setPosicionGpsPuntoA($event)" [zoom] = "7" >
+            <agm-marker [latitude] = "origin.lat"  [longitude] = "origin.lng"  >
+            </agm-marker>
+            <agm-marker [latitude] = "cliente.UBI_LATITUD"  [longitude] = "cliente.UBI_LONGITUD" [agmFitBounds]  = 'true'>
+            </agm-marker>
+        </agm-map>
+    </div>
+    <br>
+    <div id="footer" >
+        <div class="row">
+            <strong style="margin-left: 2rem; margin-bottom: 0;">Leyenda</strong>
+        </div>
+        <div class="row">
+            <p *ngIf="isDesktopDevice;else noLeyendaDesktop" style="margin-left: 2rem; margin-bottom: 0;" >Punto A: Ubicación de Especialista.  </p>
+            <p  style="margin-left: 2rem; margin-bottom: 0;" ><strong>Hacer clic en el mapa para confirmar la ubicación y continuar con el proceso.</strong></p><br>
+            <ng-template #noLeyendaDesktop>
+                <p  style="margin-left: 2rem; margin-bottom: 0;" >Punto A: Ubicación de Especialista.</p>
+            </ng-template>
+        </div>
+        <br>
+        <div class="row">
+            <p style="margin-left: 2rem;">Punto B: Ubicación de Cliente.</p>
+        </div>
+        <br>
+        <div class="row" style="display: flex; justify-content: center;">
+            <div class="modal-footer border-0">
+                <button 
+                    *ngIf="isDesktopDevice;else noDesktop" (click)="confirmarUbicacionEspecialista()"
+                    type="button" class="btn btn-success bold" style="color: #ffffff; float: right; ">
+                    Confirmar
+                </button>
+            </div>
+            <ng-template #noDesktop>
+                <button (click)="closeModal()" type="button" class="btn btn-danger bold" style="color: #ffffff; float: right; "  data-dismiss="modal" >Cerrar</button>
+            </ng-template>
+        </div>
+        <br>
+    </div>
+</ng-template>
+

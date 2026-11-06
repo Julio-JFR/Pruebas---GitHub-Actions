@@ -1,0 +1,222 @@
+/* You can add global styles to this file, and also import other style files */
+@import "bootstrap/bootstrap";
+@import "spinner";
+@import "utils";
+@import "rtl";
+@import "responsive";
+
+@media print {
+    .breadcrumb {
+        display: none !important;
+    }
+}
+
+:root{
+    --color-primary: #3E11BC;
+    --color-raya: #24DEEC;
+    --font-family-bold: 'montserrat-bold';
+    --color-sidebar-pequeno-hover: rgb(255, 255, 255);
+    --color-sidebar-pequeno-background: #3E11BC;
+}
+
+.table thead th{
+    border-bottom: 2px solid #fff;
+    border-top: 2px solid #fff;
+}
+
+
+.table thead th{
+    background-color: var(--color-primary);
+    color: #fff;
+}
+
+.table td:not(.postulante){
+    border-top: 1px solid var(--color-primary);
+}
+
+.table-border-left {
+    border-radius: 10rem 0 0 10rem !important;
+    border-color: white;
+}
+
+.table-border-rigth {
+    border-radius: 0 10rem 10rem 0 !important;
+    border-color: white;
+}
+
+.custom-select{
+    background-image: url("../assets/images/select.png");
+    background-size: 15px 15px;
+}
+
+
+.card-header{
+    border-bottom: 1px solid #ffffff;
+}
+
+
+//Rolando Berru
+.indeterminate {
+    position: relative;
+    animation: progress-indeterminate 2s linear infinite;
+  }
+  
+  @keyframes progress-indeterminate {
+     from { width: 25%; }
+     to {  width: 100%;}
+  }
+  //End Rolando Berruv
+
+
+@font-face {
+    font-family: 'montserrat';
+    src: url('../assets/fonts/montserrat/Montserrat-Light.ttf');
+}
+
+@font-face {
+    font-family: 'montserrat-bold';
+    src: url('../assets/fonts/montserrat/Montserrat-Bold.ttf');
+}
+
+@font-face {
+    font-family: 'montserrat-regular';
+    src: url('../assets/fonts/montserrat/Montserrat-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'montserrat-extraLigth';
+    src: url('../assets/fonts/montserrat/Montserrat-ExtraLight.ttf');
+}
+
+*{
+    font-family: 'montserrat';
+}
+
+.barra-azul-lateral{
+    float:left;
+    width: 8px;
+    height: 22px;  
+    margin-right: .5rem; 
+    background-color: #24DEEC;
+}
+
+.bold-tipografy{
+    font-family: "montserrat-bold";
+}
+
+.back-table-color{
+    background-color: #3E11BC;
+    color:#fff;
+    border-radius: 2rem;
+}
+
+label{
+    font-family: "montserrat-bold";
+    color: #3E11BC;
+}
+
+.modal-title{
+    font-family: "montserrat-bold";
+    color: #3E11BC;
+}
+
+.outline-btn-azul:hover{
+    background-color: #24DEEC;
+    color:#3E11BC;
+}
+
+.change-btn {
+    background-color: #3E11BC; 
+    color:#fff;
+    &:hover{
+        color:var(--color-sidebar-pequeno-background);
+        background-color: var(--color-raya);
+    }
+    &:disabled{
+        opacity: 95%;
+        color:#fff;
+        background-color: var(--color-sidebar-pequeno-background);
+    }
+}
+
+.barra-azul-lateral-title-modal{
+    float:left;
+    width: 8px;
+    height: 32px;  
+    margin-right: .5rem; 
+    background-color: #24DEEC;
+}
+
+.raya-separadora-title-modal-raya{
+    background-color: #24DEEC;
+    height: 0.2rem;
+    width: 94%;
+    margin-right: 3%;
+    margin-left: 3%;
+}
+
+input[type="date"].form-control,
+.form-control:disabled, .form-control[readonly],
+select.form-control-sm:not([size]):not([multiple]),
+input:not([type="range"]){
+    border-radius: 2rem;
+}
+
+textarea.form-control, .form-control:disabled{
+    border-radius: 1rem;
+}
+
+.input-group > .input-group-prepend > .input-group-text{
+    border-top-left-radius: 2rem;
+    border-bottom-left-radius: 2rem;
+}
+
+.line {
+    background-image: url("../assets/images/line.png");
+    background-size: 19px;
+    background-repeat: no-repeat;
+    background-position: 1px 7px;
+}
+
+
+.form-switch .form-check-input:checked {
+    background-color: #3e11bc;
+}
+
+.form-check-input:focus {
+    box-shadow: 0 0 0 .25rem #3e11bc42;
+}
+
+@media (max-width: 540px) {
+    .divGeneral{
+        gap: 2.5rem;
+    }
+}
+
+@media (min-width: 541px) {
+    .divGeneral{
+        gap: 0px;
+    }
+}
+
+
+.rotarLogo{
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    transform-origin: center;
+    width: 30%;
+}
+
+.logoResponsive{
+    background-color: #3E11BC;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media screen and (max-width: 1080px) {
+    .rotarLogo{
+        width: 80%;
+    }
+}

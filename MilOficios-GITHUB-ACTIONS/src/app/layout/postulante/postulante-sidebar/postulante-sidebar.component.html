@@ -1,0 +1,78 @@
+<div class="card pb-3" id="sideCard">
+    <div id="sidebar-wrapper" [ngClass]="{sidebarPushRight: isActive, collapsed: collapsed}">
+        <div class="d-flex flex-row">
+            <div id="barr" class="barra-azul-lateral"></div>
+            <div class="sidebar-heading"><label>{{TITULO}}</label></div>
+        </div>
+    
+    
+        <div class="row" style="width: 100%;margin:0">
+            <div class="col-12 raya-separadora-b"></div>
+          </div>
+    
+        <div class="list-group list-group-flush">
+            <div *ngIf="idEspecialista > 0">
+                <a routerLink="/app/postulante/profile" [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action " style="margin-top:10px">
+                    <i class="fa fa-user-circle"></i><span>Perfil</span>
+                </a>
+    
+                <a routerLink="/app/postulante/personal-info" [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action">
+                    <i class="fa fa-address-book"></i><span>{{(TIPO_ESPECIALISTA == 1 )?'Datos del representante':'Datos personales'}}</span>
+                </a>
+
+                <a routerLink="/app/postulante/datos-juridicos" [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action" *ngIf="TIPO_POSTULANTE == 1">
+                    <i class="fa fa-address-book"></i><span>Datos jurídicos</span>
+                </a>
+                
+                <a  routerLink="/app/postulante/academic-info" [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action" *ngIf="TIPO_POSTULANTE == 0">
+                    <i class="fa fa-graduation-cap"></i><span>Información académica</span>
+                </a>
+
+                <a routerLink="/app/postulante/laboral-info" [routerLinkActive]="['router-link-active']" class="list-group-item list-group-item-action">
+                    <i class="fa fa-suitcase"></i><span>Información laboral</span>
+                </a>
+
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
+<div class="row list-group"  id="sidebarResponsive">
+    <div *ngIf="idEspecialista > 0">
+        <button type="button" id="botones" class="btn btn-secondary">
+            <a routerLink="/app/postulante/profile" [routerLinkActive]="['router-link-active']" 
+                class="list-group-item list-group-item-action " style="margin-top:10px">
+                <em class="fa fa-user-circle"></em>
+            </a>
+        </button>
+        <button type="button" id="botones" class="btn btn-secondary">
+            <a routerLink="/app/postulante/personal-info" [routerLinkActive]="['router-link-active']" 
+                class="list-group-item list-group-item-action">
+                    <em class="fa fa-address-book"></em>
+            </a>
+        </button>
+        
+        <button type="button" id="botones" class="btn btn-secondary" *ngIf="TIPO_POSTULANTE == 1">
+            <a routerLink="/app/postulante/datos-juridicos" [routerLinkActive]="['router-link-active']" 
+                class="list-group-item list-group-item-action" >
+                <em class="fa fa-address-book"></em>
+            </a>
+        </button>
+        
+        <button type="button" id="botones" class="btn btn-secondary" *ngIf="TIPO_POSTULANTE == 0">
+            <a  routerLink="/app/postulante/academic-info" [routerLinkActive]="['router-link-active']" 
+                class="list-group-item list-group-item-action" >
+                <em class="fa fa-graduation-cap"></em>
+            </a>
+        </button>
+
+        <button type="button" id="botones" class="btn btn-secondary">
+            <a routerLink="/app/postulante/laboral-info" [routerLinkActive]="['router-link-active']" 
+                class="list-group-item list-group-item-action">
+                <em class="fa fa-suitcase"></em>
+            </a>
+        </button>
+    </div>
+</div>
+    

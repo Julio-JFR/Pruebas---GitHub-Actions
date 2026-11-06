@@ -1,0 +1,267 @@
+.disabledSpan {
+    pointer-events: none;
+    opacity: 0.5;
+}
+//si se copia todos los estilos de spanAccion eliminen el margin-top, aunque será depende de la funcionalidad a utilizar
+.spanAccion {
+    font-size: 20px;
+    margin-top: -10px;
+    cursor: pointer;
+    display: inline-block;
+}
+.posicion {
+    z-index: 1;
+    align-items: center;
+    @media screen and (min-width: 1025px) and (max-width: 1200px) {
+        padding-right: 6rem;
+    }
+    @media screen and (min-width: 1024px) {
+        padding-right: 10.5rem;
+    }
+    @media screen and (min-width: 769px) and (max-width: 992px) {
+    }
+    @media screen and (min-width: 541px) and (max-width: 768px) {
+        padding-right: 3rem;
+    }
+}
+
+.table-border-rigth {
+    border-radius: 0 10rem 10rem 0 !important;
+    border-color: white;
+}
+.table-border-left {
+    border-radius: 10rem 0 0 10rem !important;
+    border-color: white;
+}
+
+::-webkit-scrollbar {
+    height: 5px;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #3e11bc;
+}
+
+.iconEye {
+    font-size: 1rem;
+    //argin-top: -30px;
+    //margin-right: 8%;
+    color: white;
+    background-color: #3e11bc;
+    height: 1.5rem;
+    width: 1.5rem;
+    border-radius: 50%;
+    //margin-left: 85%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    //padding: 0;
+}
+
+.text-center {
+    vertical-align: middle;
+}
+
+.line {
+    background-image: url("../../../../assets/images/line.png");
+    background-size: 19px;
+    background-repeat: no-repeat;
+    background-position: -8px 7px;
+}
+
+.raya-separadora-a {
+    background-color: #24deec;
+    height: 1rem;
+}
+.col-6-col-lg-6-raya-separadora-a {
+    flex: 0 0 55%;
+    max-width: 55%;
+}
+
+.raya-separadora-b {
+    background-color: #24deec;
+    height: 1rem;
+    margin-top: -1px;
+}
+
+.triangulo-equilatero-bottom-rigth {
+    width: 0;
+    height: 0;
+    border-right: 8px solid transparent;
+    border-left: 8px solid #24deec;
+    border-bottom: 16px solid #24deec;
+}
+
+.triangulo-equilatero-bottom {
+    width: 20px;
+    position: sticky;
+    border-right: 15px solid transparent;
+    border-bottom: 43px solid #3e11bc;
+}
+
+@media (max-width: 1060px) {
+    .col-6-col-lg-6-raya-separadora-a {
+      flex: 0 0 30%;
+      max-width: 30%;
+    }
+    .raya-separadora-a {
+      background-color: #24deec;
+      height: 0.5rem;
+    }
+    .raya-separadora-b {
+      background-color: #24deec;
+      height: 0.4rem;
+      margin-top: -1px;
+    }
+    .triangulo-equilatero-bottom-rigth {
+      border-bottom: 8px solid #24deec;
+      border-left: 5px solid #24deec;
+    }
+}
+
+/* CAMBIOS SS2 */
+
+@media (min-width: 1600px) {
+    .alert-success {
+        font-weight: bold;
+        color: #fbfbff;
+        background-color: #12b50c;
+        position: fixed;
+        text-align: left;
+        font-size: 18px;
+        z-index: 2000;
+    }
+    .alert-danger {
+        margin-left: 50%;
+        font-weight: bold;
+        color: #fbfbff;
+        background-color: rgb(163, 23, 23);
+        position: fixed;
+        text-align: left;
+        font-size: 18px;
+        z-index: 2000;
+    }
+    .alert-warning {
+      margin-left: 50%;
+      font-weight: bold;
+      color: #fbfbff;
+      background-color: #ddce0b;
+      position: fixed;
+      text-align: left;
+      font-size: 18px;
+      z-index: 2000;
+  }
+}
+
+@media (min-width: 1337px) and (max-width: 1599px) {
+.alert-success {
+    font-weight: bold;
+    color: #fbfbff;
+    background-color: #12b50c;
+    position: fixed;
+    text-align: left;
+    font-size: 17px;
+    z-index: 2000;
+}
+.alert-danger {
+    margin-left: 50%;
+    font-weight: bold;
+    color: #fbfbff;
+    background-color: rgb(163, 23, 23);
+    position: fixed;
+    text-align: left;
+    font-size: 17px;
+    z-index: 2000;
+}
+.alert-warning {
+    margin-left: 50%;
+    font-weight: bold;
+    color: #fbfbff;
+    background-color: #ddce0b;
+    position: fixed;
+    text-align: left;
+    font-size: 17px;
+    z-index: 2000;
+}
+}
+
+@media  (min-width: 770px) and (max-width: 1336px) {
+.alert-success {
+    font-weight: bold;
+    color: #fbfbff;
+    background-color: #12b50c;
+    position: fixed;
+    text-align: left;
+    font-size: 15px;
+    z-index: 2000;
+}
+.alert-danger {
+    margin-left: 50%;
+    font-weight: bold;
+    color: #fbfbff;
+    background-color: rgb(163, 23, 23);
+    position: fixed;
+    text-align: left;
+    font-size: 15px;
+    z-index: 2000;
+}
+.alert-warning {
+    margin-left: 50%;
+    font-weight: bold;
+    color: #fbfbff;
+    background-color: #ddce0b;
+    position: fixed;
+    text-align: left;
+    font-size: 15px;
+    z-index: 2000;
+}
+}
+
+@media  (max-width: 769px) {
+.alert-success {
+    font-weight: bold;
+    color: #fbfbff;
+    background-color: #12b50c;
+    position: fixed;
+    text-align: left;
+    font-size: 15px;
+    z-index: 2000;
+    width:100%;
+}
+.alert-danger {
+    margin-left: 50%;
+    font-weight: bold;
+    color: #fbfbff;
+    background-color: rgb(163, 23, 23);
+    position: fixed;
+    text-align: left;
+    font-size: 15px;
+    z-index: 2000;
+    width:100%;
+}
+.alert-warning {
+    margin-left: 50%;
+    font-weight: bold;
+    color: #fbfbff;
+    background-color: #ddce0b;
+    position: fixed;
+    text-align: left;
+    font-size: 15px;
+    z-index: 2000;
+    width:100%;
+}
+}
+
+
+#postularBoton{
+    background: #3e11bc;
+    border: transparent;
+    height: 2.5rem;
+    border-radius: 2rem;
+    font-weight: 600;
+}
+
+#postularBoton:hover {
+    background: #24deec;
+    color: #3e11bc;
+}
