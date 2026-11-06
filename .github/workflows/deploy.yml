@@ -1,16 +1,45 @@
-name: Deploy MilOficios
+
+name: Build and Package MilOficios
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - julio-jfr-subir-proyecto-al-repositorio
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
-  build-and-deploy:
+  build-and-package:
+    name: Compilar y empaquetar MilOficios
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    timeout-minutes: 20
 
-      - name: Verificar archivos
-        run: ls -la
-      
+    defaults:
+      run:
+        working-directory: MilOficios-GITHUB-ACTIONS
+
+    steps:
+      - name: Descargar codigo del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.20.8
+          cache: npm
+          cache-dependency-path: MilOficios-GITHUB-ACTIONS/package-lock.json
+
+      - name: Instalar dependencias
+        run: npm ci --legacy-peer-deps
+
+      - name: Compilar Angular en produccion
+        run: npx ng build --configuration production
+
+      - name: Guardar archivos compilados
+        uses: actions/upload-artifact@v4
+        with:
+          name: MilOficios-Produccion
+          path: MilOficios-GITHUB-ACTIONS/dist/
+          retention-days: 7
