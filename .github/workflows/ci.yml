@@ -35,7 +35,7 @@ jobs:
           cache-dependency-path: MilOficios-GITHUB-ACTIONS/package-lock.json
 
       - name: Instalar dependencias
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: Compilar proyecto Angular
         run: npx ng build --configuration production
